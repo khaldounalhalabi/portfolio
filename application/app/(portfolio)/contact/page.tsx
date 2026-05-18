@@ -12,7 +12,7 @@ export default async function ContactPage() {
         <p className="text-xs uppercase tracking-[0.3em] text-secondary">
           Connection Node
         </p>
-        <h1 className="mt-5 bg-gradient-to-r from-primary to-primary-container bg-clip-text font-heading text-5xl font-bold text-transparent md:text-7xl">
+        <h1 className="mt-5 bg-linear-to-r from-primary to-primary-container bg-clip-text font-heading text-5xl font-bold text-transparent md:text-7xl">
           Get in Touch
         </h1>
         <p className="mt-6 max-w-3xl text-lg leading-8 text-on-surface-variant">
@@ -88,7 +88,7 @@ export default async function ContactPage() {
               ))}
             </div>
           </div>
-          <div className="rounded-[2rem] border border-primary-container/15 bg-gradient-to-br from-primary-container/10 to-secondary/5 p-8">
+          <div className="rounded-[2rem] border border-primary-container/15 bg-linear-to-br from-primary-container/10 to-secondary/5 p-8">
             <p className="text-xs uppercase tracking-[0.3em] text-secondary">
               Availability
             </p>

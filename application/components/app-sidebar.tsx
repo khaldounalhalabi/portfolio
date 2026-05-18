@@ -1,69 +1,68 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import * as React from "react";
 
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import { ContactIcon, FolderKanbanIcon, LayoutDashboardIcon, SparklesIcon } from "lucide-react";
+import { LayoutDashboardIcon } from "lucide-react";
+import Link from "next/link";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
-const navigation = [
-  { href: "/dashboard", label: "Overview", icon: LayoutDashboardIcon },
-  { href: "/dashboard/projects", label: "Projects", icon: FolderKanbanIcon },
-  { href: "/dashboard/skills", label: "Skills", icon: SparklesIcon },
-  { href: "/dashboard/contact", label: "Contact", icon: ContactIcon },
-];
+const data = {
+  user: {
+    name: "Khaldoun Alhalabi",
+    email: "khaldounalhalabi42@gmail.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: <LayoutDashboardIcon />,
+    },
+  ],
+};
 
-export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
-
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <div className="px-2 py-3">
-          <Link href="/" className="flex items-center gap-3 rounded-xl bg-sidebar-accent px-3 py-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              KD
-            </div>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">Portfolio Admin</span>
-              <span className="truncate text-xs text-sidebar-foreground/65">
-                Next.js + Supabase
-              </span>
-            </div>
-          </Link>
-        </div>
+    <Sidebar collapsible="offcanvas" {...props}>
+      <SidebarHeader className="px-0">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="w-auto! data-[slot=sidebar-menu-button]:p-1.5!"
+              style={{
+                width: "auto !important",
+              }}
+            >
+              <Link href="/" className="p-0">
+                <Avatar className="p-0">
+                  <AvatarFallback>KH</AvatarFallback>
+                </Avatar>
+                <span className="text-base font-semibold">
+                  Khaldoun Portfolio Dashboard
+                </span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarMenu>
-          {navigation.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={
-                  item.href === "/dashboard"
-                    ? pathname === item.href
-                    : pathname.startsWith(item.href)
-                }
-                tooltip={item.label}
-              >
-                <Link href={item.href}>
-                  <item.icon />
-                  <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarRail />
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }
