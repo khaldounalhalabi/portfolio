@@ -1,6 +1,8 @@
 "use client";
 
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Field, FieldGroup, FieldSeparator } from "@/components/ui/field";
 import useResourceMutation, {
   QueryResourceKey,
 } from "@/hooks/use-resource-mutation";
@@ -13,6 +15,7 @@ import {
   HTMLProps,
   ReactNode,
   useContext,
+  useState,
 } from "react";
 import {
   DefaultValues,
@@ -51,6 +54,7 @@ interface FormProps<
   mode?: UseFormProps<z.input<TSchema>>["mode"];
   reValidateMode?: UseFormProps<z.input<TSchema>>["reValidateMode"];
   withSubmitButton?: boolean;
+  withBackButton?: boolean;
 }
 
 function Form<
@@ -67,8 +71,11 @@ function Form<
   mode = "onSubmit",
   reValidateMode = "onChange",
   withSubmitButton = true,
+  withBackButton = true,
+  disabled = false,
   ...props
 }: FormProps<OnSuccessReturn, TSchema>) {
+  const [error, setError] = useState<Error | null>(null);
   const router = useRouter();
   const methods = useForm<z.input<TSchema>, unknown, z.output<TSchema>>({
     resolver: validation ? zodResolver(validation) : undefined,
@@ -85,13 +92,16 @@ function Form<
       data: z.output<TSchema>;
       event?: BaseSyntheticEvent;
     }) => {
+      setError(null);
       if (!onSubmit) {
         throw new Error("onSubmit Prop is required");
       }
       return onSubmit(data, event);
     },
     onSuccess: onSuccess,
-    onError: onError,
+    onError: (error) => {
+      onError?.(error);
+    },
     resource: invalidateQueryKey,
   });
 
@@ -118,26 +128,47 @@ function Form<
           {...props}
         >
           {children}
-          {withSubmitButton && (
-            <div className={"my-5 flex w-full justify-between"}>
-              <Button
-                className={"cursor-pointer"}
-                variant={"secondary"}
-                type={"button"}
-                onClick={() => {
-                  router.back();
-                }}
-              >
-                Back
-              </Button>
-              <Button className={"cursor-pointer"} type={"submit"}>
-                Submit{" "}
-                {methods.formState.isSubmitting && (
-                  <Loader2 className={"animate-spin"} />
-                )}
-              </Button>
-            </div>
-          )}
+          {(error || withSubmitButton) && <FieldSeparator className={"my-3"} />}
+          <FieldGroup>
+            {error && (
+              <Field>
+                <Alert variant={"destructive"}>
+                  <AlertTitle>{error.message}</AlertTitle>
+                </Alert>
+              </Field>
+            )}
+            {withSubmitButton && (
+              <>
+                <Field>
+                  <div className={"flex w-full items-center justify-between"}>
+                    {withBackButton && (
+                      <Button
+                        className={"cursor-pointer"}
+                        variant={"secondary"}
+                        type={"button"}
+                        onClick={() => {
+                          router.back();
+                        }}
+                        disabled={disabled}
+                      >
+                        Back
+                      </Button>
+                    )}
+                    <Button
+                      className={"cursor-pointer"}
+                      type={"submit"}
+                      disabled={disabled}
+                    >
+                      Submit{" "}
+                      {methods.formState.isSubmitting && (
+                        <Loader2 className={"animate-spin"} />
+                      )}
+                    </Button>
+                  </div>
+                </Field>
+              </>
+            )}
+          </FieldGroup>
         </form>
       </FormProvider>
     </FormMetaData.Provider>

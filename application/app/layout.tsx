@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 
 import QueryClientProvider from "@/components/providers/QueryClientProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const sans = Inter({
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
         className={`${sans.variable} ${heading.variable} min-h-full bg-background font-sans text-foreground`}
       >
+        <Toaster />
         <QueryClientProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </QueryClientProvider>

@@ -15,5 +15,6 @@ export const config = {
      * Feel free to modify this pattern to include more paths.
      */
     "/dashboard",
+    "/auth/reset-password"
   ],
 };

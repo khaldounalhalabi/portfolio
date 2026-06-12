@@ -4,11 +4,12 @@ import Form from "@/components/forms/form";
 import FormInput from "@/components/forms/form-input";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup } from "@/components/ui/field";
-import { createClient } from "@/lib/supabase/client";
+import { Field, FieldGroup, FieldSeparator } from "@/components/ui/field";
+import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { AuthError } from "@supabase/supabase-js";
 import { LayoutDashboardIcon, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ComponentProps, useState } from "react";
 import { z } from "zod";
@@ -30,7 +31,7 @@ export function LoginForm({ className, ...props }: ComponentProps<"div">) {
           setLoading(true);
           setError(null);
           try {
-            const { error } = await createClient().auth.signInWithPassword({
+            const { error } = await supabase.auth.signInWithPassword({
               email: data.email,
               password: data.password,
             });
@@ -72,6 +73,9 @@ export function LoginForm({ className, ...props }: ComponentProps<"div">) {
             type={"password"}
             autoComplete={"current-password"}
           />
+        </FieldGroup>
+        <FieldSeparator className={"my-5"} />
+        <FieldGroup>
           {error && (
             <Field>
               <Alert variant={"destructive"}>
@@ -83,6 +87,12 @@ export function LoginForm({ className, ...props }: ComponentProps<"div">) {
             <Button type="submit">
               Login {loading && <Loader2 className={"animate-spin"} />}
             </Button>
+          </Field>
+          <Field className={"flex flex-row items-center justify-center gap-0"}>
+            <p>Forgot Your Password ?</p>
+            <Link href={"/auth/request-password-reset"} className={"underline"}>
+              Try Resetting it
+            </Link>
           </Field>
         </FieldGroup>
       </Form>
