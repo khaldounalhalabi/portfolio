@@ -18,6 +18,7 @@
     "build": "npm --prefix application run build",
     "start": "npm --prefix application run start",
     "lint": "npm --prefix application run lint",
-    "db:reset": "supabase stop && supabase start && supabase db reset"
+    "db:reset": "supabase stop && supabase start && supabase db reset",
+    "db:types": "supabase gen types typescript --local > ./application/integrations/supabase/database.types.ts"
   }
 }
