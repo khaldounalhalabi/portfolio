@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 
 import QueryClientProvider from "@/components/providers/QueryClientProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body
         className={`${sans.variable} ${heading.variable} min-h-full bg-background font-sans text-foreground`}
       >
+        <NextTopLoader />
         <Toaster />
         <QueryClientProvider>
           <TooltipProvider>{children}</TooltipProvider>
