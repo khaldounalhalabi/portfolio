@@ -1,0 +1,23 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "My Portfolio",
+  "homepage": "https://github.com/khaldounalhalabi/portfolio#readme",
+  "bugs": {
+    "url": "https://github.com/khaldounalhalabi/portfolio/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khaldounalhalabi/portfolio.git"
+  },
+  "license": "ISC",
+  "author": "Khaldoun Alhalabi",
+  "devDependencies": {},
+  "scripts": {
+    "dev": "npm --prefix application run dev",
+    "build": "npm --prefix application run build",
+    "start": "npm --prefix application run start",
+    "lint": "npm --prefix application run lint",
+    "db:reset": "supabase stop && supabase start && supabase db reset"
+  }
+}
