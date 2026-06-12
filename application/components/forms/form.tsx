@@ -149,7 +149,7 @@ function Form<
                       onClick={() => {
                         router.back();
                       }}
-                      disabled={disabled || methods.formState.isSubmitting}
+                      disabled={disabled || mutation.isPending}
                     >
                       Back
                     </Button>
@@ -157,10 +157,10 @@ function Form<
                   <Button
                     className={"cursor-pointer"}
                     type={"submit"}
-                    disabled={disabled || methods.formState.isSubmitting}
+                    disabled={disabled || mutation.isPending}
                   >
                     Submit{" "}
-                    {methods.formState.isSubmitting && (
+                    {mutation.isPending && (
                       <Loader2 className={"animate-spin"} />
                     )}
                   </Button>

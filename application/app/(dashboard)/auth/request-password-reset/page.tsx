@@ -10,7 +10,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const Page = () => {
+const RequestPasswordReset = () => {
   const [disabled, setDisabled] = useState(false);
   const validation = z.object({
     email: z.email(),
@@ -65,4 +65,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default RequestPasswordReset;

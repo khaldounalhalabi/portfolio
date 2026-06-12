@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const Page = () => {
+const ResetPassword = () => {
   const router = useRouter();
   const validation = z
     .object({
@@ -71,4 +71,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ResetPassword;
