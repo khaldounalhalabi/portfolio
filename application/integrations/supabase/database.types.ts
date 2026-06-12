@@ -174,19 +174,19 @@ export type Database = {
           id: string
           key: string
           structure: Json
-          value: string
+          value: Json
         }
         Insert: {
           id?: string
           key: string
           structure: Json
-          value: string
+          value: Json
         }
         Update: {
           id?: string
           key?: string
           structure?: Json
-          value?: string
+          value?: Json
         }
         Relationships: []
       }

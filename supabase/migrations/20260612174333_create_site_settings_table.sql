@@ -2,7 +2,7 @@ create table if not exists site_settings
 (
     id        uuid  not null unique default gen_random_uuid(),
     key       text  not null unique,
-    value     text  not null,
+    value     jsonb  not null,
     structure jsonb not null
 );
 
