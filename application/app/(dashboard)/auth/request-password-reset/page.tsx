@@ -24,7 +24,7 @@ const Page = () => {
           const { data, error } = await supabase.auth.resetPasswordForEmail(
             formData.email,
             {
-              redirectTo: "/auth/reset-password",
+              redirectTo: `${window.location.origin}/auth/confirm?next=/auth/reset-password`,
             },
           );
 

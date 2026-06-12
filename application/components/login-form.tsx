@@ -2,26 +2,36 @@
 
 import Form from "@/components/forms/form";
 import FormInput from "@/components/forms/form-input";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldSeparator } from "@/components/ui/field";
 import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { AuthError } from "@supabase/supabase-js";
 import { LayoutDashboardIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { z } from "zod";
 
 export function LoginForm({ className, ...props }: ComponentProps<"div">) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<AuthError | null>(null);
   const router = useRouter();
   const validation = z.object({
     email: z.email(),
     password: z.string().max(255),
   });
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session) {
+        router.replace("/dashboard");
+      }
+    };
+
+    checkSession();
+  }, [router]);
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Form
@@ -29,28 +39,20 @@ export function LoginForm({ className, ...props }: ComponentProps<"div">) {
         validation={validation}
         onSubmit={async (data) => {
           setLoading(true);
-          setError(null);
-          try {
-            const { error } = await supabase.auth.signInWithPassword({
-              email: data.email,
-              password: data.password,
-            });
-            if (!error) {
-              router.replace("/dashboard");
-            } else {
-              setError(error);
-            }
-          } catch (e: unknown) {
-            setError(
-              new AuthError(
-                (e as unknown as Error)?.message ?? "Failed To Login",
-                500,
-                "unexpected",
-              ),
-            );
-          } finally {
-            setLoading(false);
+          const { error } = await supabase.auth.signInWithPassword({
+            email: data.email,
+            password: data.password,
+          });
+          if (error) {
+            throw error;
           }
+          setLoading(false);
+        }}
+        onSuccess={() => {
+          router.replace("/dashboard");
+        }}
+        onError={() => {
+          setLoading(false);
         }}
       >
         <FieldGroup>
@@ -76,15 +78,8 @@ export function LoginForm({ className, ...props }: ComponentProps<"div">) {
         </FieldGroup>
         <FieldSeparator className={"my-5"} />
         <FieldGroup>
-          {error && (
-            <Field>
-              <Alert variant={"destructive"}>
-                <AlertTitle>{error.message}</AlertTitle>
-              </Alert>
-            </Field>
-          )}
           <Field>
-            <Button type="submit">
+            <Button disabled={loading} type="submit">
               Login {loading && <Loader2 className={"animate-spin"} />}
             </Button>
           </Field>

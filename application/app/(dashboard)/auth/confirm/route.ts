@@ -1,4 +1,3 @@
-import { type EmailOtpType } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
 // The client you created from the Server-Side Auth instructions
@@ -6,17 +5,23 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const code = searchParams.get("code");
   const token_hash = searchParams.get("token_hash");
-  const type = searchParams.get("type") as EmailOtpType | null;
   const next = searchParams.get("next") ?? "/";
-  const redirectTo = request.nextUrl.clone();
-  redirectTo.pathname = next;
+  const redirectTo = new URL(next, request.url);
 
-  if (token_hash && type) {
+  if (code) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) {
+      return NextResponse.redirect(redirectTo);
+    }
+  } else if (token_hash) {
     const supabase = await createClient();
 
     const { error } = await supabase.auth.verifyOtp({
-      type,
+      type: "recovery",
       token_hash,
     });
     if (!error) {
@@ -25,6 +30,9 @@ export async function GET(request: NextRequest) {
   }
 
   // return the user to an error page with some instructions
-  redirectTo.pathname = "/auth/auth-code-error";
-  return NextResponse.redirect(redirectTo);
+  const errorUrl = new URL("/auth/auth-code-error", request.url);
+  if (next) {
+    errorUrl.searchParams.set("next", next);
+  }
+  return NextResponse.redirect(errorUrl);
 }

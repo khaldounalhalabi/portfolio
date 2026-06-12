@@ -100,6 +100,7 @@ function Form<
     },
     onSuccess: onSuccess,
     onError: (error) => {
+      setError(error);
       onError?.(error);
     },
     resource: invalidateQueryKey,
@@ -138,35 +139,33 @@ function Form<
               </Field>
             )}
             {withSubmitButton && (
-              <>
-                <Field>
-                  <div className={"flex w-full items-center justify-between"}>
-                    {withBackButton && (
-                      <Button
-                        className={"cursor-pointer"}
-                        variant={"secondary"}
-                        type={"button"}
-                        onClick={() => {
-                          router.back();
-                        }}
-                        disabled={disabled}
-                      >
-                        Back
-                      </Button>
-                    )}
+              <Field>
+                <div className={"flex w-full items-center justify-between"}>
+                  {withBackButton && (
                     <Button
                       className={"cursor-pointer"}
-                      type={"submit"}
-                      disabled={disabled}
+                      variant={"secondary"}
+                      type={"button"}
+                      onClick={() => {
+                        router.back();
+                      }}
+                      disabled={disabled || methods.formState.isSubmitting}
                     >
-                      Submit{" "}
-                      {methods.formState.isSubmitting && (
-                        <Loader2 className={"animate-spin"} />
-                      )}
+                      Back
                     </Button>
-                  </div>
-                </Field>
-              </>
+                  )}
+                  <Button
+                    className={"cursor-pointer"}
+                    type={"submit"}
+                    disabled={disabled || methods.formState.isSubmitting}
+                  >
+                    Submit{" "}
+                    {methods.formState.isSubmitting && (
+                      <Loader2 className={"animate-spin"} />
+                    )}
+                  </Button>
+                </div>
+              </Field>
             )}
           </FieldGroup>
         </form>
