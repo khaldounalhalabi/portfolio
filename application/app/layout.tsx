@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 
+import QueryClientProvider from "@/components/providers/QueryClientProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${sans.variable} ${heading.variable} min-h-full bg-background font-sans text-foreground`}
       >
-        <TooltipProvider>{children}</TooltipProvider>
+        <QueryClientProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
