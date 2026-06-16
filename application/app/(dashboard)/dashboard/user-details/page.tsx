@@ -16,7 +16,6 @@ const UserDetails = async () => {
   } = await supabase.auth.getUser();
   if (!user) {
     redirect("/auth/login");
-    return;
   }
   return (
     <Card className={"m-5"}>

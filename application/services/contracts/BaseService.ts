@@ -5,7 +5,6 @@ import {
   TablesUpdate,
 } from "@/integrations/supabase/database.types";
 import { supabase } from "@/lib/supabase/client";
-import { createClient } from "@/lib/supabase/server";
 import type {
   PostgrestResponse,
   PostgrestSingleResponse,
@@ -15,9 +14,8 @@ import type {
 export type TableName = keyof Database["public"]["Tables"];
 type TableRecord = Tables<TableName>;
 
-export type RECORD<MODEL extends TableName | TableRecord> = MODEL extends TableName
-  ? Tables<MODEL>
-  : MODEL;
+export type RECORD<MODEL extends TableName | TableRecord> =
+  MODEL extends TableName ? Tables<MODEL> : MODEL;
 
 export type RecordWithRelations<
   MODEL extends TableName | TableRecord,
@@ -28,15 +26,15 @@ type TableNameFromRecord<MODEL extends TableRecord> = {
   [K in TableName]: MODEL extends Tables<K> ? K : never;
 }[TableName];
 
-export type Insert<MODEL extends TableName | TableRecord> = MODEL extends TableName
-  ? TablesInsert<MODEL>
-  : MODEL extends TableRecord
-    ? TablesInsert<TableNameFromRecord<MODEL>>
-    : never;
+export type Insert<MODEL extends TableName | TableRecord> =
+  MODEL extends TableName
+    ? TablesInsert<MODEL>
+    : MODEL extends TableRecord
+      ? TablesInsert<TableNameFromRecord<MODEL>>
+      : never;
 
-export type Update<MODEL extends TableName | TableRecord> = MODEL extends TableName
-  ? TablesUpdate<MODEL>
-  : Partial<MODEL>;
+export type Update<MODEL extends TableName | TableRecord> =
+  MODEL extends TableName ? TablesUpdate<MODEL> : Partial<MODEL>;
 
 export type PaginationResult<MODEL extends TableName | TableRecord> = {
   current_page: number;
@@ -110,11 +108,6 @@ export function BaseService<SERVICE, MODEL extends TableName | TableRecord>() {
       throw new Error(
         "You need to define a getTable method within your service which determines which table is your service dealing with",
       );
-    }
-
-    public async server() {
-      this.supabase = await createClient();
-      return this;
     }
 
     public async all(): Promise<RECORD<MODEL>[]> {
