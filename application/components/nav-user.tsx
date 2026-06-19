@@ -106,8 +106,8 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => {
-                supabase.auth.signOut();
+              onClick={async () => {
+                await supabase.auth.signOut();
                 router.replace("/auth/login");
               }}
             >

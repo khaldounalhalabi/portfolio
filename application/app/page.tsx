@@ -4,13 +4,17 @@ import Link from "next/link";
 import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
 import { ProjectMedia } from "@/components/portfolio/project-media";
 import { SiteLayout } from "@/components/portfolio/site-layout";
+import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
 import { getPortfolioData } from "@/lib/portfolio/queries";
+import SiteSettingService from "@/services/SiteSettingService";
 
 export default async function HomePage() {
   const portfolio = await getPortfolioData();
   const featuredProject =
     portfolio.projects.find((project) => project.featured) ??
     portfolio.projects[0];
+
+  const siteSettings = await SiteSettingService.make().all();
 
   return (
     <SiteLayout
@@ -26,25 +30,36 @@ export default async function HomePage() {
             <div className="inline-flex w-fit items-center gap-3 rounded-full border border-white/10 bg-surface-container-low px-4 py-2">
               <span className="h-2 w-2 rounded-full bg-secondary" />
               <span className="text-xs tracking-[0.25em] text-secondary uppercase">
-                {portfolio.contactInfo.availability}
+                Available for new opportunities
               </span>
             </div>
             <h1 className="mt-8 max-w-5xl font-heading text-5xl font-bold tracking-tight text-primary md:text-7xl lg:text-8xl">
               Khaldoun Alhalabi
               <span className="text-glow mt-3 block bg-linear-to-r from-primary to-primary-container bg-clip-text text-transparent">
-                Full-Stack Architect
+                {
+                  siteSettings.find(
+                    (s) => s.key == SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME,
+                  )?.value
+                }
               </span>
             </h1>
             <div className="mt-8 flex flex-wrap gap-4 text-xs tracking-[0.3em] text-on-surface-variant uppercase md:text-sm">
-              <span>PHP & Laravel</span>
-              <span>React & Next.js</span>
-              <span>Supabase & System Design</span>
+              {siteSettings
+                .find((s) => s.key == SiteSettingKeyEnum.HERO_SKILLS)
+                ?.value.map((skill, index) => (
+                  <span key={index}>{skill}</span>
+                ))}
             </div>
-            <p className="mt-8 max-w-3xl text-lg leading-8 text-on-surface-variant md:text-xl">
-              Backend-first engineering with a strong frontend eye. I build
-              scalable systems, sharp interfaces, and admin workflows that keep
-              content maintainable after launch.
-            </p>
+            <div className="mt-8 max-w-3xl text-lg leading-8 text-on-surface-variant md:text-xl">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html:
+                    siteSettings.find(
+                      (s) => s.key == SiteSettingKeyEnum.HERO_PARAGRAPH,
+                    )?.value ?? "",
+                }}
+              />
+            </div>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/projects"

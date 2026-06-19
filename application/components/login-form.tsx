@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboardIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, useState } from "react";
 import { z } from "zod";
 
 export function LoginForm({ className, ...props }: ComponentProps<"div">) {
@@ -19,19 +19,7 @@ export function LoginForm({ className, ...props }: ComponentProps<"div">) {
     email: z.email(),
     password: z.string().max(255),
   });
-  useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
 
-      if (session) {
-        router.replace("/dashboard");
-      }
-    };
-
-    checkSession();
-  }, [router]);
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Form
