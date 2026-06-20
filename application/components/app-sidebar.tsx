@@ -13,7 +13,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { LayoutDashboardIcon, SettingsIcon } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  LayoutDashboardIcon,
+  SettingsIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
@@ -28,6 +32,11 @@ const data = {
       title: "Site Settings",
       url: "/dashboard/site-settings",
       icon: <SettingsIcon />,
+    },
+    {
+      title: "Experiences",
+      url: "/dashboard/experiences",
+      icon: <BriefcaseBusiness />,
     },
   ],
 };

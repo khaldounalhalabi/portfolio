@@ -1,12 +1,13 @@
 import "server-only";
 
+import { format } from "date-fns";
 import { unstable_noStore as noStore } from "next/cache";
 
+import { Tables } from "@/integrations/supabase/database.types";
 import {
   createSupabaseServerClient,
   hasSupabaseServerEnv,
 } from "@/integrations/supabase/server";
-import { Tables } from "@/integrations/supabase/database.types";
 import {
   defaultContactInfo,
   defaultContactLinks,
@@ -18,6 +19,7 @@ import {
 import type {
   ContactInfo,
   ContactLink,
+  ExperienceItem,
   PortfolioData,
   Project,
   ProjectTech,
@@ -30,6 +32,7 @@ type ProjectRow = Tables<"projects">;
 type SkillGroupRow = Tables<"skill_groups">;
 type ContactInfoRow = Tables<"contact_info">;
 type ContactLinkRow = Tables<"contact_links">;
+type ExperienceRow = Tables<"experiences">;
 
 function getProjectImageUrl(imagePath: string | null) {
   if (!imagePath) {
@@ -60,7 +63,7 @@ function mapProject(row: ProjectRow): Project {
     problem: row.problem,
     solution: row.solution,
     features: row.features ?? [],
-    techStack: ((row.tech_stack as ProjectTech[] | null) ?? []),
+    techStack: (row.tech_stack as ProjectTech[] | null) ?? [],
     featured: row.featured ?? false,
     displayOrder: row.display_order ?? 0,
   };
@@ -101,25 +104,58 @@ function mapContactLink(row: ContactLinkRow): ContactLink {
   };
 }
 
+function formatExperiencePeriod(row: Pick<ExperienceRow, "from" | "to">) {
+  const from = format(new Date(row.from), "MMM yyyy");
+  const to = row.to ? format(new Date(row.to), "MMM yyyy") : "Present";
+
+  return `${from} - ${to}`;
+}
+
+function mapExperience(row: ExperienceRow): ExperienceItem {
+  return {
+    id: row.id,
+    company: row.company_name,
+    role: row.position,
+    period: formatExperiencePeriod(row),
+    description: row.job_description,
+    tags: [row.location].filter(Boolean),
+    isCurrent: !row.to,
+    companyDescription: row.company_description,
+    companyWebsite: row.company_website,
+    from: row.from,
+    location: row.location,
+    to: row.to,
+  };
+}
+
 async function fetchPortfolioDataFromSupabase(): Promise<PortfolioData> {
   const supabase = createSupabaseServerClient();
 
-  const [projectsResult, skillsResult, contactInfoResult, contactLinksResult] =
-    await Promise.all([
-      supabase
-        .from("projects")
-        .select("*")
-        .order("display_order", { ascending: true }),
-      supabase
-        .from("skill_groups")
-        .select("*")
-        .order("display_order", { ascending: true }),
-      supabase.from("contact_info").select("*").eq("id", "primary").single(),
-      supabase
-        .from("contact_links")
-        .select("*")
-        .order("display_order", { ascending: true }),
-    ]);
+  const [
+    projectsResult,
+    skillsResult,
+    contactInfoResult,
+    contactLinksResult,
+    experiencesResult,
+  ] = await Promise.all([
+    supabase
+      .from("projects")
+      .select("*")
+      .order("display_order", { ascending: true }),
+    supabase
+      .from("skill_groups")
+      .select("*")
+      .order("display_order", { ascending: true }),
+    supabase.from("contact_info").select("*").eq("id", "primary").single(),
+    supabase
+      .from("contact_links")
+      .select("*")
+      .order("display_order", { ascending: true }),
+    supabase
+      .from("experiences")
+      .select("*")
+      .order("from", { ascending: false }),
+  ]);
 
   if (projectsResult.error) {
     throw projectsResult.error;
@@ -133,15 +169,19 @@ async function fetchPortfolioDataFromSupabase(): Promise<PortfolioData> {
   if (contactLinksResult.error) {
     throw contactLinksResult.error;
   }
+  if (experiencesResult.error) {
+    throw experiencesResult.error;
+  }
 
   return {
     projects: projectsResult.data?.map(mapProject) ?? defaultProjects,
-    experience: defaultExperience,
+    experience: experiencesResult.data?.map(mapExperience) ?? defaultExperience,
     skillGroups: skillsResult.data?.map(mapSkillGroup) ?? defaultSkillGroups,
     contactInfo: contactInfoResult.data
       ? mapContactInfo(contactInfoResult.data)
       : defaultContactInfo,
-    contactLinks: contactLinksResult.data?.map(mapContactLink) ?? defaultContactLinks,
+    contactLinks:
+      contactLinksResult.data?.map(mapContactLink) ?? defaultContactLinks,
   };
 }
 
@@ -169,8 +209,9 @@ export async function getDashboardSummary() {
 
   return {
     projectCount: portfolio.projects.length,
-    featuredProjectCount: portfolio.projects.filter((project) => project.featured)
-      .length,
+    featuredProjectCount: portfolio.projects.filter(
+      (project) => project.featured,
+    ).length,
     skillCount: portfolio.skillGroups.reduce(
       (total, group) => total + group.skills.length,
       0,

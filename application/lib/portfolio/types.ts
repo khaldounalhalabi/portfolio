@@ -32,6 +32,11 @@ export type ExperienceItem = {
   description: string;
   tags: string[];
   isCurrent?: boolean;
+  companyDescription?: string | null;
+  companyWebsite?: string | null;
+  from?: string | null;
+  location?: string | null;
+  to?: string | null;
 };
 
 export type SkillGroup = {

@@ -103,6 +103,42 @@ export type Database = {
         }
         Relationships: []
       }
+      experiences: {
+        Row: {
+          company_description: string | null
+          company_name: string
+          company_website: string | null
+          from: string
+          id: string
+          job_description: string
+          location: string
+          position: string
+          to: string | null
+        }
+        Insert: {
+          company_description?: string | null
+          company_name: string
+          company_website?: string | null
+          from: string
+          id?: string
+          job_description: string
+          location: string
+          position: string
+          to?: string | null
+        }
+        Update: {
+          company_description?: string | null
+          company_name?: string
+          company_website?: string | null
+          from?: string
+          id?: string
+          job_description?: string
+          location?: string
+          position?: string
+          to?: string | null
+        }
+        Relationships: []
+      }
       projects: {
         Row: {
           category: string

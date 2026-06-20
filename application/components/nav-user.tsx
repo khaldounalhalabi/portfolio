@@ -38,8 +38,12 @@ export function NavUser() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        await supabase.auth.signOut();
+      } else {
+        setUser(data.user);
+      }
     })();
   }, [pathname]);
 
