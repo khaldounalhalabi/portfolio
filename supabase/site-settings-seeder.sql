@@ -30,7 +30,7 @@ values ('hero_sentence_under_name', to_jsonb(cast('Full-Stack Architect' as text
         '{
           "type": "string"
         }'),
-       ('linkedin_url',
+       ('linked_in',
         to_jsonb(cast('https://linkedin.com' as text)),
         '{
           "type": "string"
@@ -49,4 +49,20 @@ values ('hero_sentence_under_name', to_jsonb(cast('Full-Stack Architect' as text
         to_jsonb(cast('https://stackoverflow.com' as text)),
         '{
           "type": "string"
-        }');
+        }'),
+       ('telegram',
+        to_jsonb(cast('https://t.me/khaldounalhalabi' as text)),
+        '{
+          "type": "string"
+        }'),
+       ('whatsapp',
+        to_jsonb(cast('https://wa.me/963956926129' as text)),
+        '{
+          "type": "string"
+        }'),
+       ('pre_filled_message',
+        to_jsonb(cast('Hi Khaldoun! 👋 I''m interested in creating a new project and would like to discuss my requirements with you. When are you available?' as text)),
+        '{
+          "type": "string"
+        }')
+on conflict do nothing;

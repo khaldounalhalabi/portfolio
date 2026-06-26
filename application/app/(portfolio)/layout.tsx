@@ -1,16 +1,18 @@
-import { getPortfolioData } from "@/lib/portfolio/queries";
 import { SiteLayout } from "@/components/portfolio/site-layout";
+import SiteSettingsProvider from "@/components/providers/site-settings-provider";
+import SiteSettingService from "@/services/SiteSettingService";
+import { ReactNode } from "react";
 
 export default async function PortfolioLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
-  const { contactInfo, contactLinks } = await getPortfolioData();
+  const siteSettings = await SiteSettingService.make().all();
 
   return (
-    <SiteLayout contactInfo={contactInfo} contactLinks={contactLinks}>
-      {children}
-    </SiteLayout>
+    <SiteSettingsProvider siteSettings={siteSettings}>
+      <SiteLayout>{children}</SiteLayout>
+    </SiteSettingsProvider>
   );
 }

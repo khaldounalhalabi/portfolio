@@ -1,30 +1,48 @@
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
 import { Tables } from "@/integrations/supabase/database.types";
 type SiteSettingBase = Omit<Tables<"site_settings">, "structure" | "value">;
-interface StringStructure extends SiteSettingBase {
-  structure: {
-    type: "string";
-  };
+interface StringStructure<
+  K extends SiteSettingKeyEnum,
+> extends SiteSettingBase {
+  key: K;
+  structure: { type: "string" };
   value: string;
-  key: SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME;
 }
 
-interface ArrayStructure extends SiteSettingBase {
+interface ArrayStructure<K extends SiteSettingKeyEnum> extends SiteSettingBase {
   structure: {
     type: "array";
   };
   value: string[];
-  key: SiteSettingKeyEnum.HERO_SKILLS;
+  key: K;
 }
 
-interface ParagraphStructure extends SiteSettingBase {
+interface ParagraphStructure<
+  K extends SiteSettingKeyEnum,
+> extends SiteSettingBase {
   structure: {
     type: "paragraph";
   };
   value: string;
-  key: SiteSettingKeyEnum.HERO_PARAGRAPH;
+  key: K;
 }
 
-type SiteSetting = ArrayStructure | ParagraphStructure | StringStructure;
+type SiteSetting =
+  // Array Structure
+  | ArrayStructure<SiteSettingKeyEnum.HERO_SKILLS>
+  // Paragraph Structure
+  | ParagraphStructure<SiteSettingKeyEnum.HERO_PARAGRAPH>
+  // String Structure
+  | StringStructure<SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME>
+  | StringStructure<SiteSettingKeyEnum.EMAIL>
+  | StringStructure<SiteSettingKeyEnum.PHONE>
+  | StringStructure<SiteSettingKeyEnum.LOCATION>
+  | StringStructure<SiteSettingKeyEnum.LINKED_IN>
+  | StringStructure<SiteSettingKeyEnum.GITHUB>
+  | StringStructure<SiteSettingKeyEnum.GITLAB>
+  | StringStructure<SiteSettingKeyEnum.WHATSAPP>
+  | StringStructure<SiteSettingKeyEnum.TELEGRAM>
+  | StringStructure<SiteSettingKeyEnum.PRE_FILLED_MESSAGE>
+  | StringStructure<SiteSettingKeyEnum.STACKOVERFLOW>;
 
 export default SiteSetting;
