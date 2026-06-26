@@ -8,6 +8,7 @@ class SkillCategoryService extends BaseService<
   getTable(): TableName {
     return "skill_categories";
   }
+
 }
 
 export default SkillCategoryService;

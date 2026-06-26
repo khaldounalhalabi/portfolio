@@ -110,10 +110,16 @@ export function BaseService<SERVICE, MODEL extends TableName | TableRecord>() {
       );
     }
 
-    public async all(): Promise<RECORD<MODEL>[]> {
+    public async all<
+      RELATIONS extends readonly TableName[] | undefined = undefined,
+    >(relations?: RELATIONS): Promise<RECORD<MODEL>[]> {
+      const relationsArray = (relations ?? []) as TableName[];
+      const relationString = this.getRelationString(relationsArray);
       const { data, error } = (await this.supabase
         .from(this.table)
-        .select("*")) as PostgrestResponse<RECORD<MODEL>>;
+        .select(
+          relationString.length > 0 ? `*, ${relationString}` : "*",
+        )) as PostgrestResponse<RecordWithRelations<MODEL, RELATIONS>>;
 
       if (error) {
         throw error;

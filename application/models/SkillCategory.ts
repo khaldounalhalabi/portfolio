@@ -1,5 +1,8 @@
 import { Tables } from "@/integrations/supabase/database.types";
+import Skill from "@/models/Skill";
 
-type SkillCategory = Tables<"skill_categories">;
+interface SkillCategory extends Tables<"skill_categories"> {
+  skills?: Skill[];
+}
 
 export default SkillCategory;
