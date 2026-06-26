@@ -28,20 +28,19 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   const getUser = async () => {
-    setIsLoading(true);
-    await supabase.auth
-      .getUser()
-      .then((result) => {
-        const u = result.data.user;
-        setUser(u);
+    try {
+      setIsLoading(true);
+      const result = await supabase.auth.getUser();
+      const u = result.data.user;
+      setUser(u);
 
-        if (!u) {
-          router.replace("/auth/login");
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      if (!u) {
+        await logout();
+      }
+    } catch (e) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useLayoutEffect(() => {

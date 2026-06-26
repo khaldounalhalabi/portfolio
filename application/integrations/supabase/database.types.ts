@@ -283,6 +283,32 @@ export type Database = {
         }
         Relationships: []
       }
+      skills: {
+        Row: {
+          id: string
+          name: string
+          skill_category_id: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          skill_category_id: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          skill_category_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skills_skill_category_id_fkey"
+            columns: ["skill_category_id"]
+            isOneToOne: false
+            referencedRelation: "skill_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

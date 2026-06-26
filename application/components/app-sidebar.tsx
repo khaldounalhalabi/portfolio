@@ -13,6 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { IconTools } from "@tabler/icons-react";
 import {
   BriefcaseBusiness,
   LayoutDashboardIcon,
@@ -43,6 +44,11 @@ const data = {
       title: "Skill Categories",
       url: "/dashboard/skill-categories",
       icon: <ShapesIcon />,
+    },
+    {
+      title: "Skills",
+      url: "/dashboard/skills",
+      icon: <IconTools />,
     },
   ],
 };
