@@ -126,7 +126,7 @@ The `.env.example` file lists the required keys. The application uses `NEXT_PUBL
 ### Supabase
 - **Auth**: Email/password authentication. Auth confirmation route at `app/(dashboard)/auth/confirm/route.ts`.
 - **Database**: PostgreSQL with Row Level Security (RLS) policies. Tables: `projects`, `skill_groups`, `contact_info`, `contact_links`, `experiences`, `site_settings`.
-- **Storage**: `portfolio-images` bucket for project images.
+- **Storage**: use supabase storage buckets for project images.
 - **Local Dev**: Supabase CLI with `config.toml`. Local services run on ports 54321 (API), 54322 (DB), 54323 (Studio), 54324 (Inbucket).
 - **Type Generation**: `npm run db:types` generates `database.types.ts` from the local schema.
 
