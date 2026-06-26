@@ -229,16 +229,19 @@ export type Database = {
       skill_categories: {
         Row: {
           description: string
+          icon: string
           id: string
           name: string
         }
         Insert: {
           description: string
+          icon: string
           id?: string
           name: string
         }
         Update: {
           description?: string
+          icon?: string
           id?: string
           name?: string
         }

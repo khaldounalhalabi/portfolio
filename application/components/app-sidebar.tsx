@@ -17,6 +17,7 @@ import {
   BriefcaseBusiness,
   LayoutDashboardIcon,
   SettingsIcon,
+  ShapesIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar, AvatarFallback } from "./ui/avatar";
@@ -37,6 +38,11 @@ const data = {
       title: "Experiences",
       url: "/dashboard/experiences",
       icon: <BriefcaseBusiness />,
+    },
+    {
+      title: "Skill Categories",
+      url: "/dashboard/skill-categories",
+      icon: <ShapesIcon />,
     },
   ],
 };
