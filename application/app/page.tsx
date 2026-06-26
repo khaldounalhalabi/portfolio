@@ -7,6 +7,7 @@ import { SiteLayout } from "@/components/portfolio/site-layout";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
 import { getPortfolioData } from "@/lib/portfolio/queries";
 import SiteSettingService from "@/services/SiteSettingService";
+import SkillCategoryService from "@/services/SkillCategoryService";
 
 export default async function HomePage() {
   const portfolio = await getPortfolioData();
@@ -15,6 +16,7 @@ export default async function HomePage() {
     portfolio.projects[0];
 
   const siteSettings = await SiteSettingService.make().all();
+  const skillCategories = await SkillCategoryService.make().all(["skills"]);
 
   return (
     <SiteLayout
@@ -156,11 +158,11 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              {portfolio.skillGroups.map((group) => (
+              {skillCategories.map((group) => (
                 <div
                   key={group.id}
-                  className={`rounded-3xl border p-6 ${
-                    group.isHighlight
+                  className={`rounded-[2rem] border p-6 ${
+                    group.is_highlighted
                       ? "border-primary-container/30 bg-surface-container"
                       : "border-white/6 bg-surface-container-low"
                   }`}
@@ -168,24 +170,24 @@ export default async function HomePage() {
                   <PortfolioIcon
                     name={group.icon}
                     className={`h-6 w-6 ${
-                      group.isHighlight
+                      group.is_highlighted
                         ? "text-primary-container"
                         : "text-secondary"
                     }`}
                   />
-                  <h3 className="mt-5 font-heading text-2xl font-bold text-primary">
-                    {group.title}
+                  <h3 className="mt-4 font-heading text-2xl font-bold text-primary">
+                    {group.name}
                   </h3>
                   <p className="mt-3 text-sm leading-7 text-on-surface-variant">
                     {group.description}
                   </p>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    {group.skills.map((skill) => (
+                    {group.skills?.map((skill) => (
                       <span
-                        key={skill}
+                        key={skill.name}
                         className="rounded-full bg-surface-container-high px-3 py-1 text-xs text-on-surface-variant"
                       >
-                        {skill}
+                        {skill.name}
                       </span>
                     ))}
                   </div>

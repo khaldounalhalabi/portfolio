@@ -52,21 +52,21 @@ function TimelineItem({
   return (
     <div
       className={cn(
-        "relative grid min-h-48 grid-cols-[2rem_1fr] gap-5 md:grid-cols-[1fr_4rem_1fr] md:gap-8",
+        "relative grid min-h-48 grid-cols-1 gap-5 md:grid-cols-2 md:gap-8",
         index > 0 && "md:-mt-10",
       )}
     >
       <div
         className={cn(
-          "md:col-start-1",
-          isRight ? "md:col-start-3" : "md:col-start-1",
+          "md:col-start-1 mx-5 my-5",
+          isRight ? "md:col-start-2" : "md:col-start-1",
         )}
       >
         <Sheet>
           <SheetTrigger asChild>
             <button
               className={cn(
-                "cursor-pointer group w-full rounded-lg border border-white/6 bg-surface-container-low p-5 text-left shadow-sm transition hover:border-primary-container/35 hover:bg-surface-container focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:p-6",
+                "group w-full cursor-pointer rounded-lg border border-white/6 bg-surface-container-low p-5 text-left shadow-sm transition hover:border-primary-container/35 hover:bg-surface-container focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:p-6",
                 isRight ? "md:mt-16" : "md:mt-0",
               )}
               type="button"
@@ -94,7 +94,7 @@ function TimelineItem({
                 </p>
               ) : null}
               <div className="mt-5 flex items-center justify-between gap-4">
-                <span className="hover:underline text-sm font-medium text-primary-container">
+                <span className="text-sm font-medium text-primary-container hover:underline">
                   View details
                 </span>
                 <span className="h-2 w-2 rounded-full bg-secondary transition group-hover:scale-125" />
@@ -105,7 +105,7 @@ function TimelineItem({
         </Sheet>
       </div>
 
-      <div className="absolute -top-1/2 left-0 flex h-8 w-8 items-center justify-center rounded-full border border-primary-container/30 bg-background md:left-1/2 md:-translate-x-1/2">
+      <div className="absolute top-1/2 left-0 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-primary-container/30 bg-background md:left-1/2 md:-translate-x-1/2">
         <span className="h-3 w-3 rounded-full bg-primary-container shadow-[0_0_22px_rgb(0_245_255/45%)]" />
       </div>
     </div>
