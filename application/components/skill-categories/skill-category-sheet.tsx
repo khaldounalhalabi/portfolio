@@ -20,9 +20,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { iconNames } from "lucide-react/dynamic";
-import FormLucideIconSelect from "@/components/skill-categories/form-lucide-icon-select";
+import FormIconPicker from "@/components/forms/form-icon-picker";
 
-const lucideIconNames = new Set<string>(iconNames);
+const iconNamesSet = new Set<string>(iconNames as unknown as string[]);
 
 const skillCategorySchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
@@ -31,7 +31,7 @@ const skillCategorySchema = z.object({
     .string()
     .trim()
     .min(1, "Icon is required")
-    .refine((value) => lucideIconNames.has(value), {
+    .refine((value) => iconNamesSet.has(value), {
       message: "Icon must be a valid Lucide icon",
     }),
 });
@@ -88,7 +88,7 @@ const SkillCategorySheet = ({ category }: { category?: SkillCategory }) => {
           >
             <FieldGroup>
               <FormInput name="name" label="Name" />
-               <FormLucideIconSelect name="icon" label="Icon" />
+              <FormIconPicker name="icon" label="Icon" />
               <FormTextarea name="description" label="Description" rows={5} />
             </FieldGroup>
           </Form>
