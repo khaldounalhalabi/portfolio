@@ -231,18 +231,21 @@ export type Database = {
           description: string
           icon: string
           id: string
+          is_highlighted: boolean
           name: string
         }
         Insert: {
           description: string
           icon: string
           id?: string
+          is_highlighted?: boolean
           name: string
         }
         Update: {
           description?: string
           icon?: string
           id?: string
+          is_highlighted?: boolean
           name?: string
         }
         Relationships: []

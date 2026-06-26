@@ -50,6 +50,7 @@ const SkillCategoriesIndex = async () => {
               <TableHead>Name</TableHead>
               <TableHead>Icon</TableHead>
               <TableHead>Description</TableHead>
+              <TableHead>Highlighted</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -69,6 +70,9 @@ const SkillCategoriesIndex = async () => {
                   }}
                 >
                   {category.description}
+                </TableCell>
+                <TableCell>
+                  {category.is_highlighted ? "Yes" : "No"}
                 </TableCell>
                 <TableCell>
                   <TableActions category={category as SkillCategory} />

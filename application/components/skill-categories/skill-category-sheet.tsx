@@ -20,6 +20,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { iconNames } from "lucide-react/dynamic";
+import FormCheckbox from "@/components/forms/form-checkbox";
 import FormIconPicker from "@/components/forms/form-icon-picker";
 
 const iconNamesSet = new Set<string>(iconNames as unknown as string[]);
@@ -34,6 +35,7 @@ const skillCategorySchema = z.object({
     .refine((value) => iconNamesSet.has(value), {
       message: "Icon must be a valid Lucide icon",
     }),
+  is_highlighted: z.boolean(),
 });
 
 type SkillCategoryFormData = z.output<typeof skillCategorySchema>;
@@ -90,6 +92,10 @@ const SkillCategorySheet = ({ category }: { category?: SkillCategory }) => {
               <FormInput name="name" label="Name" />
               <FormIconPicker name="icon" label="Icon" />
               <FormTextarea name="description" label="Description" rows={5} />
+              <FormCheckbox
+                name="is_highlighted"
+                label="Highlighted"
+              />
             </FieldGroup>
           </Form>
         </div>
@@ -103,6 +109,7 @@ function getDefaultValues(category?: SkillCategory) {
     name: category?.name ?? "",
     icon: category?.icon ?? "",
     description: category?.description ?? "",
+    is_highlighted: category?.is_highlighted ?? false,
   };
 }
 
@@ -111,6 +118,7 @@ function toPayload(data: SkillCategoryFormData) {
     name: data.name,
     icon: data.icon,
     description: data.description,
+    is_highlighted: data.is_highlighted,
   };
 }
 

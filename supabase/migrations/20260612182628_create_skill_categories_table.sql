@@ -1,9 +1,10 @@
 create table if not exists skill_categories
 (
-    id          uuid not null unique default gen_random_uuid(),
-    name        text not null unique,
-    description text not null,
-    icon      text not null
+    id             uuid not null unique default gen_random_uuid(),
+    name           text not null unique,
+    description    text not null,
+    icon           text not null,
+    is_highlighted boolean not null default false
 );
 
 alter table skill_categories
