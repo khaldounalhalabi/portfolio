@@ -31,19 +31,17 @@ export default async function ExperiencePage() {
             <div
               key={group.id}
               className={`rounded-[2rem] border p-6 ${
-                // group.isHighlight
-                //   ? "border-primary-container/30 bg-surface-container"
-                //   :
-                "border-white/6 bg-surface-container-low"
+                group.is_highlighted
+                  ? "border-primary-container/30 bg-surface-container"
+                  : "border-white/6 bg-surface-container-low"
               }`}
             >
               <PortfolioIcon
                 name={group.icon}
                 className={`h-6 w-6 ${
-                  // group.isHighlight
-                  //   ? "text-primary-container"
-                  //   :
-                  "text-secondary"
+                  group.is_highlighted
+                    ? "text-primary-container"
+                    : "text-secondary"
                 }`}
               />
               <h3 className="mt-4 font-heading text-2xl font-bold text-primary">
