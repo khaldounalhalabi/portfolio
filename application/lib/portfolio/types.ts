@@ -1,7 +1,7 @@
 export type ProjectTech = {
   name: string;
   icon: string;
-  detail: string;
+  description: string;
 };
 
 export type Project = {
@@ -10,10 +10,10 @@ export type Project = {
   title: string;
   description: string;
   longDescription?: string | null;
-  imagePath?: string | null;
   imageUrl?: string | null;
   tags: string[];
   category: string;
+  employer?: string | null;
   role?: string | null;
   year?: string | null;
   problem?: string | null;
@@ -22,6 +22,7 @@ export type Project = {
   techStack: ProjectTech[];
   featured: boolean;
   displayOrder: number;
+  projectUrl?: string | null;
 };
 
 export type ExperienceItem = {

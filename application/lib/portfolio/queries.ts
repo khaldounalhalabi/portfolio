@@ -26,26 +26,11 @@ import type {
   SkillGroup,
 } from "@/lib/portfolio/types";
 
-const PROJECT_IMAGES_BUCKET = "portfolio-images";
-
 type ProjectRow = Tables<"projects">;
 type SkillGroupRow = Tables<"skill_groups">;
 type ContactInfoRow = Tables<"contact_info">;
 type ContactLinkRow = Tables<"contact_links">;
 type ExperienceRow = Tables<"experiences">;
-
-function getProjectImageUrl(imagePath: string | null) {
-  if (!imagePath) {
-    return null;
-  }
-
-  const supabase = createSupabaseServerClient();
-  const { data } = supabase.storage
-    .from(PROJECT_IMAGES_BUCKET)
-    .getPublicUrl(imagePath);
-
-  return data.publicUrl;
-}
 
 function mapProject(row: ProjectRow): Project {
   return {
@@ -54,10 +39,10 @@ function mapProject(row: ProjectRow): Project {
     title: row.title,
     description: row.description,
     longDescription: row.long_description,
-    imagePath: row.image_path,
-    imageUrl: getProjectImageUrl(row.image_path),
+    imageUrl: row.image_url || null,
     tags: row.tags ?? [],
     category: row.category,
+    employer: row.employer,
     role: row.role,
     year: row.year,
     problem: row.problem,
@@ -66,6 +51,7 @@ function mapProject(row: ProjectRow): Project {
     techStack: (row.tech_stack as ProjectTech[] | null) ?? [],
     featured: row.featured ?? false,
     displayOrder: row.display_order ?? 0,
+    projectUrl: row.project_url,
   };
 }
 

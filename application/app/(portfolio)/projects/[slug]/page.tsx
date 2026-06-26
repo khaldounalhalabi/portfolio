@@ -127,7 +127,7 @@ export default async function ProjectDetailPage({
                 <h3 className="mt-5 font-heading text-xl font-bold text-primary">
                   {tech.name}
                 </h3>
-                <p className="mt-2 text-sm text-on-surface-variant">{tech.detail}</p>
+                <p className="mt-2 text-sm text-on-surface-variant">{tech.description}</p>
               </div>
             ))}
           </div>

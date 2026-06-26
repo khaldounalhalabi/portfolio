@@ -34,75 +34,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      contact_info: {
-        Row: {
-          availability: string
-          created_at: string
-          email: string
-          id: string
-          intro: string
-          location: string
-          phone: string
-          resume_label: string | null
-          resume_url: string | null
-          updated_at: string
-        }
-        Insert: {
-          availability: string
-          created_at?: string
-          email: string
-          id: string
-          intro: string
-          location: string
-          phone: string
-          resume_label?: string | null
-          resume_url?: string | null
-          updated_at?: string
-        }
-        Update: {
-          availability?: string
-          created_at?: string
-          email?: string
-          id?: string
-          intro?: string
-          location?: string
-          phone?: string
-          resume_label?: string | null
-          resume_url?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      contact_links: {
-        Row: {
-          created_at: string
-          display_order: number
-          icon: string
-          id: string
-          label: string
-          updated_at: string
-          url: string
-        }
-        Insert: {
-          created_at?: string
-          display_order?: number
-          icon?: string
-          id: string
-          label: string
-          updated_at?: string
-          url: string
-        }
-        Update: {
-          created_at?: string
-          display_order?: number
-          icon?: string
-          id?: string
-          label?: string
-          updated_at?: string
-          url?: string
-        }
-        Relationships: []
-      }
       experiences: {
         Row: {
           company_description: string | null
@@ -145,13 +76,14 @@ export type Database = {
           created_at: string
           description: string
           display_order: number
+          employer: string | null
           featured: boolean
           features: string[]
           id: string
-          image_path: string | null
           image_url: string
           long_description: string | null
           problem: string | null
+          project_url: string | null
           role: string | null
           slug: string
           solution: string | null
@@ -166,15 +98,16 @@ export type Database = {
           created_at?: string
           description?: string
           display_order?: number
+          employer?: string | null
           featured?: boolean
           features?: string[]
           id?: string
-          image_path?: string | null
           image_url?: string
           long_description?: string | null
           problem?: string | null
+          project_url?: string | null
           role?: string | null
-          slug: string
+          slug?: string
           solution?: string | null
           tags?: string[]
           tech_stack?: Json
@@ -187,13 +120,14 @@ export type Database = {
           created_at?: string
           description?: string
           display_order?: number
+          employer?: string | null
           featured?: boolean
           features?: string[]
           id?: string
-          image_path?: string | null
           image_url?: string
           long_description?: string | null
           problem?: string | null
+          project_url?: string | null
           role?: string | null
           slug?: string
           solution?: string | null
@@ -202,6 +136,93 @@ export type Database = {
           title?: string
           updated_at?: string
           year?: string | null
+        }
+        Relationships: []
+      }
+      contact_info: {
+        Row: {
+          availability: string
+          email: string
+          id: string
+          intro: string
+          location: string
+          phone: string
+          resume_label: string | null
+          resume_url: string | null
+        }
+        Insert: {
+          availability: string
+          email: string
+          id?: string
+          intro: string
+          location: string
+          phone: string
+          resume_label?: string | null
+          resume_url?: string | null
+        }
+        Update: {
+          availability?: string
+          email?: string
+          id?: string
+          intro?: string
+          location?: string
+          phone?: string
+          resume_label?: string | null
+          resume_url?: string | null
+        }
+        Relationships: []
+      }
+      contact_links: {
+        Row: {
+          display_order: number
+          icon: string
+          id: string
+          label: string
+          url: string
+        }
+        Insert: {
+          display_order?: number
+          icon: string
+          id?: string
+          label: string
+          url: string
+        }
+        Update: {
+          display_order?: number
+          icon?: string
+          id?: string
+          label?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      skill_groups: {
+        Row: {
+          description: string | null
+          display_order: number
+          icon: string
+          id: string
+          is_highlight: boolean
+          skills: string[]
+          title: string
+        }
+        Insert: {
+          description?: string | null
+          display_order?: number
+          icon: string
+          id?: string
+          is_highlight?: boolean
+          skills?: string[]
+          title: string
+        }
+        Update: {
+          description?: string | null
+          display_order?: number
+          icon?: string
+          id?: string
+          is_highlight?: boolean
+          skills?: string[]
+          title?: string
         }
         Relationships: []
       }
@@ -247,42 +268,6 @@ export type Database = {
           id?: string
           is_highlighted?: boolean
           name?: string
-        }
-        Relationships: []
-      }
-      skill_groups: {
-        Row: {
-          created_at: string
-          description: string | null
-          display_order: number
-          icon: string
-          id: string
-          is_highlight: boolean
-          skills: string[]
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          display_order?: number
-          icon?: string
-          id: string
-          is_highlight?: boolean
-          skills?: string[]
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          display_order?: number
-          icon?: string
-          id?: string
-          is_highlight?: boolean
-          skills?: string[]
-          title?: string
-          updated_at?: string
         }
         Relationships: []
       }

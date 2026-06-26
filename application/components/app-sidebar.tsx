@@ -16,6 +16,7 @@ import {
 import { IconTools } from "@tabler/icons-react";
 import {
   BriefcaseBusiness,
+  FolderKanban,
   LayoutDashboardIcon,
   SettingsIcon,
   ShapesIcon,
@@ -39,6 +40,11 @@ const data = {
       title: "Experiences",
       url: "/dashboard/experiences",
       icon: <BriefcaseBusiness />,
+    },
+    {
+      title: "Projects",
+      url: "/dashboard/projects",
+      icon: <FolderKanban />,
     },
     {
       title: "Skill Categories",

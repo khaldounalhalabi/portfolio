@@ -16,10 +16,10 @@ export const defaultProjects: Project[] = [
       "A modern, cloud-based Human Capital Management solution engineered for the next generation of digital-first enterprises.",
     longDescription:
       "A modern, cloud-based Human Capital Management solution engineered for the next generation of digital-first enterprises.",
-    imagePath: null,
     imageUrl: null,
     tags: ["Laravel", "React", "Next.js", "PostgreSQL"],
     category: "PHP/Laravel",
+    employer: "Cohort HCM",
     role: "Lead Fullstack Architect",
     year: "2024",
     problem:
@@ -32,10 +32,10 @@ export const defaultProjects: Project[] = [
       "Multi-layer encryption, SOC2 compliance standards, and granular RBAC to keep sensitive human capital data protected.",
     ],
     techStack: [
-      { name: "Laravel", icon: "terminal", detail: "Core Logic & API" },
-      { name: "React", icon: "layers", detail: "Dynamic UI" },
-      { name: "Next.js", icon: "sparkles", detail: "SSR & Performance" },
-      { name: "PostgreSQL", icon: "database", detail: "Data Persistence" },
+      { name: "Laravel", icon: "terminal", description: "Core Logic & API" },
+      { name: "React", icon: "layers", description: "Dynamic UI" },
+      { name: "Next.js", icon: "sparkles", description: "SSR & Performance" },
+      { name: "PostgreSQL", icon: "database", description: "Data Persistence" },
     ],
     featured: true,
     displayOrder: 1,
@@ -46,7 +46,6 @@ export const defaultProjects: Project[] = [
     title: "SmartInventory Pro",
     description:
       "Enterprise-grade inventory tracking with automated restocking alerts and real-time analytics.",
-    imagePath: null,
     imageUrl: null,
     tags: ["Laravel", "MySQL"],
     category: "PHP/Laravel",
@@ -61,7 +60,6 @@ export const defaultProjects: Project[] = [
     title: "EduSphere LMS",
     description:
       "Scalable e-learning solution managing courses, student progress, and interactive certifications.",
-    imagePath: null,
     imageUrl: null,
     tags: ["PHP", "JavaScript"],
     category: "PHP/Laravel",
@@ -76,7 +74,6 @@ export const defaultProjects: Project[] = [
     title: "NeuralNexus",
     description:
       "An AI-driven personal assistant for developers that automates documentation and test generation.",
-    imagePath: null,
     imageUrl: null,
     tags: ["Python", "NLP"],
     category: "AI/ML",
@@ -91,7 +88,6 @@ export const defaultProjects: Project[] = [
     title: "Vault-X",
     description:
       "A secure digital wallet featuring instant currency conversion and multi-layer encryption.",
-    imagePath: null,
     imageUrl: null,
     tags: ["Next.js", "Prisma"],
     category: "React/Next.js",

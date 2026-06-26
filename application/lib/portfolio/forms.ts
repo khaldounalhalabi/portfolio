@@ -18,11 +18,11 @@ export function parseTechStack(
   value: FormDataEntryValue | null,
 ): ProjectTech[] {
   return splitLines(value).map((line) => {
-    const [name = "", icon = "", detail = ""] = line
+    const [name = "", icon = "", description = ""] = line
       .split("|")
       .map((item) => item.trim());
 
-    return { name, icon, detail };
+    return { name, icon, description };
   });
 }
 
