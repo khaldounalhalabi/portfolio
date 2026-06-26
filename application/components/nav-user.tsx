@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/components/providers/auth-provider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -19,39 +20,24 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/lib/supabase/client";
 import { getUserInitials, userFullName } from "@/lib/utils";
-import { User } from "@supabase/supabase-js";
 import {
   CircleUserRoundIcon,
   EllipsisVerticalIcon,
   LogOutIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const pathname = usePathname();
   const router = useRouter();
-
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        await supabase.auth.signOut();
-      } else {
-        setUser(data.user);
-      }
-    })();
-  }, [pathname]);
+  const { user, isLoading , logout} = useAuth();
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          {!user ? (
+          {!user || isLoading ? (
             <DropdownMenuTrigger disabled={true}>
               <Skeleton className={"h-8 w-64"} />
             </DropdownMenuTrigger>
@@ -110,10 +96,7 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={async () => {
-                await supabase.auth.signOut();
-                router.replace("/auth/login");
-              }}
+              onClick={logout}
             >
               <LogOutIcon />
               Log out

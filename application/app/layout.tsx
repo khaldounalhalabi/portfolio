@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 
-import QueryClientProvider from "@/components/providers/QueryClientProvider";
+import QueryClientProvider from "@/components/providers/query-client-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
