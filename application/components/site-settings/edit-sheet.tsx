@@ -12,7 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { title } from "@/lib/portfolio/forms";
 import SiteSetting from "@/models/SiteSetting";
 import SiteSettingService from "@/services/SiteSettingService";
 import { PencilIcon } from "lucide-react";
@@ -20,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { title } from "@/lib/utils";
 
 function getSchema(setting: SiteSetting) {
   switch (setting.structure.type) {

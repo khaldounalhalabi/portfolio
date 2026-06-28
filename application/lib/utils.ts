@@ -56,3 +56,23 @@ export function userFullName(user: User) {
 
   return user.email ?? "User";
 }
+
+export function title(value: string): string {
+  return (
+    value
+      // Split camelCase and PascalCase
+      .replace(/([a-z\d])([A-Z])/g, "$1 $2")
+      // Convert snake_case and kebab-case to spaces
+      .replace(/[_-]+/g, " ")
+      // Collapse multiple spaces
+      .replace(/\s+/g, " ")
+      .trim()
+      // Title case each word
+      .replace(
+        /\p{L}+/gu,
+        (word) =>
+          word.charAt(0).toLocaleUpperCase() +
+          word.slice(1).toLocaleLowerCase(),
+      )
+  );
+}

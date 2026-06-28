@@ -14,10 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { title } from "@/lib/portfolio/forms";
 import { createClient } from "@/lib/supabase/server";
 import SiteSetting from "@/models/SiteSetting";
 import { redirect } from "next/navigation";
+import { title } from "@/lib/utils";
 
 const SiteSettingsIndex = async () => {
   const supabase = await createClient();
