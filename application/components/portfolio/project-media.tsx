@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export function ProjectMedia({
   imageUrl,
   title,
@@ -18,7 +16,7 @@ export function ProjectMedia({
             <p className="font-heading text-4xl font-bold tracking-[0.3em] text-primary/35 md:text-5xl">
               {title.slice(0, 3).toUpperCase()}
             </p>
-            <p className="mt-3 text-xs uppercase tracking-[0.25em] text-on-surface-variant">
+            <p className="mt-3 text-xs tracking-[0.25em] text-on-surface-variant uppercase">
               Upload project image in dashboard
             </p>
           </div>
@@ -27,27 +25,8 @@ export function ProjectMedia({
     );
   }
 
-  const isSvg = imageUrl.toLowerCase().includes(".svg");
-
-  if (isSvg) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={imageUrl}
-        alt={title}
-        className="h-full w-full object-cover"
-      />
-    );
-  }
-
   return (
-    <Image
-      src={imageUrl}
-      alt={title}
-      fill
-      priority={priority}
-      className="object-cover"
-      unoptimized
-    />
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
   );
 }
