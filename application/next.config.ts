@@ -17,28 +17,16 @@ if (supabaseUrl) {
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      ...remotePatterns,
-      {
-        protocol: "https",
-        hostname: "*.supabase.co",
-        pathname: "/storage/v1/object/public/**",
-      },
-      {
-        protocol: "https",
-        hostname: "bmfgtfadddainejlcqmy.supabase.co",
-        pathname: "/storage/v1/object/public/**",
-      },
-    ],
+    remotePatterns,
   },
 
   turbopack:
     process.env.NODE_ENV === "development"
       ? {
-          resolveAlias: {
-            "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
-          },
-        }
+        resolveAlias: {
+          "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
+        },
+      }
       : undefined,
 };
 
