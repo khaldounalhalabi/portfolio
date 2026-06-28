@@ -2,17 +2,17 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
-import { ProjectMedia } from "@/components/portfolio/project-media";
+import { FeaturedProjectsCarousel } from "@/components/portfolio/featured-projects-carousel";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
-import { getPortfolioData } from "@/lib/portfolio/queries";
+import ProjectService from "@/services/ProjectService";
 import SiteSettingService from "@/services/SiteSettingService";
 import SkillCategoryService from "@/services/SkillCategoryService";
 
 export default async function HomePage() {
-  const portfolio = await getPortfolioData();
-  const featuredProject =
-    portfolio.projects.find((project) => project.featured) ??
-    portfolio.projects[0];
+  const projects = await ProjectService.make().all();
+  const featuredProjects = projects
+    .filter((project) => project.featured)
+    .sort((a, b) => a.display_order - b.display_order);
 
   const siteSettings = await SiteSettingService.make().all();
   const skillCategories = await SkillCategoryService.make().all(["skills"]);
@@ -75,64 +75,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {featuredProject ? (
-        <section className="border-y border-white/5 bg-surface-container-low py-24">
-          <div className="container-shell grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
-            <div>
-              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-                Featured System
-              </p>
-              <h2 className="mt-5 max-w-xl font-heading text-4xl font-bold text-primary md:text-5xl">
-                Building at the edge of performance.
-              </h2>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-on-surface-variant">
-                My architecture approach combines dependable backend design,
-                maintainable admin surfaces, and clean interaction design.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                {featuredProject.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-surface-container-high px-3 py-1 text-xs tracking-[0.25em] text-secondary uppercase"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <Link
-                href={`/projects/${featuredProject.slug}`}
-                className="mt-8 inline-flex items-center gap-2 font-semibold text-primary-container"
-              >
-                Open featured case study
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <Link
-              href={`/projects/${featuredProject.slug}`}
-              className="group relative block overflow-hidden rounded-[2rem] border border-white/5"
-            >
-              <div className="relative aspect-video">
-                <div className="transition duration-700 group-hover:scale-105">
-                  <ProjectMedia
-                    imageUrl={featuredProject.imageUrl}
-                    title={featuredProject.title}
-                    priority
-                  />
-                </div>
-                <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
-              </div>
-              <div className="absolute inset-x-0 bottom-0 p-8">
-                <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-                  {featuredProject.category}
-                </p>
-                <h3 className="mt-3 font-heading text-3xl font-bold text-primary">
-                  {featuredProject.title}
-                </h3>
-              </div>
-            </Link>
-          </div>
-        </section>
-      ) : null}
+      {featuredProjects.length > 0 && (
+        <FeaturedProjectsCarousel projects={featuredProjects} />
+      )}
 
       <section className="py-24">
         <div className="container-shell">
