@@ -1,3 +1,4 @@
+import { fetchProjectImageAction } from "./actions";
 import ProjectSheet from "@/components/projects/project-sheet";
 import TableActions from "@/components/projects/table-actions";
 import {
@@ -40,7 +41,7 @@ const ProjectsPage = async () => {
               Manage portfolio projects, media, and tech stacks.
             </CardDescription>
           </div>
-          <ProjectSheet />
+          <ProjectSheet fetchImageAction={fetchProjectImageAction} />
         </div>
       </CardHeader>
       <CardContent>

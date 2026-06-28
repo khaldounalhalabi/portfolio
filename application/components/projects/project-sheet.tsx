@@ -1,6 +1,5 @@
 "use client";
 
-import { fetchProjectImageAction } from "@/app/(dashboard)/dashboard/projects/actions";
 import Form from "@/components/forms/form";
 import FormCheckbox from "@/components/forms/form-checkbox";
 import FormInput from "@/components/forms/form-input";
@@ -57,7 +56,17 @@ const projectSchema = z.object({
 
 type ProjectFormData = z.output<typeof projectSchema>;
 
-const ProjectSheet = ({ project }: { project?: Project }) => {
+type FetchImageAction = (
+  projectUrl: string,
+) => Promise<{ error?: string; imageUrl?: string }>;
+
+const ProjectSheet = ({
+  project,
+  fetchImageAction,
+}: {
+  project?: Project;
+  fetchImageAction: FetchImageAction;
+}) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const isEditing = Boolean(project);
@@ -103,7 +112,7 @@ const ProjectSheet = ({ project }: { project?: Project }) => {
             }}
             withBackButton={false}
           >
-            <ProjectFormFields />
+            <ProjectFormFields fetchImageAction={fetchImageAction} />
           </Form>
         </div>
       </SheetContent>
@@ -111,7 +120,11 @@ const ProjectSheet = ({ project }: { project?: Project }) => {
   );
 };
 
-const ProjectFormFields = () => {
+const ProjectFormFields = ({
+  fetchImageAction,
+}: {
+  fetchImageAction: FetchImageAction;
+}) => {
   const { setValue, control } = useFormContext<ProjectFormData>();
   const [isFetchingImage, setIsFetchingImage] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -126,7 +139,7 @@ const ProjectFormFields = () => {
     }
 
     setIsFetchingImage(true);
-    const result = await fetchProjectImageAction(projectUrl);
+    const result = await fetchImageAction(projectUrl);
     setIsFetchingImage(false);
 
     if (result.error) {
