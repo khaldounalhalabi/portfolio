@@ -5,8 +5,8 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 import { ProjectMedia } from "@/components/portfolio/project-media";
-import { stripRichText } from "@/lib/portfolio/rich-text";
-import type { Project } from "@/lib/portfolio/types";
+import { stripRichText } from "@/lib/rich-text";
+import Project from "@/models/Project";
 
 export function ProjectsExplorer({ projects }: { projects: Project[] }) {
   const [selectedCategory, setSelectedCategory] = useState("All Projects");
@@ -57,7 +57,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
           >
             <div className="relative aspect-[16/10] overflow-hidden">
               <div className="transition duration-700 group-hover:scale-105">
-                <ProjectMedia imageUrl={project.imageUrl} title={project.title} />
+                <ProjectMedia imageUrl={project.image_url} title={project.title} />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
             </div>

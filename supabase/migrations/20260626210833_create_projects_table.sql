@@ -1,7 +1,9 @@
 CREATE TABLE IF NOT EXISTS public.projects
 (
     id               uuid primary key     default gen_random_uuid(),
-    slug             text        not null unique,
+    slug             text not null generated always as (
+        lower(regexp_replace(title, '[^a-zA-Z0-9]+', '-', 'g'))
+        ) stored unique,
     title            text        not null,
     description      text        not null default '',
     long_description text,
@@ -42,26 +44,6 @@ create policy "Authenticated users can do anything on projects"
     to authenticated, service_role
     USING (true)
     WITH CHECK (true);
-
--- Auto-generate slug from title in kebab-case when not provided
-CREATE OR REPLACE FUNCTION public.set_project_slug()
-    RETURNS trigger
-AS
-$$
-BEGIN
-    IF NEW.slug IS NULL OR NEW.slug = '' THEN
-        NEW.slug := lower(regexp_replace(NEW.title, '[^a-zA-Z0-9]+', '-', 'g'));
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS set_project_slug ON public.projects;
-CREATE TRIGGER set_project_slug
-    BEFORE INSERT OR UPDATE
-    ON public.projects
-    FOR EACH ROW
-EXECUTE FUNCTION public.set_project_slug();
 
 -- Initialize the public storage bucket used for project images
 INSERT INTO storage.buckets (id, name, public)

@@ -4,8 +4,15 @@ import { notFound } from "next/navigation";
 import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
 import { ProjectMedia } from "@/components/portfolio/project-media";
 import { RichTextContent } from "@/components/portfolio/rich-text-content";
-import { getProjectBySlug } from "@/lib/portfolio/queries";
-import { hasRichTextContent, stripRichText } from "@/lib/portfolio/rich-text";
+import { hasRichTextContent, stripRichText } from "@/lib/rich-text";
+import Project from "@/models/Project";
+import ProjectService from "@/services/ProjectService";
+
+interface TechStackItem {
+  name: string;
+  icon: string;
+  description: string;
+}
 
 export default async function ProjectDetailPage({
   params,
@@ -13,11 +20,23 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+  let project;
+
+  try {
+    project = (await ProjectService.make().show(
+      slug,
+      undefined,
+      "slug",
+    )) as Project | null;
+  } catch {
+    notFound();
+  }
 
   if (!project) {
     notFound();
   }
+
+  const techStack = (project.tech_stack as TechStackItem[] | null) ?? [];
 
   return (
     <main className="pb-24 pt-20">
@@ -31,7 +50,7 @@ export default async function ProjectDetailPage({
               {project.title}
             </h1>
             <p className="mt-6 max-w-3xl text-xl leading-9 text-on-surface-variant">
-              {stripRichText(project.longDescription || project.description)}
+              {stripRichText(project.long_description || project.description)}
             </p>
           </div>
           <div className="grid gap-4">
@@ -57,7 +76,7 @@ export default async function ProjectDetailPage({
 
       <section className="container-shell mt-14">
         <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/5">
-          <ProjectMedia imageUrl={project.imageUrl} title={project.title} priority />
+          <ProjectMedia imageUrl={project.image_url} title={project.title} priority />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </div>
       </section>
@@ -98,18 +117,18 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
-      {hasRichTextContent(project.longDescription) ? (
+      {hasRichTextContent(project.long_description) ? (
         <section className="container-shell mt-18">
           <div className="rounded-[2rem] border border-white/6 bg-surface-container-low p-8 md:p-10">
             <p className="text-xs uppercase tracking-[0.3em] text-secondary">
               Overview
             </p>
-            <RichTextContent value={project.longDescription} className="mt-6" />
+            <RichTextContent value={project.long_description} className="mt-6" />
           </div>
         </section>
       ) : null}
 
-      {project.techStack.length ? (
+      {techStack.length ? (
         <section className="container-shell mt-20">
           <div className="mb-8 flex items-center gap-4">
             <h2 className="font-heading text-3xl font-bold text-primary">
@@ -118,7 +137,7 @@ export default async function ProjectDetailPage({
             <div className="h-px flex-1 bg-white/10" />
           </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {project.techStack.map((tech) => (
+            {techStack.map((tech) => (
               <div
                 key={`${project.id}-${tech.name}`}
                 className="rounded-3xl border border-white/6 bg-surface-container-low p-6"

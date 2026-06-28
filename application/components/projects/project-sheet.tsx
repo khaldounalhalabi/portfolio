@@ -18,14 +18,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { supabase } from "@/lib/supabase/client";
 import Project from "@/models/Project";
 import ProjectService from "@/services/ProjectService";
-import { PencilIcon, PlusIcon } from "lucide-react";
+import { PencilIcon, PlusIcon, UploadIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+const BUCKET_NAME = "portfolio-images";
 
 const techStackItemSchema = z.object({
   name: z.string().trim().min(1, "Tech name is required"),
@@ -111,6 +114,8 @@ const ProjectSheet = ({ project }: { project?: Project }) => {
 const ProjectFormFields = () => {
   const { setValue, control } = useFormContext<ProjectFormData>();
   const [isFetchingImage, setIsFetchingImage] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const projectUrl = useWatch({ control, name: "project_url" });
   const imageUrl = useWatch({ control, name: "image_url" });
 
@@ -135,6 +140,42 @@ const ProjectFormFields = () => {
     }
   };
 
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setIsUploadingImage(true);
+    const extension = file.name.split(".").pop() || "png";
+    const path = `projects/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+
+    const { error } = await supabase.storage
+      .from(BUCKET_NAME)
+      .upload(path, file, {
+        contentType: file.type,
+        upsert: false,
+      });
+
+    setIsUploadingImage(false);
+    event.target.value = "";
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(path);
+    setValue("image_url", data.publicUrl);
+    toast.success("Image uploaded");
+  };
+
+  const handleRemoveImage = () => {
+    setValue("image_url", "");
+  };
+
   return (
     <FieldGroup>
       <FormInput name="title" label="Title" />
@@ -145,21 +186,63 @@ const ProjectFormFields = () => {
         minHeight="200px"
       />
       <FormInput name="project_url" label="Project URL" optional />
-      <div className="flex flex-col gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={isFetchingImage || !projectUrl}
-          onClick={handleFetchImage}
-          className="self-start"
-        >
-          {isFetchingImage ? "Fetching..." : "Fetch image from project URL"}
-        </Button>
+
+      <div className="flex flex-col gap-4 rounded-lg border border-input p-4">
+        <p className="text-sm font-medium">Project Image</p>
+
+        {imageUrl && (
+          <div className="relative w-fit">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imageUrl}
+              alt="Project preview"
+              className="h-32 w-auto rounded-md object-cover"
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              className="absolute -right-2 -top-2 h-6 w-6"
+              onClick={handleRemoveImage}
+            >
+              <XIcon className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
+
+        {imageUrl && <FormInput name="image_url" label="Image URL" optional />}
+
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={isUploadingImage}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <UploadIcon className="mr-2 h-4 w-4" />
+            {isUploadingImage ? "Uploading..." : "Upload image"}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={isFetchingImage || !projectUrl}
+            onClick={handleFetchImage}
+          >
+            {isFetchingImage ? "Fetching..." : "Fetch from project URL"}
+          </Button>
+        </div>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleFileChange}
+        />
       </div>
-      {imageUrl && (
-        <FormInput name="image_url" label="Image URL" optional />
-      )}
+
       <FormInput name="category" label="Category" />
       <FormInput name="employer" label="Employer" optional />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -172,11 +255,7 @@ const ProjectFormFields = () => {
       <FormTiptap name="solution" label="Solution" minHeight="150px" />
       <TechStackInput name="tech_stack" label="Tech Stack" />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <FormInput
-          name="display_order"
-          label="Display Order"
-          type="number"
-        />
+        <FormInput name="display_order" label="Display Order" type="number" />
         <FormCheckbox name="featured" label="Featured" />
       </div>
     </FieldGroup>

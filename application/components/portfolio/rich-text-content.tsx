@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { sanitizeRichText } from "@/lib/portfolio/rich-text";
+import { sanitizeRichText } from "@/lib/rich-text";
 
 export function RichTextContent({
   value,

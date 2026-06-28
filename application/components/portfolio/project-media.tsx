@@ -47,6 +47,7 @@ export function ProjectMedia({
       fill
       priority={priority}
       className="object-cover"
+      unoptimized={process.env.NODE_ENV === "development"}
     />
   );
 }

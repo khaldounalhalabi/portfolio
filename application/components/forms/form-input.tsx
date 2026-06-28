@@ -18,7 +18,7 @@ interface FormInputProps extends Omit<
 const FormInput: FC<FormInputProps> = ({
   label,
   name,
-  defaultValue,
+  defaultValue: defaultValueProp,
   onChange,
   optional,
   ...props
@@ -29,45 +29,51 @@ const FormInput: FC<FormInputProps> = ({
     formState: { defaultValues },
   } = useFormContext();
 
-  defaultValue =
-    defaultValue ?? getNestedPropertyValue(defaultValues ?? {}, name);
-  useEffect(() => {
-    if (defaultValue !== undefined) {
-      setValue(name, defaultValue);
-    }
-  }, [defaultValue, name, setValue]);
+  const resolvedDefaultValue =
+    defaultValueProp ?? getNestedPropertyValue(defaultValues ?? {}, name);
 
   return (
     <Controller
       control={control}
       name={name}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
-          {label &&
-            (typeof label == "function" ? (
-              label()
-            ) : (
-              <FieldLabel className="font-medium">
-                {label}{" "}
-                {optional && (
-                  <span className="text-sm text-gray-500">(Optional)</span>
-                )}
-              </FieldLabel>
-            ))}
+      render={({ field, fieldState }) => {
+        useEffect(() => {
+          if (
+            resolvedDefaultValue !== undefined &&
+            (field.value === undefined || field.value === "")
+          ) {
+            setValue(name, resolvedDefaultValue);
+          }
+        }, [resolvedDefaultValue, name, setValue, field.value]);
 
-          <Input
-            {...field}
-            {...props}
-            value={props.value ?? field.value ?? ""}
-            onChange={(e) => {
-              field.onChange(e);
-              if (onChange) {
-                onChange(e);
-              }
-            }}
-          />
-        </Field>
-      )}
+        return (
+          <Field data-invalid={fieldState.invalid}>
+            {label &&
+              (typeof label == "function" ? (
+                label()
+              ) : (
+                <FieldLabel className="font-medium">
+                  {label}{" "}
+                  {optional && (
+                    <span className="text-sm text-gray-500">(Optional)</span>
+                  )}
+                </FieldLabel>
+              ))}
+
+            <Input
+              {...field}
+              {...props}
+              value={props.value ?? field.value ?? ""}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) {
+                  onChange(e);
+                }
+              }}
+            />
+          </Field>
+        );
+      }}
     />
   );
 };

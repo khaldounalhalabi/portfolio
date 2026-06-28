@@ -1,8 +1,8 @@
 import { ProjectsExplorer } from "@/components/portfolio/projects-explorer";
-import { getPortfolioData } from "@/lib/portfolio/queries";
+import ProjectService from "@/services/ProjectService";
 
 export default async function ProjectsPage() {
-  const { projects } = await getPortfolioData();
+  const projects = await ProjectService.make().all();
 
   return (
     <main className="pb-24 pt-20">
