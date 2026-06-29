@@ -1,0 +1,159 @@
+import "server-only";
+
+import { format, parseISO } from "date-fns";
+
+import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
+import { stripRichText } from "@/lib/rich-text";
+import SiteSetting from "@/models/SiteSetting";
+import ExperienceService from "@/services/ExperienceService";
+import ProjectService from "@/services/ProjectService";
+import SiteSettingService from "@/services/SiteSettingService";
+import SkillCategoryService from "@/services/SkillCategoryService";
+
+import {
+  ResumeContact,
+  ResumeData,
+  ResumeExperience,
+  ResumeProject,
+  ResumeProjectTechStackItem,
+  ResumeSkillGroup,
+} from "./types";
+
+const RESUME_SETTING_KEYS: SiteSettingKeyEnum[] = [
+  SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME,
+  SiteSettingKeyEnum.HERO_PARAGRAPH,
+  SiteSettingKeyEnum.EMAIL,
+  SiteSettingKeyEnum.PHONE,
+  SiteSettingKeyEnum.LOCATION,
+  SiteSettingKeyEnum.LINKED_IN,
+  SiteSettingKeyEnum.GITHUB,
+  SiteSettingKeyEnum.GITLAB,
+  SiteSettingKeyEnum.STACKOVERFLOW,
+  SiteSettingKeyEnum.TELEGRAM,
+  SiteSettingKeyEnum.WHATSAPP,
+];
+
+function getSettingValue(
+  settings: SiteSetting[],
+  key: SiteSettingKeyEnum,
+): string | undefined {
+  const setting = settings.find((s) => s.key === key);
+
+  if (!setting) {
+    return undefined;
+  }
+
+  return Array.isArray(setting.value)
+    ? setting.value.join(", ")
+    : String(setting.value);
+}
+
+function formatDateRange(from: string, to: string | null): string {
+  const fromDate = parseISO(from);
+  const toDate = to ? parseISO(to) : null;
+
+  const fromFormatted = format(fromDate, "MMM yyyy");
+  const toFormatted = toDate ? format(toDate, "MMM yyyy") : "Present";
+
+  return `${fromFormatted} - ${toFormatted}`;
+}
+
+function normalizeDescription(value: string): string {
+  return value
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function parseTechStack(value: unknown): ResumeProjectTechStackItem[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter(
+      (item): item is ResumeProjectTechStackItem =>
+        typeof item === "object" &&
+        item !== null &&
+        "name" in item &&
+        typeof item.name === "string" &&
+        item.name.trim().length > 0,
+    )
+    .map((item) => ({
+      name: item.name.trim(),
+      icon: typeof item.icon === "string" ? item.icon.trim() : "",
+      description:
+        typeof item.description === "string" ? item.description.trim() : "",
+    }));
+}
+
+export async function getResumeData(): Promise<ResumeData> {
+  const [settings, experiences, projects, skillCategories] = await Promise.all([
+    SiteSettingService.make().getByKeys(RESUME_SETTING_KEYS),
+    ExperienceService.make().all(),
+    ProjectService.make().all(),
+    SkillCategoryService.make().all(["skills"]),
+  ]);
+
+  const contact: ResumeContact = {
+    email: getSettingValue(settings, SiteSettingKeyEnum.EMAIL),
+    phone: getSettingValue(settings, SiteSettingKeyEnum.PHONE),
+    location: getSettingValue(settings, SiteSettingKeyEnum.LOCATION),
+    linkedIn: getSettingValue(settings, SiteSettingKeyEnum.LINKED_IN),
+    github: getSettingValue(settings, SiteSettingKeyEnum.GITHUB),
+    gitlab: getSettingValue(settings, SiteSettingKeyEnum.GITLAB),
+    stackoverflow: getSettingValue(settings, SiteSettingKeyEnum.STACKOVERFLOW),
+    telegram: getSettingValue(settings, SiteSettingKeyEnum.TELEGRAM),
+    whatsapp: getSettingValue(settings, SiteSettingKeyEnum.WHATSAPP),
+  };
+
+  const mappedExperiences: ResumeExperience[] = experiences.map(
+    (experience) => ({
+      id: experience.id,
+      position: experience.position,
+      companyName: experience.company_name,
+      location: experience.location,
+      dateRange: formatDateRange(experience.from, experience.to),
+      jobDescription: normalizeDescription(experience.job_description),
+    }),
+  );
+
+  const mappedProjects: ResumeProject[] = projects
+    .filter((project) => project.featured)
+    .sort((a, b) => a.display_order - b.display_order)
+    .map((project) => ({
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      role: project.role,
+      year: project.year,
+      employer: project.employer,
+      projectUrl: project.project_url,
+      techStack: parseTechStack(project.tech_stack),
+    }));
+
+  const mappedSkillGroups: ResumeSkillGroup[] = skillCategories
+    .filter((category) => category.is_highlighted)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((category) => ({
+      category: category.name,
+      skills:
+        category.skills
+          ?.map((skill) => skill.name)
+          .filter(Boolean)
+          .sort() ?? [],
+    }));
+
+  return {
+    name: "Khaldoun Alhalabi",
+    title: getSettingValue(settings, SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME) ?? "",
+    summary: stripRichText(
+      getSettingValue(settings, SiteSettingKeyEnum.HERO_PARAGRAPH),
+    ),
+    contact,
+    experiences: mappedExperiences,
+    projects: mappedProjects,
+    skillGroups: mappedSkillGroups,
+  };
+}

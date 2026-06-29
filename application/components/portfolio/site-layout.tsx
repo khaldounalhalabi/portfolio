@@ -34,7 +34,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <Link
-            href={"/contact"}
+            href="/resume.pdf"
+            download="Khaldoun-Alhalabi-Resume.pdf"
             className="rounded-full bg-secondary-fixed-dim px-5 py-2 text-sm font-semibold text-on-secondary"
           >
             Resume

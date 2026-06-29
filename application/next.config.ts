@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
     remotePatterns,
   },
 
+  async rewrites() {
+    return [
+      {
+        source: "/resume.pdf",
+        destination: "/api/resume",
+      },
+    ];
+  },
+
   turbopack:
     process.env.NODE_ENV === "development"
       ? {

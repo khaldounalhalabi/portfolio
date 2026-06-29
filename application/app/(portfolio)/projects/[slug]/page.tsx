@@ -39,11 +39,11 @@ export default async function ProjectDetailPage({
   const techStack = (project.tech_stack as TechStackItem[] | null) ?? [];
 
   return (
-    <main className="pb-24 pt-20">
+    <main className="pt-20 pb-24">
       <section className="container-shell">
         <div className="grid gap-10 lg:grid-cols-[1fr_280px] lg:items-end">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-secondary">
+            <p className="text-xs tracking-[0.3em] text-secondary uppercase">
               Featured Project
             </p>
             <h1 className="mt-5 font-heading text-5xl font-bold text-primary md:text-7xl">
@@ -55,7 +55,7 @@ export default async function ProjectDetailPage({
           </div>
           <div className="grid gap-4">
             <div className="rounded-3xl border border-white/6 bg-surface-container-low p-6">
-              <p className="text-xs uppercase tracking-[0.25em] text-secondary">
+              <p className="text-xs tracking-[0.25em] text-secondary uppercase">
                 Role
               </p>
               <p className="mt-3 font-heading text-xl text-primary">
@@ -63,7 +63,7 @@ export default async function ProjectDetailPage({
               </p>
             </div>
             <div className="rounded-3xl border border-white/6 bg-surface-container-low p-6">
-              <p className="text-xs uppercase tracking-[0.25em] text-secondary">
+              <p className="text-xs tracking-[0.25em] text-secondary uppercase">
                 Year
               </p>
               <p className="mt-3 font-heading text-xl text-primary">
@@ -76,21 +76,18 @@ export default async function ProjectDetailPage({
 
       <section className="container-shell mt-14">
         <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/5">
-          <ProjectMedia imageUrl={project.image_url} title={project.title} priority />
+          <ProjectMedia imageUrl={project.image_url} title={project.title} />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </div>
       </section>
 
       <section className="container-shell mt-16 grid gap-12 lg:grid-cols-2">
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-secondary">
+          <p className="text-xs tracking-[0.3em] text-secondary uppercase">
             The Problem
           </p>
           {hasRichTextContent(project.problem) ? (
-            <RichTextContent
-              value={project.problem}
-              className="mt-6 text-lg"
-            />
+            <RichTextContent value={project.problem} className="mt-6 text-lg" />
           ) : (
             <p className="mt-6 text-lg leading-8 text-on-surface-variant">
               Legacy systems often suffer from fragmented data flows, brittle
@@ -99,7 +96,7 @@ export default async function ProjectDetailPage({
           )}
         </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-primary-container">
+          <p className="text-xs tracking-[0.3em] text-primary-container uppercase">
             The Solution
           </p>
           {hasRichTextContent(project.solution) ? (
@@ -120,10 +117,13 @@ export default async function ProjectDetailPage({
       {hasRichTextContent(project.long_description) ? (
         <section className="container-shell mt-18">
           <div className="rounded-[2rem] border border-white/6 bg-surface-container-low p-8 md:p-10">
-            <p className="text-xs uppercase tracking-[0.3em] text-secondary">
+            <p className="text-xs tracking-[0.3em] text-secondary uppercase">
               Overview
             </p>
-            <RichTextContent value={project.long_description} className="mt-6" />
+            <RichTextContent
+              value={project.long_description}
+              className="mt-6"
+            />
           </div>
         </section>
       ) : null}
@@ -142,11 +142,16 @@ export default async function ProjectDetailPage({
                 key={`${project.id}-${tech.name}`}
                 className="rounded-3xl border border-white/6 bg-surface-container-low p-6"
               >
-                <PortfolioIcon name={tech.icon} className="h-7 w-7 text-primary-container" />
+                <PortfolioIcon
+                  name={tech.icon}
+                  className="h-7 w-7 text-primary-container"
+                />
                 <h3 className="mt-5 font-heading text-xl font-bold text-primary">
                   {tech.name}
                 </h3>
-                <p className="mt-2 text-sm text-on-surface-variant">{tech.description}</p>
+                <p className="mt-2 text-sm text-on-surface-variant">
+                  {tech.description}
+                </p>
               </div>
             ))}
           </div>
@@ -170,7 +175,7 @@ export default async function ProjectDetailPage({
                 key={`${project.id}-feature-${index}`}
                 className="rounded-3xl border border-white/6 bg-surface-container-low p-6"
               >
-                <p className="text-xs uppercase tracking-[0.25em] text-secondary">
+                <p className="text-xs tracking-[0.25em] text-secondary uppercase">
                   Outcome {index + 1}
                 </p>
                 <p className="mt-4 text-base leading-8 text-on-surface-variant">
@@ -188,8 +193,8 @@ export default async function ProjectDetailPage({
             Building the future of {project.title.split(" ")[0]}?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-on-surface-variant">
-            Let&apos;s discuss a solution that stays performant, maintainable, and
-            easy to operate after it ships.
+            Let&apos;s discuss a solution that stays performant, maintainable,
+            and easy to operate after it ships.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <Link

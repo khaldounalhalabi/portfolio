@@ -1,11 +1,9 @@
 export function ProjectMedia({
   imageUrl,
   title,
-  priority = false,
 }: {
   imageUrl?: string | null;
   title: string;
-  priority?: boolean;
 }) {
   if (!imageUrl) {
     return (

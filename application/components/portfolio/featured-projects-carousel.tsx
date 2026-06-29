@@ -95,7 +95,6 @@ export function FeaturedProjectsCarousel({
               <ProjectMedia
                 imageUrl={project.image_url}
                 title={project.title}
-                priority
               />
             </div>
             <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
