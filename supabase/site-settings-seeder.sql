@@ -2,6 +2,11 @@ insert into site_settings (key, value, structure)
 values ('hero_sentence_under_name', to_jsonb(cast('Full-Stack Architect' as text)), '{
   "type": "string"
 }'),
+       ('resume_title',
+        to_jsonb(cast('Fullstack Developer | PHP & Laravel Developer | Experienced in React, Next.js, and Modern Frontend Frameworks | Building Scalable Web Solutions' as text)),
+        '{
+          "type": "string"
+        }'),
        ('hero_skills', '[
          "PHP & Laravel",
          "React & NEXT.JS",
@@ -21,22 +26,22 @@ values ('hero_sentence_under_name', to_jsonb(cast('Full-Stack Architect' as text
           "type": "string"
         }'),
        ('phone',
-        to_jsonb(cast('+963 956926129' as text)),
+        to_jsonb(cast('963936955531' as text)),
         '{
           "type": "string"
         }'),
        ('location',
-        to_jsonb(cast('Damascus, Syria' as text)),
+        to_jsonb(cast('Damascus' as text)),
         '{
           "type": "string"
         }'),
        ('linked_in',
-        to_jsonb(cast('https://linkedin.com' as text)),
+        to_jsonb(cast('linkedin.com/in/khaldoun-alhalabi-38525432b' as text)),
         '{
           "type": "string"
         }'),
        ('github',
-        to_jsonb(cast('https://github.com' as text)),
+        to_jsonb(cast('https://github.com/khaldounalhalabi' as text)),
         '{
           "type": "string"
         }'),
@@ -64,5 +69,17 @@ values ('hero_sentence_under_name', to_jsonb(cast('Full-Stack Architect' as text
         to_jsonb(cast('Hi Khaldoun! 👋 I''m interested in creating a new project and would like to discuss my requirements with you. When are you available?' as text)),
         '{
           "type": "string"
+        }'),
+       ('languages',
+        to_jsonb(cast('Arabic, English' as text)),
+        '{
+          "type": "string"
+        }'),
+       ('education',
+        to_jsonb(cast('Bachelor, Information Technology
+Damascus University
+01/2018 - 07/2025' as text)),
+        '{
+          "type": "paragraph"
         }')
 on conflict do nothing;

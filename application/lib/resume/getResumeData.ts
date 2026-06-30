@@ -13,6 +13,7 @@ import SkillCategoryService from "@/services/SkillCategoryService";
 import {
   ResumeContact,
   ResumeData,
+  ResumeEducation,
   ResumeExperience,
   ResumeProject,
   ResumeProjectTechStackItem,
@@ -31,6 +32,9 @@ const RESUME_SETTING_KEYS: SiteSettingKeyEnum[] = [
   SiteSettingKeyEnum.STACKOVERFLOW,
   SiteSettingKeyEnum.TELEGRAM,
   SiteSettingKeyEnum.WHATSAPP,
+  SiteSettingKeyEnum.LANGUAGES,
+  SiteSettingKeyEnum.EDUCATION,
+  SiteSettingKeyEnum.RESUME_TITLE,
 ];
 
 function getSettingValue(
@@ -52,8 +56,8 @@ function formatDateRange(from: string, to: string | null): string {
   const fromDate = parseISO(from);
   const toDate = to ? parseISO(to) : null;
 
-  const fromFormatted = format(fromDate, "MMM yyyy");
-  const toFormatted = toDate ? format(toDate, "MMM yyyy") : "Present";
+  const fromFormatted = format(fromDate, "MM/yyyy");
+  const toFormatted = toDate ? format(toDate, "MM/yyyy") : "Present";
 
   return `${fromFormatted} - ${toFormatted}`;
 }
@@ -86,6 +90,34 @@ function parseTechStack(value: unknown): ResumeProjectTechStackItem[] {
       description:
         typeof item.description === "string" ? item.description.trim() : "",
     }));
+}
+
+function parseEducation(value: string | undefined): ResumeEducation | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const lines = value
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length === 0) {
+    return undefined;
+  }
+
+  const [degreeLine, school, dateRange] = lines;
+  const [degree, ...fieldParts] = (degreeLine ?? "").split(",");
+  const field = fieldParts.join(",").trim();
+
+  return {
+    degree: degree?.trim() ?? "",
+    field,
+    school: school ?? "",
+    dateRange: dateRange ?? "",
+  };
 }
 
 export async function getResumeData(): Promise<ResumeData> {
@@ -147,7 +179,10 @@ export async function getResumeData(): Promise<ResumeData> {
 
   return {
     name: "Khaldoun Alhalabi",
-    title: getSettingValue(settings, SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME) ?? "",
+    title:
+      getSettingValue(settings, SiteSettingKeyEnum.RESUME_TITLE) ??
+      getSettingValue(settings, SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME) ??
+      "",
     summary: stripRichText(
       getSettingValue(settings, SiteSettingKeyEnum.HERO_PARAGRAPH),
     ),
@@ -155,5 +190,9 @@ export async function getResumeData(): Promise<ResumeData> {
     experiences: mappedExperiences,
     projects: mappedProjects,
     skillGroups: mappedSkillGroups,
+    languages: getSettingValue(settings, SiteSettingKeyEnum.LANGUAGES),
+    education: parseEducation(
+      getSettingValue(settings, SiteSettingKeyEnum.EDUCATION),
+    ),
   };
 }

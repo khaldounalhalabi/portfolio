@@ -12,5 +12,8 @@ enum SiteSettingKeyEnum {
   TELEGRAM = "telegram",
   WHATSAPP = "whatsapp",
   PRE_FILLED_MESSAGE = "pre_filled_message",
+  LANGUAGES = "languages",
+  EDUCATION = "education",
+  RESUME_TITLE = "resume_title",
 }
 export default SiteSettingKeyEnum;
