@@ -77,7 +77,7 @@ export default async function ProjectDetailPage({
       <section className="container-shell mt-14">
         <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/5">
           <ProjectMedia imageUrl={project.image_url} title={project.title} />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
         </div>
       </section>
 

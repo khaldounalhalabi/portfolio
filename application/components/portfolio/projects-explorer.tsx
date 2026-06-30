@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
 import { ProjectMedia } from "@/components/portfolio/project-media";
 import { stripRichText } from "@/lib/rich-text";
@@ -56,15 +56,17 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
             className="group overflow-hidden rounded-3xl border border-white/6 bg-surface-container-low"
           >
             <div className="relative aspect-16/10 overflow-hidden">
-              <div className="transition duration-700 group-hover:scale-105">
-                <ProjectMedia imageUrl={project.image_url} title={project.title} />
-              </div>
+              <ProjectMedia
+                className={"transition duration-700 group-hover:scale-105"}
+                imageUrl={project.image_url}
+                title={project.title}
+              />
               <div className="absolute inset-0 bg-linear-to-t from-background via-background/10 to-transparent" />
             </div>
             <div className="space-y-5 p-7">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-secondary">
+                  <p className="text-xs tracking-[0.25em] text-secondary uppercase">
                     {project.category}
                   </p>
                   <h3 className="mt-3 font-heading text-2xl font-bold text-primary">
@@ -80,7 +82,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-surface-container-high px-3 py-1 text-xs uppercase tracking-[0.2em] text-secondary"
+                    className="rounded-full bg-surface-container-high px-3 py-1 text-xs tracking-[0.2em] text-secondary uppercase"
                   >
                     {tag}
                   </span>

@@ -1,13 +1,17 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { HTMLProps } from "react";
 
 export function ProjectMedia({
   imageUrl,
   title,
   priority = false,
+  className,
 }: {
   imageUrl?: string | null;
   title: string;
   priority?: boolean;
+  className?: HTMLProps<HTMLImageElement>["className"];
 }) {
   if (!imageUrl) {
     return (
@@ -32,7 +36,11 @@ export function ProjectMedia({
   if (isSvg) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+      <img
+        src={imageUrl}
+        alt={title}
+        className={cn("h-full w-full object-cover", className)}
+      />
     );
   }
 
@@ -42,7 +50,7 @@ export function ProjectMedia({
       alt={title}
       fill
       priority={priority}
-      className="object-cover"
+      className={cn("object-cover", className)}
       unoptimized={process.env.NODE_ENV == "development"}
     />
   );
