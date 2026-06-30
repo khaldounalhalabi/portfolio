@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
-    "prebuild": "tsx scripts/generate-resume.ts",
     "build": "NODE_OPTIONS=\"--max-old-space-size=2048\" next build --experimental-debug-memory-usage",
     "start": "next start",
     "lint": "eslint",
