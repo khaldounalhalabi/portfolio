@@ -55,11 +55,11 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
             href={`/projects/${project.slug}`}
             className="group overflow-hidden rounded-3xl border border-white/6 bg-surface-container-low"
           >
-            <div className="relative aspect-[16/10] overflow-hidden">
+            <div className="relative aspect-16/10 overflow-hidden">
               <div className="transition duration-700 group-hover:scale-105">
                 <ProjectMedia imageUrl={project.image_url} title={project.title} />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-background via-background/10 to-transparent" />
             </div>
             <div className="space-y-5 p-7">
               <div className="flex items-start justify-between gap-4">

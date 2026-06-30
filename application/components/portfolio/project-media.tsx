@@ -1,13 +1,17 @@
+import Image from "next/image";
+
 export function ProjectMedia({
   imageUrl,
   title,
+  priority = false,
 }: {
   imageUrl?: string | null;
   title: string;
+  priority?: boolean;
 }) {
   if (!imageUrl) {
     return (
-      <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-surface-container-high to-surface-container-low">
+      <div className="relative h-full w-full overflow-hidden bg-linear-to-br from-surface-container-high to-surface-container-low">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(0,245,255,0.16),transparent_0_35%),radial-gradient(circle_at_80%_10%,rgba(125,255,162,0.12),transparent_0_30%)]" />
         <div className="absolute inset-0 grid place-items-center">
           <div className="text-center">
@@ -23,8 +27,23 @@ export function ProjectMedia({
     );
   }
 
+  const isSvg = imageUrl.toLowerCase().includes(".svg");
+
+  if (isSvg) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+    );
+  }
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+    <Image
+      src={imageUrl}
+      alt={title}
+      fill
+      priority={priority}
+      className="object-cover"
+      unoptimized={process.env.NODE_ENV == "development"}
+    />
   );
 }
