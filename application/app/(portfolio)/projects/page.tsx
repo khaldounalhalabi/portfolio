@@ -1,3 +1,5 @@
+import { FadeIn } from "@/components/motion/fade-in";
+import { TextReveal } from "@/components/motion/text-reveal";
 import { ProjectsExplorer } from "@/components/portfolio/projects-explorer";
 import ProjectService from "@/services/ProjectService";
 
@@ -5,18 +7,25 @@ export default async function ProjectsPage() {
   const projects = await ProjectService.make().all();
 
   return (
-    <main className="pb-24 pt-20">
+    <main className="pt-20 pb-24">
       <section className="container-shell mb-12">
-        <p className="text-xs uppercase tracking-[0.3em] text-secondary">
-          Showcase
-        </p>
-        <h1 className="mt-5 font-heading text-5xl font-bold text-primary md:text-7xl">
-          Selected Works
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-on-surface-variant">
-          A curated set of systems, products, and experiments spanning
-          Laravel-heavy backends, modern React stacks, and AI-flavored tooling.
-        </p>
+        <FadeIn>
+          <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+            Showcase
+          </p>
+        </FadeIn>
+        <TextReveal as="h1" className="mt-5" delay={0.1}>
+          <span className="font-heading text-5xl font-bold text-primary md:text-7xl">
+            Selected Works
+          </span>
+        </TextReveal>
+        <FadeIn delay={0.2} className="mt-6 max-w-2xl">
+          <p className="text-lg leading-8 text-on-surface-variant">
+            A curated set of systems, products, and experiments spanning
+            Laravel-heavy backends, modern React stacks, and AI-flavored
+            tooling.
+          </p>
+        </FadeIn>
       </section>
       <ProjectsExplorer projects={projects} />
     </main>

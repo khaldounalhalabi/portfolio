@@ -1,5 +1,9 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 
+import { FadeIn } from "@/components/motion/fade-in";
+import { MagneticButton } from "@/components/motion/magnetic-button";
+import { StaggerContainer, StaggerItem } from "@/components/motion/stagger";
+import { TextReveal } from "@/components/motion/text-reveal";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
 import SiteSettingService from "@/services/SiteSettingService";
 import {
@@ -46,146 +50,169 @@ export default async function ContactPage() {
     find(SiteSettingKeyEnum.PRE_FILLED_MESSAGE)?.value ?? "Hello",
   );
 
+  const contactDetails = [
+    {
+      icon: Mail,
+      label: "Email",
+      href: `mailto:${email?.value}?subject=${subject}&body=${message}`,
+      value: email?.value,
+      external: true,
+    },
+    {
+      icon: Phone,
+      label: "Phone",
+      href: `tel:${phone?.value?.replace(/\s+/g, "")}`,
+      value: phone?.value,
+      external: false,
+    },
+    {
+      icon: MapPin,
+      label: "Location",
+      href: null,
+      value: location?.value,
+      external: false,
+    },
+  ];
+
+  const socialLinks = [
+    { icon: IconBrandLinkedin, label: "LinkedIn", href: linkedin?.value },
+    {
+      icon: IconBrandWhatsapp,
+      label: "Whatsapp",
+      href: `${whatsapp?.value}?text=${message}`,
+    },
+    { icon: IconBrandTelegram, label: "Telegram", href: telegram?.value },
+    { icon: IconBrandGithub, label: "Github", href: github?.value },
+    { icon: IconBrandGitlab, label: "Gitlab", href: gitlab?.value },
+    {
+      icon: IconBrandStackoverflow,
+      label: "Stackoverflow",
+      href: stackoverflow?.value,
+    },
+  ];
+
   return (
     <main className="pt-20 pb-24">
       <section className="container-shell">
-        <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-          Connection Node
-        </p>
-        <h1 className="mt-5 bg-linear-to-r from-primary to-primary-container bg-clip-text font-heading text-5xl font-bold text-transparent md:text-7xl">
-          Get in Touch
-        </h1>
-        <p className="mt-6 max-w-3xl text-lg leading-8 text-on-surface-variant">
-          Whether you have a technical challenge, a project proposal, or just
-          want to discuss the future of full-stack architecture, my digital door
-          is open.
-        </p>
+        <FadeIn>
+          <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+            Connection Node
+          </p>
+        </FadeIn>
+        <TextReveal as="h1" className="mt-5" delay={0.1}>
+          <span className="bg-linear-to-r from-primary via-primary-container to-secondary bg-clip-text font-heading text-5xl font-bold break-words text-transparent md:text-7xl">
+            Get in Touch
+          </span>
+        </TextReveal>
+        <FadeIn delay={0.2} className="mt-6 max-w-3xl">
+          <p className="text-lg leading-8 text-on-surface-variant">
+            Whether you have a technical challenge, a project proposal, or just
+            want to discuss the future of full-stack architecture, my digital
+            door is open.
+          </p>
+        </FadeIn>
       </section>
 
       <section className="container-shell mt-14 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-[2rem] border border-white/6 bg-surface-container-low p-8">
-          <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-            Contact Details
-          </p>
-          <div className="mt-8 space-y-6">
-            <a
-              href={`mailto:${email?.value}?subject=${subject}&body=${message}`}
-              className="flex items-start gap-4 rounded-2xl bg-surface-container-high p-5"
-              target={"_blank"}
-            >
-              <div className="rounded-xl bg-surface-container p-3 text-primary-container">
-                <Mail className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-xs tracking-[0.25em] text-on-surface-variant uppercase">
-                  Email
-                </p>
-                <p className="mt-2 text-primary">{email?.value}</p>
-              </div>
-            </a>
-            <a
-              href={`tel:${phone?.value.replace(/\s+/g, "")}`}
-              className="flex items-start gap-4 rounded-2xl bg-surface-container-high p-5"
-            >
-              <div className="rounded-xl bg-surface-container p-3 text-primary-container">
-                <Phone className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-xs tracking-[0.25em] text-on-surface-variant uppercase">
-                  Phone
-                </p>
-                <p className="mt-2 text-primary">{phone?.value}</p>
-              </div>
-            </a>
-            <div className="flex items-start gap-4 rounded-2xl bg-surface-container-high p-5">
-              <div className="rounded-xl bg-surface-container p-3 text-primary-container">
-                <MapPin className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-xs tracking-[0.25em] text-on-surface-variant uppercase">
-                  Location
-                </p>
-                <p className="mt-2 text-primary">{location?.value}</p>
-              </div>
-            </div>
+        <FadeIn delay={0.2} direction="up">
+          <div className="max-w-[90vw] rounded-[2rem] border border-white/6 bg-surface-container-low/80 p-6 backdrop-blur-sm md:max-w-full md:p-8">
+            <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+              Contact Details
+            </p>
+            <StaggerContainer className="mt-8 space-y-4" staggerDelay={0.08}>
+              {contactDetails.map(
+                (detail) =>
+                  detail.value && (
+                    <StaggerItem key={detail.label}>
+                      {detail.href ? (
+                        <a
+                          href={detail.href}
+                          target={detail.external ? "_blank" : undefined}
+                          rel={detail.external ? "noreferrer" : undefined}
+                          className="group flex items-start gap-4 rounded-2xl border border-transparent bg-surface-container-high p-5 transition-all duration-300 hover:border-primary-container/20 hover:bg-surface-container"
+                        >
+                          <div className="rounded-xl bg-surface-container p-3 text-primary-container transition-colors group-hover:bg-primary-container/10">
+                            <detail.icon className="h-5 w-5" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs tracking-[0.25em] text-on-surface-variant uppercase">
+                              {detail.label}
+                            </p>
+                            <p className="mt-2 wrap-break-word text-primary transition-colors group-hover:text-primary-container">
+                              {detail.value}
+                            </p>
+                          </div>
+                        </a>
+                      ) : (
+                        <div className="flex items-start gap-4 rounded-2xl bg-surface-container-high p-5">
+                          <div className="rounded-xl bg-surface-container p-3 text-primary-container">
+                            <detail.icon className="h-5 w-5" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs tracking-[0.25em] text-on-surface-variant uppercase">
+                              {detail.label}
+                            </p>
+                            <p className="mt-2 wrap-break-word text-primary">
+                              {detail.value}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </StaggerItem>
+                  ),
+              )}
+            </StaggerContainer>
           </div>
-        </div>
+        </FadeIn>
 
         <aside className="space-y-8">
-          <div className="rounded-[2rem] border border-white/6 bg-surface-container-low p-8">
-            <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-              Social Nodes
-            </p>
-            <div className="mt-6 flex flex-col gap-3">
-              <a
-                href={linkedin?.value}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl bg-surface-container-high px-5 py-4 text-on-surface-variant hover:text-primary"
-              >
-                <IconBrandLinkedin />
-                <span className="font-medium">Linkedin</span>
-              </a>
-
-              <a
-                href={`${whatsapp?.value}?text=${message}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl bg-surface-container-high px-5 py-4 text-on-surface-variant hover:text-primary"
-              >
-                <IconBrandWhatsapp />
-                <span className="font-medium">Whatsapp</span>
-              </a>
-
-              <a
-                href={`${telegram?.value}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl bg-surface-container-high px-5 py-4 text-on-surface-variant hover:text-primary"
-              >
-                <IconBrandTelegram />
-                <span className="font-medium">Telegram</span>
-              </a>
-
-              <a
-                href={github?.value}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl bg-surface-container-high px-5 py-4 text-on-surface-variant hover:text-primary"
-              >
-                <IconBrandGithub />
-                <span className="font-medium">Github</span>
-              </a>
-
-              <a
-                href={gitlab?.value}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl bg-surface-container-high px-5 py-4 text-on-surface-variant hover:text-primary"
-              >
-                <IconBrandGitlab />
-                <span className="font-medium">Gitlab</span>
-              </a>
-
-              <a
-                href={stackoverflow?.value}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-3 rounded-2xl bg-surface-container-high px-5 py-4 text-on-surface-variant hover:text-primary"
-              >
-                <IconBrandStackoverflow />
-                <span className="font-medium">Stackoverflow</span>
-              </a>
+          <FadeIn delay={0.3} direction="up">
+            <div className="rounded-[2rem] border border-white/6 bg-surface-container-low/80 p-6 backdrop-blur-sm md:p-8">
+              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+                Social Nodes
+              </p>
+              <div className="mt-6 grid gap-3">
+                {socialLinks.map(
+                  (social) =>
+                    social.href && (
+                      <MagneticButton
+                        key={social.label}
+                        strength={0.15}
+                        className="w-full"
+                      >
+                        <a
+                          href={social.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="group flex w-full items-center gap-3 rounded-2xl border border-transparent bg-surface-container-high px-5 py-4 text-on-surface-variant transition-all duration-300 hover:border-primary-container/20 hover:bg-surface-container hover:text-primary"
+                        >
+                          <social.icon className="h-5 w-5 shrink-0 transition-colors group-hover:text-primary-container" />
+                          <span className="min-w-0 flex-1 truncate font-medium">
+                            {social.label}
+                          </span>
+                        </a>
+                      </MagneticButton>
+                    ),
+                )}
+              </div>
             </div>
-          </div>
-          <div className="rounded-[2rem] border border-primary-container/15 bg-linear-to-br from-primary-container/10 to-secondary/5 p-8">
-            <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-              Availability
-            </p>
-            <h2 className="mt-4 font-heading text-3xl font-bold text-primary">
-              Available for new opportunities
-            </h2>
-          </div>
+          </FadeIn>
+
+          <FadeIn delay={0.4} direction="up">
+            <div className="relative overflow-hidden rounded-[2rem] border border-primary-container/15 bg-linear-to-br from-primary-container/10 via-background to-secondary/5 p-6 md:p-8">
+              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-primary-container/10 blur-[80px]" />
+              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+                Availability
+              </p>
+              <h2 className="relative mt-4 font-heading text-3xl font-bold break-words text-primary">
+                Available for new opportunities
+              </h2>
+              <p className="relative mt-3 text-sm leading-6 text-on-surface-variant">
+                Currently open to full-stack, backend-heavy, and architecture
+                roles. Let&apos;s build something great.
+              </p>
+            </div>
+          </FadeIn>
         </aside>
       </section>
     </main>

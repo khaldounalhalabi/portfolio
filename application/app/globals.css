@@ -106,15 +106,22 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    @apply scroll-smooth font-sans;
+  }
+
   body {
     @apply bg-background text-foreground selection:bg-primary-container selection:text-on-primary;
   }
-  html {
-    @apply font-sans;
-  }
+
   a,
   button {
     @apply transition-colors;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
   }
 }
 
@@ -123,10 +130,72 @@
 }
 
 @utility grid-fade {
-  background-image: radial-gradient(circle at 2px 2px, rgb(58 73 74 / 18%) 1px, transparent 0);
+  background-image: radial-gradient(
+    circle at 2px 2px,
+    rgb(58 73 74 / 18%) 1px,
+    transparent 0
+  );
   background-size: 40px 40px;
 }
 
-.text-glow {
+.noise-overlay {
+  position: relative;
+  isolation: isolate;
+}
+
+.noise-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@utility text-glow {
   text-shadow: 0 0 24px rgb(0 245 255 / 20%);
+}
+
+@utility text-glow-strong {
+  text-shadow: 0 0 40px rgb(0 245 255 / 35%);
+}
+
+@utility glow-border {
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 8%),
+    0 0 0 0 rgb(0 245 255 / 0%);
+  transition: box-shadow 0.3s ease;
+}
+
+@utility glow-border-hover {
+  box-shadow:
+    inset 0 0 0 1px rgb(0 245 255 / 25%),
+    0 0 30px -5px rgb(0 245 255 / 12%);
+}
+
+.card-hover {
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgb(0 245 255 / 20%);
+  box-shadow:
+    0 20px 40px -15px rgb(0 0 0 / 35%),
+    0 0 30px -10px rgb(0 245 255 / 8%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

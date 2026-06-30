@@ -1,5 +1,10 @@
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+
+import { FadeIn } from "@/components/motion/fade-in";
+import { TextReveal } from "@/components/motion/text-reveal";
 import { ExperienceTimeline } from "@/components/portfolio/experience-timeline";
-import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
+import { SkillsGrid } from "@/components/portfolio/skills-grid";
 import ExperienceService from "@/services/ExperienceService";
 import SkillCategoryService from "@/services/SkillCategoryService";
 
@@ -10,59 +15,50 @@ export default async function ExperiencePage() {
   return (
     <main className="pt-20 pb-24">
       <section className="container-shell">
-        <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-          Chronology
-        </p>
-        <h1 className="mt-5 font-heading text-5xl font-bold text-primary md:text-7xl">
-          Experience
-        </h1>
+        <FadeIn>
+          <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+            Chronology
+          </p>
+        </FadeIn>
+        <TextReveal as="h1" className="mt-5" delay={0.1}>
+          <span className="font-heading text-5xl font-bold text-primary md:text-7xl">
+            Experience
+          </span>
+        </TextReveal>
+        <FadeIn delay={0.2} className="mt-6 max-w-2xl">
+          <p className="text-lg leading-8 text-on-surface-variant">
+            A timeline of roles that shaped my approach to building reliable,
+            scalable systems and working effectively across teams.
+          </p>
+        </FadeIn>
         <ExperienceTimeline experiences={experiences} />
       </section>
 
-      <section id="skills" className="container-shell mt-20">
-        <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-          Toolbox
-        </p>
-        <h2 className="mt-5 font-heading text-4xl font-bold text-primary md:text-6xl">
-          Skills & Tech
-        </h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {skillCategories.map((group) => (
-            <div
-              key={group.id}
-              className={`rounded-[2rem] border p-6 ${
-                group.is_highlighted
-                  ? "border-primary-container/30 bg-surface-container"
-                  : "border-white/6 bg-surface-container-low"
-              }`}
-            >
-              <PortfolioIcon
-                name={group.icon}
-                className={`h-6 w-6 ${
-                  group.is_highlighted
-                    ? "text-primary-container"
-                    : "text-secondary"
-                }`}
-              />
-              <h3 className="mt-4 font-heading text-2xl font-bold text-primary">
-                {group.name}
-              </h3>
-              <p className="mt-3 text-sm leading-7 text-on-surface-variant">
-                {group.description}
+      <section id="skills" className="container-shell mt-24 md:mt-32">
+        <div className="flex items-end justify-between gap-6">
+          <div>
+            <FadeIn>
+              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+                Toolbox
               </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {group.skills?.map((skill) => (
-                  <span
-                    key={skill.name}
-                    className="rounded-full bg-surface-container-high px-3 py-1 text-xs text-on-surface-variant"
-                  >
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+            </FadeIn>
+            <TextReveal as="h2" className="mt-4" delay={0.1}>
+              <span className="font-heading text-4xl font-bold text-primary md:text-5xl">
+                Skills & Tech
+              </span>
+            </TextReveal>
+          </div>
+          <FadeIn delay={0.2} className="hidden md:block">
+            <Link
+              href="/projects"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-primary-container"
+            >
+              View projects
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </FadeIn>
         </div>
+        <SkillsGrid skillCategories={skillCategories} />
       </section>
     </main>
   );

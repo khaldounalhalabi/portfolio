@@ -11,6 +11,7 @@ A personal portfolio website with a Supabase-backed admin dashboard. Built with 
 - **Rich Text**: TipTap editor with custom extensions
 - **Icons**: Lucide React (with a development stub) + Tabler Icons
 - **Charts**: Recharts
+- **Animations**: Framer Motion
 - **Drag-and-Drop**: @dnd-kit (core, sortable, utilities)
 - **Screenshot Capture**: ScreenshotOne API SDK for project images
 - **Package Manager**: npm
@@ -51,6 +52,7 @@ portfolio/
 │   │   ├── ui/              # shadcn/ui components (31+ components)
 │   │   ├── forms/           # Reusable form components (Form, FormInput, FormTiptap, etc.)
 │   │   ├── tiptap/          # TipTap editor components and extensions
+│   │   ├── motion/          # Reusable Framer Motion animation wrappers
 │   │   ├── portfolio/       # Portfolio-specific components
 │   │   ├── projects/        # Project CRUD components
 │   │   ├── experiences/     # Experience CRUD components
@@ -138,7 +140,7 @@ The application uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLIS
 - **Tailwind CSS v4** with the new `@import "tailwindcss"` syntax and `@tailwindcss/postcss` plugin.
 - Custom theme variables defined in `app/globals.css` using CSS custom properties (`--background`, `--primary`, `--secondary`, etc.).
 - Dark theme is the default (`html className="dark"`).
-- Custom utilities: `container-shell`, `grid-fade`, and `.text-glow`.
+- Custom utilities: `container-shell`, `grid-fade`, `.text-glow`, `.noise-overlay`, `.card-hover`, `.glow-border`, and `.glow-border-hover`.
 - Fonts: Inter (sans) and Space Grotesk (heading) via `next/font/google`.
 
 ### shadcn/ui
@@ -209,4 +211,5 @@ The project is designed for deployment on **Vercel** (standard Next.js deploymen
 - The auth/session proxy is `application/proxy.ts`; there is no `middleware.ts`.
 - The Next.js app package is at `application/package.json`; do not look for a root `package.json`.
 - Project screenshots are captured via the ScreenshotOne server action in `app/(dashboard)/dashboard/projects/actions.ts` and stored in the `portfolio-images` Supabase bucket.
+- Portfolio animations are built with Framer Motion. Reusable wrappers live in `components/motion/` (`FadeIn`, `TextReveal`, `StaggerContainer`, `MagneticButton`, `GradientSpotlight`, etc.) and respect `prefers-reduced-motion`.
 - Always regenerate Supabase types after schema changes: `npm run db:types`.
