@@ -5,6 +5,7 @@ import { MagneticButton } from "@/components/motion/magnetic-button";
 import { StaggerContainer, StaggerItem } from "@/components/motion/stagger";
 import { TextReveal } from "@/components/motion/text-reveal";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
+import { createClient } from "@/lib/supabase/server";
 import SiteSettingService from "@/services/SiteSettingService";
 import {
   IconBrandGithub,
@@ -16,18 +17,21 @@ import {
 } from "@tabler/icons-react";
 
 export default async function ContactPage() {
-  const siteSettings = await SiteSettingService.make().getByKeys([
-    SiteSettingKeyEnum.EMAIL,
-    SiteSettingKeyEnum.LINKED_IN,
-    SiteSettingKeyEnum.GITHUB,
-    SiteSettingKeyEnum.PHONE,
-    SiteSettingKeyEnum.LOCATION,
-    SiteSettingKeyEnum.STACKOVERFLOW,
-    SiteSettingKeyEnum.GITLAB,
-    SiteSettingKeyEnum.WHATSAPP,
-    SiteSettingKeyEnum.TELEGRAM,
-    SiteSettingKeyEnum.PRE_FILLED_MESSAGE,
-  ]);
+  const supabase = await createClient();
+  const siteSettings = await SiteSettingService.make()
+    .setClient(supabase)
+    .getByKeys([
+      SiteSettingKeyEnum.EMAIL,
+      SiteSettingKeyEnum.LINKED_IN,
+      SiteSettingKeyEnum.GITHUB,
+      SiteSettingKeyEnum.PHONE,
+      SiteSettingKeyEnum.LOCATION,
+      SiteSettingKeyEnum.STACKOVERFLOW,
+      SiteSettingKeyEnum.GITLAB,
+      SiteSettingKeyEnum.WHATSAPP,
+      SiteSettingKeyEnum.TELEGRAM,
+      SiteSettingKeyEnum.PRE_FILLED_MESSAGE,
+    ]);
   const find = <K extends SiteSettingKeyEnum>(key: K) =>
     siteSettings.find(
       (s): s is Extract<(typeof siteSettings)[number], { key: K }> =>

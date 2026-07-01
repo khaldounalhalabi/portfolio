@@ -10,6 +10,7 @@ import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
 import { ProjectMedia } from "@/components/portfolio/project-media";
 import { RichTextContent } from "@/components/portfolio/rich-text-content";
 import { hasRichTextContent, stripRichText } from "@/lib/rich-text";
+import { createClient } from "@/lib/supabase/server";
 import Project from "@/models/Project";
 import ProjectService from "@/services/ProjectService";
 
@@ -25,14 +26,13 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const supabase = await createClient();
   let project;
 
   try {
-    project = (await ProjectService.make().show(
-      slug,
-      undefined,
-      "slug",
-    )) as Project | null;
+    project = (await ProjectService.make()
+      .setClient(supabase)
+      .show(slug, undefined, "slug")) as Project | null;
   } catch {
     notFound();
   }

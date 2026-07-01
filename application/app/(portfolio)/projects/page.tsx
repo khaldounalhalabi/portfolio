@@ -1,10 +1,12 @@
 import { FadeIn } from "@/components/motion/fade-in";
 import { TextReveal } from "@/components/motion/text-reveal";
 import { ProjectsExplorer } from "@/components/portfolio/projects-explorer";
+import { createClient } from "@/lib/supabase/server";
 import ProjectService from "@/services/ProjectService";
 
 export default async function ProjectsPage() {
-  const projects = await ProjectService.make().all();
+  const supabase = await createClient();
+  const projects = await ProjectService.make().setClient(supabase).all();
 
   return (
     <main className="pt-20 pb-24">

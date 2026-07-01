@@ -86,6 +86,11 @@ export function BaseService<SERVICE, MODEL extends TableName | TableRecord>() {
     protected static instance?: SERVICE;
     protected supabase: SupabaseClient;
 
+    public setClient(supabaseClient: SupabaseClient) {
+      this.supabase = supabaseClient;
+      return this as unknown as SERVICE;
+    }
+
     public table: TableName;
 
     protected constructor() {

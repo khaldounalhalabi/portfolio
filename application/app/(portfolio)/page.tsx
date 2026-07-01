@@ -8,18 +8,24 @@ import { TextReveal } from "@/components/motion/text-reveal";
 import { FeaturedProjectsCarousel } from "@/components/portfolio/featured-projects-carousel";
 import { SkillsGrid } from "@/components/portfolio/skills-grid";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
+import { createClient } from "@/lib/supabase/server";
 import ProjectService from "@/services/ProjectService";
 import SiteSettingService from "@/services/SiteSettingService";
 import SkillCategoryService from "@/services/SkillCategoryService";
 
 export default async function HomePage() {
-  const projects = await ProjectService.make().all();
+  const supabase = await createClient();
+  const projects = await ProjectService.make().setClient(supabase).all();
   const featuredProjects = projects
     .filter((project) => project.featured)
     .sort((a, b) => a.display_order - b.display_order);
 
-  const siteSettings = await SiteSettingService.make().all();
-  const skillCategories = await SkillCategoryService.make().all(["skills"]);
+  const siteSettings = await SiteSettingService.make()
+    .setClient(supabase)
+    .all();
+  const skillCategories = await SkillCategoryService.make()
+    .setClient(supabase)
+    .all(["skills"]);
 
   const heroSentence = siteSettings.find(
     (s) => s.key == SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME,

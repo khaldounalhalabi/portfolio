@@ -5,12 +5,16 @@ import { FadeIn } from "@/components/motion/fade-in";
 import { TextReveal } from "@/components/motion/text-reveal";
 import { ExperienceTimeline } from "@/components/portfolio/experience-timeline";
 import { SkillsGrid } from "@/components/portfolio/skills-grid";
+import { createClient } from "@/lib/supabase/server";
 import ExperienceService from "@/services/ExperienceService";
 import SkillCategoryService from "@/services/SkillCategoryService";
 
 export default async function ExperiencePage() {
-  const experiences = await ExperienceService.make().all();
-  const skillCategories = await SkillCategoryService.make().all(["skills"]);
+  const supabase = await createClient();
+  const experiences = await ExperienceService.make().setClient(supabase).all();
+  const skillCategories = await SkillCategoryService.make()
+    .setClient(supabase)
+    .all(["skills"]);
 
   return (
     <main className="pt-20 pb-24">

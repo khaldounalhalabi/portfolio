@@ -10,6 +10,7 @@ import ProjectService from "@/services/ProjectService";
 import SiteSettingService from "@/services/SiteSettingService";
 import SkillCategoryService from "@/services/SkillCategoryService";
 
+import { createClient } from "../supabase/server";
 import {
   ResumeContact,
   ResumeData,
@@ -92,7 +93,9 @@ function parseTechStack(value: unknown): ResumeProjectTechStackItem[] {
     }));
 }
 
-function parseEducation(value: string | undefined): ResumeEducation | undefined {
+function parseEducation(
+  value: string | undefined,
+): ResumeEducation | undefined {
   if (!value) {
     return undefined;
   }
@@ -121,11 +124,14 @@ function parseEducation(value: string | undefined): ResumeEducation | undefined 
 }
 
 export async function getResumeData(): Promise<ResumeData> {
+  const supabase = await createClient();
   const [settings, experiences, projects, skillCategories] = await Promise.all([
-    SiteSettingService.make().getByKeys(RESUME_SETTING_KEYS),
-    ExperienceService.make().all(),
-    ProjectService.make().all(),
-    SkillCategoryService.make().all(["skills"]),
+    SiteSettingService.make()
+      .setClient(supabase)
+      .getByKeys(RESUME_SETTING_KEYS),
+    ExperienceService.make().setClient(supabase).all(),
+    ProjectService.make().setClient(supabase).all(),
+    SkillCategoryService.make().setClient(supabase).all(["skills"]),
   ]);
 
   const contact: ResumeContact = {
