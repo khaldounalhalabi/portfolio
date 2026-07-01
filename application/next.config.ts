@@ -29,8 +29,12 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  serverExternalPackages: ["@sparticuz/chromium"],
-
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push("@sparticuz/chromium");
+    }
+    return config;
+  },
   turbopack:
     process.env.NODE_ENV === "development"
       ? {
