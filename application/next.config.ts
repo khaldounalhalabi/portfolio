@@ -29,13 +29,15 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  serverExternalPackages: ["@sparticuz/chromium"],
+
   turbopack:
     process.env.NODE_ENV === "development"
       ? {
-        resolveAlias: {
-          "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
-        },
-      }
+          resolveAlias: {
+            "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
+          },
+        }
       : undefined,
 };
 
