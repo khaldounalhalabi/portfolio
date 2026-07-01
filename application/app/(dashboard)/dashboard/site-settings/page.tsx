@@ -15,16 +15,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { createClient } from "@/lib/supabase/server";
+import { title } from "@/lib/utils";
 import SiteSetting from "@/models/SiteSetting";
 import { redirect } from "next/navigation";
-import { title } from "@/lib/utils";
 
 const SiteSettingsIndex = async () => {
   const supabase = await createClient();
 
   const { data: siteSettings, error } = await supabase
     .from("site_settings")
-    .select("*");
+    .select("*")
+    .order("key", { ascending: true });
 
   if (error) {
     redirect("/500");
