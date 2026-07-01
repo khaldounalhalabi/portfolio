@@ -29,19 +29,13 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals.push("@sparticuz/chromium");
-    }
-    return config;
-  },
   turbopack:
     process.env.NODE_ENV === "development"
       ? {
-          resolveAlias: {
-            "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
-          },
-        }
+        resolveAlias: {
+          "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
+        },
+      }
       : undefined,
 };
 
