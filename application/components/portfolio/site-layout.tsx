@@ -168,8 +168,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               Available for new opportunities
             </p>
             <p className="mt-3 max-w-xl text-sm text-on-surface-variant">
-              © {new Date().getFullYear()} Khaldoun Alhalabi. Built with
-              Next.js, Supabase, and attention to detail.
+              © {new Date().getFullYear()} Khaldoun Alhalabi.
             </p>
           </div>
           <FooterContactLinks />

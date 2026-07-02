@@ -9,7 +9,7 @@ import { TextReveal } from "@/components/motion/text-reveal";
 import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
 import { ProjectMedia } from "@/components/portfolio/project-media";
 import { RichTextContent } from "@/components/portfolio/rich-text-content";
-import { hasRichTextContent, stripRichText } from "@/lib/rich-text";
+import { hasRichTextContent } from "@/lib/rich-text";
 import { createClient } from "@/lib/supabase/server";
 import Project from "@/models/Project";
 import ProjectService from "@/services/ProjectService";
@@ -52,7 +52,7 @@ export default async function ProjectDetailPage({
       />
 
       <section className="relative container-shell">
-        <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-end">
+        <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-center">
           <div>
             <FadeIn>
               <p className="text-xs tracking-[0.3em] text-secondary uppercase">
@@ -60,13 +60,17 @@ export default async function ProjectDetailPage({
               </p>
             </FadeIn>
             <TextReveal as="h1" className="mt-5" delay={0.1}>
-              <span className="font-heading text-4xl font-bold break-words text-primary md:text-6xl lg:text-7xl">
+              <span className="font-heading text-4xl font-bold wrap-break-word text-primary md:text-6xl lg:text-7xl">
                 {project.title}
               </span>
             </TextReveal>
             <FadeIn delay={0.2} className="mt-6 max-w-3xl">
               <p className="text-xl leading-9 text-on-surface-variant">
-                {stripRichText(project.long_description || project.description)}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: project.long_description || project.description,
+                  }}
+                />
               </p>
             </FadeIn>
           </div>
@@ -114,7 +118,7 @@ export default async function ProjectDetailPage({
 
       <section className="container-shell mt-16 grid gap-12 lg:grid-cols-2">
         <FadeIn delay={0.1} direction="up">
-          <div className="rounded-[2rem] border border-white/6 bg-surface-container-low/60 p-8 backdrop-blur-sm md:p-10">
+          <div className="h-full rounded-[2rem] border border-white/6 bg-surface-container-low/60 p-8 backdrop-blur-sm md:p-10">
             <p className="text-xs tracking-[0.3em] text-secondary uppercase">
               The Problem
             </p>
@@ -132,7 +136,7 @@ export default async function ProjectDetailPage({
           </div>
         </FadeIn>
         <FadeIn delay={0.2} direction="up">
-          <div className="rounded-[2rem] border border-white/6 bg-surface-container-low/60 p-8 backdrop-blur-sm md:p-10">
+          <div className="h-full rounded-[2rem] border border-white/6 bg-surface-container-low/60 p-8 backdrop-blur-sm md:p-10">
             <p className="text-xs tracking-[0.3em] text-primary-container uppercase">
               The Solution
             </p>
@@ -175,7 +179,7 @@ export default async function ProjectDetailPage({
               <h2 className="font-heading text-3xl font-bold text-primary">
                 Engineered With
               </h2>
-              <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+              <div className="h-px flex-1 bg-linear-to-r from-white/10 to-transparent" />
             </div>
           </FadeIn>
           <StaggerContainer

@@ -34,9 +34,9 @@ export function ProjectsExplorer({ projects }: ProjectsExplorerProps) {
 
   return (
     <div>
-      <div className="sticky top-[73px] z-30 border-y border-white/5 bg-background/80 py-4 backdrop-blur-xl">
-        <div className="container-shell flex gap-3 overflow-x-auto pb-1">
-          {categories.map((category) => (
+      <div className="sticky top-18.25 z-30 border-y border-white/5 bg-background/80 py-4 backdrop-blur-xl">
+        <div className="container-shell flex flex-wrap gap-3 pb-1">
+          {categories.slice(0, 15).map((category) => (
             <button
               key={category}
               type="button"
