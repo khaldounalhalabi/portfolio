@@ -111,6 +111,7 @@ const ProjectSheet = ({
               router.refresh();
             }}
             withBackButton={false}
+            revalidateOnSuccess
           >
             <ProjectFormFields fetchImageAction={fetchImageAction} />
           </Form>

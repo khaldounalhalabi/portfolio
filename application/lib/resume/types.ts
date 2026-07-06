@@ -41,13 +41,6 @@ export interface ResumeSkillGroup {
   skills: string[];
 }
 
-export interface ResumeEducation {
-  degree: string;
-  field: string;
-  school: string;
-  dateRange: string;
-}
-
 export interface ResumeData {
   name: string;
   title: string;
@@ -57,5 +50,5 @@ export interface ResumeData {
   projects: ResumeProject[];
   skillGroups: ResumeSkillGroup[];
   languages?: string;
-  education?: ResumeEducation;
+  education?: string;
 }

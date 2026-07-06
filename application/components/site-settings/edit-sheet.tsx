@@ -87,6 +87,7 @@ const EditSheet = ({ setting }: { setting: SiteSetting }) => {
               router.refresh();
             }}
             withBackButton={false}
+            revalidateOnSuccess
           >
             <SettingField setting={setting} />
           </Form>

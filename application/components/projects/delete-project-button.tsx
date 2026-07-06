@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidatePortfolio } from "@/app/(dashboard)/dashboard/actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,6 +56,7 @@ const DeleteProjectButton = ({ project }: { project: Project }) => {
 
               toast.success("Project deleted");
               router.refresh();
+              await revalidatePortfolio();
               setIsDeleting(false);
               setOpen(false);
             }}

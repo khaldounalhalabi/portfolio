@@ -3,7 +3,7 @@ import "server-only";
 import { format, parseISO } from "date-fns";
 
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
-import { stripRichText } from "@/lib/rich-text";
+import { sanitizeRichText, stripRichText } from "@/lib/rich-text";
 import SiteSetting from "@/models/SiteSetting";
 import ExperienceService from "@/services/ExperienceService";
 import ProjectService from "@/services/ProjectService";
@@ -14,7 +14,6 @@ import { createClient } from "../supabase/server";
 import {
   ResumeContact,
   ResumeData,
-  ResumeEducation,
   ResumeExperience,
   ResumeProject,
   ResumeProjectTechStackItem,
@@ -63,12 +62,20 @@ function formatDateRange(from: string, to: string | null): string {
   return `${fromFormatted} - ${toFormatted}`;
 }
 
-function normalizeDescription(value: string): string {
+function decodeHtmlEntities(value: string): string {
   return value
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, "/")
+    .replace(/&#47;/g, "/");
+}
+
+function sanitizeResumeHtml(value: string | null | undefined): string {
+  return sanitizeRichText(decodeHtmlEntities(value ?? ""));
 }
 
 function parseTechStack(value: unknown): ResumeProjectTechStackItem[] {
@@ -91,36 +98,6 @@ function parseTechStack(value: unknown): ResumeProjectTechStackItem[] {
       description:
         typeof item.description === "string" ? item.description.trim() : "",
     }));
-}
-
-function parseEducation(
-  value: string | undefined,
-): ResumeEducation | undefined {
-  if (!value) {
-    return undefined;
-  }
-
-  const lines = value
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  if (lines.length === 0) {
-    return undefined;
-  }
-
-  const [degreeLine, school, dateRange] = lines;
-  const [degree, ...fieldParts] = (degreeLine ?? "").split(",");
-  const field = fieldParts.join(",").trim();
-
-  return {
-    degree: degree?.trim() ?? "",
-    field,
-    school: school ?? "",
-    dateRange: dateRange ?? "",
-  };
 }
 
 export async function getResumeData(): Promise<ResumeData> {
@@ -153,7 +130,7 @@ export async function getResumeData(): Promise<ResumeData> {
       companyName: experience.company_name,
       location: experience.location,
       dateRange: formatDateRange(experience.from, experience.to),
-      jobDescription: normalizeDescription(experience.job_description),
+      jobDescription: sanitizeResumeHtml(experience.job_description),
     }),
   );
 
@@ -171,8 +148,7 @@ export async function getResumeData(): Promise<ResumeData> {
       techStack: parseTechStack(project.tech_stack),
     }));
 
-  const mappedSkillGroups: ResumeSkillGroup[] = skillCategories
-    .filter((category) => category.is_highlighted)
+  const mappedSkillGroups: ResumeSkillGroup[] = [...skillCategories]
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((category) => ({
       category: category.name,
@@ -197,7 +173,7 @@ export async function getResumeData(): Promise<ResumeData> {
     projects: mappedProjects,
     skillGroups: mappedSkillGroups,
     languages: getSettingValue(settings, SiteSettingKeyEnum.LANGUAGES),
-    education: parseEducation(
+    education: sanitizeResumeHtml(
       getSettingValue(settings, SiteSettingKeyEnum.EDUCATION),
     ),
   };

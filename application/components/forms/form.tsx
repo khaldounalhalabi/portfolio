@@ -51,6 +51,7 @@ interface FormProps<
   onError?: (error: Error) => void;
   validation?: TSchema;
   invalidateQueryKey?: QueryResourceKey<OnSuccessReturn, unknown, unknown>;
+  revalidateOnSuccess?: boolean;
   mode?: UseFormProps<z.input<TSchema>>["mode"];
   reValidateMode?: UseFormProps<z.input<TSchema>>["reValidateMode"];
   withSubmitButton?: boolean;
@@ -68,6 +69,7 @@ function Form<
   onError,
   validation,
   invalidateQueryKey,
+  revalidateOnSuccess,
   mode = "onSubmit",
   reValidateMode = "onChange",
   withSubmitButton = true,
@@ -104,6 +106,7 @@ function Form<
       onError?.(error);
     },
     resource: invalidateQueryKey,
+    revalidate: revalidateOnSuccess,
   });
 
   const handleSubmit = async (

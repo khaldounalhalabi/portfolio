@@ -61,7 +61,24 @@ const SiteSettingsIndex = async () => {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {String(setting.value)}
+                    {typeof setting.structure == "object" &&
+                    setting.structure &&
+                    "type" in setting?.structure &&
+                    setting?.structure.type == "paragraph" ? (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: String(setting.value),
+                        }}
+                        className="max-h-10"
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      />
+                    ) : (
+                      String(setting.value)
+                    )}
                   </TableCell>
                   <TableCell>
                     <TableActions setting={setting as SiteSetting} />

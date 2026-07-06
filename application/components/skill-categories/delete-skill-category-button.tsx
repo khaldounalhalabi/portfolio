@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidatePortfolio } from "@/app/(dashboard)/dashboard/actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -61,6 +62,7 @@ const DeleteSkillCategoryButton = ({
 
               toast.success("Skill category deleted");
               router.refresh();
+              await revalidatePortfolio();
               setIsDeleting(false);
               setOpen(false);
             }}
