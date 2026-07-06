@@ -1,12 +1,12 @@
-import "server-only";
-
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
 import { prerenderToNodeStream } from "react-dom/static";
 
-import { Resume } from "@/components/resume/Resume";
+import { config } from "../../config.js";
 
-import { getResumeData } from "./getResumeData";
+import { Resume } from "./Resume.js";
+import { getResumeData } from "./getResumeData.js";
+import type { SupabaseService } from "../../services/supabase.service.js";
 
 function streamToString(stream: NodeJS.ReadableStream): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -47,15 +47,17 @@ function buildResumeHtml(bodyHtml: string): string {
 </html>`;
 }
 
-export async function generateResume(): Promise<Buffer> {
-  const data = await getResumeData();
+export async function generateResume(
+  supabaseService: SupabaseService,
+): Promise<Buffer> {
+  const data = await getResumeData(supabaseService.client);
   const { prelude } = await prerenderToNodeStream(<Resume data={data} />);
   const bodyHtml = await streamToString(prelude);
   const html = buildResumeHtml(bodyHtml);
 
   const executablePath =
-    process.env.NODE_ENV === "development" && process.env.CHROME_EXECUTABLE_PATH
-      ? process.env.CHROME_EXECUTABLE_PATH
+    config.nodeEnv === "development" && config.chromeExecutablePath
+      ? config.chromeExecutablePath
       : await chromium.executablePath();
 
   const browser = await puppeteer.launch({

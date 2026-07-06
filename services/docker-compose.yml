@@ -1,0 +1,23 @@
+services:
+  portfolio-services:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portfolio-services
+    ports:
+      - "${PORT:-3001}:${PORT:-3001}"
+    environment:
+      - PORT=${PORT:-3001}
+      - NODE_ENV=${NODE_ENV:-production}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - API_KEY=${API_KEY}
+      - RESUME_BUCKET_NAME=${RESUME_BUCKET_NAME:-resume}
+      - RESUME_OBJECT_PATH=${RESUME_OBJECT_PATH:-khaldoun-alhalabi-resume.pdf}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:${PORT:-3001}/health').then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped

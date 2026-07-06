@@ -94,6 +94,7 @@ const ExperienceSheet = ({ experience }: { experience?: Experience }) => {
               router.refresh();
             }}
             withBackButton={false}
+            revalidateOnSuccess
           >
             <ExperienceFields />
           </Form>

@@ -79,6 +79,7 @@ const SkillSheet = ({
               router.refresh();
             }}
             withBackButton={false}
+            revalidateOnSuccess
           >
             <FieldGroup>
               <FormInput name="name" label="Name" />

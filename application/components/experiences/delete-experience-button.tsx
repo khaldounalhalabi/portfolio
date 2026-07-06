@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidatePortfolio } from "@/app/(dashboard)/dashboard/actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,6 +56,7 @@ const DeleteExperienceButton = ({ experience }: { experience: Experience }) => {
 
               toast.success("Experience deleted");
               router.refresh();
+              await revalidatePortfolio();
               setIsDeleting(false);
             }}
           >

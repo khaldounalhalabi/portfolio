@@ -1,4 +1,5 @@
-import { ResumeData } from "@/lib/resume/types";
+import { sanitizeRichText } from "./rich-text.js";
+import type { ResumeData } from "./types.js";
 
 interface ResumeProps {
   data: ResumeData;
@@ -9,7 +10,6 @@ const baseFontFamily =
 const teal = "#0d9488";
 const textColor = "#111827";
 const mutedColor = "#374151";
-const lightMutedColor = "#4b5563";
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -28,71 +28,59 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-function parseMarkdownBold(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*.*?\*\*)/g);
+function ResumeHtmlContent({ html }: { html: string }) {
+  const sanitized = sanitizeRichText(html);
 
-  return parts.map((part, index) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return (
-        <strong key={index} style={{ fontWeight: 700 }}>
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-
-    return <span key={index}>{part}</span>;
-  });
-}
-
-function parseBulletPoints(text: string): string[] {
-  const lines = text
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .split("\n");
-
-  const bullets: string[] = [];
-  let current: string[] = [];
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line) {
-      continue;
-    }
-
-    if (line.startsWith("•")) {
-      if (current.length > 0) {
-        bullets.push(current.join(" ").trim());
-      }
-      current = [line.slice(1).trim()];
-    } else {
-      current.push(line);
-    }
-  }
-
-  if (current.length > 0) {
-    bullets.push(current.join(" ").trim());
-  }
-
-  return bullets;
-}
-
-function BulletList({ items }: { items: string[] }) {
   return (
-    <ul
-      style={{
-        margin: "2px 0 0 0",
-        paddingLeft: "13px",
-        color: mutedColor,
-        fontSize: "9.5pt",
-        lineHeight: 1.25,
-      }}
-    >
-      {items.map((item, index) => (
-        <li key={index} style={{ marginBottom: "0px" }}>
-          {parseMarkdownBold(item)}
-        </li>
-      ))}
-    </ul>
+    <>
+      <style>{`
+        .resume-html-content {
+          color: ${mutedColor};
+          font-size: 9.5pt;
+          line-height: 1.25;
+        }
+        .resume-html-content p {
+          margin: 0 0 3px 0;
+        }
+        .resume-html-content p:last-child {
+          margin-bottom: 0;
+        }
+        .resume-html-content ul,
+        .resume-html-content ol {
+          margin: 2px 0 0 0;
+          padding-left: 13px;
+        }
+        .resume-html-content li {
+          margin-bottom: 0;
+        }
+        .resume-html-content li > p {
+          margin: 0;
+        }
+        .resume-html-content strong {
+          font-weight: 700;
+          color: ${textColor};
+        }
+        .resume-html-content a {
+          color: ${teal};
+          text-decoration: none;
+        }
+        .resume-html-content em {
+          font-style: italic;
+        }
+        .resume-html-content h2,
+        .resume-html-content h3,
+        .resume-html-content h4 {
+          font-size: 9.5pt;
+          font-weight: 700;
+          margin: 4px 0 2px 0;
+          color: ${textColor};
+        }
+      `}</style>
+      <div
+        className="resume-html-content"
+        dangerouslySetInnerHTML={{ __html: sanitized }}
+      />
+    </>
   );
 }
 
@@ -325,7 +313,7 @@ export function Resume({ data }: ResumeProps) {
                     >
                       {experience.position}
                     </h3>
-                    <BulletList items={parseBulletPoints(experience.jobDescription)} />
+                    <ResumeHtmlContent html={experience.jobDescription} />
                   </article>
                 ))}
               </div>
@@ -458,36 +446,7 @@ export function Resume({ data }: ResumeProps) {
           {education && (
             <section style={{ breakInside: "avoid" }}>
               <SectionHeading>Education</SectionHeading>
-              <p
-                style={{
-                  margin: "0 0 2px 0",
-                  fontWeight: 700,
-                  color: textColor,
-                  fontSize: "9.5pt",
-                  lineHeight: 1.25,
-                }}
-              >
-                {education.degree}
-                {education.field ? `, ${education.field}` : ""}
-              </p>
-              <p
-                style={{
-                  margin: "0 0 2px 0",
-                  color: mutedColor,
-                  fontSize: "9.5pt",
-                }}
-              >
-                {education.school}
-              </p>
-              <p
-                style={{
-                  margin: 0,
-                  color: lightMutedColor,
-                  fontSize: "9pt",
-                }}
-              >
-                {education.dateRange}
-              </p>
+              <ResumeHtmlContent html={education} />
             </section>
           )}
         </aside>

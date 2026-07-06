@@ -1,25 +1,25 @@
-import "server-only";
-
 import { format, parseISO } from "date-fns";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
-import { stripRichText } from "@/lib/rich-text";
-import SiteSetting from "@/models/SiteSetting";
-import ExperienceService from "@/services/ExperienceService";
-import ProjectService from "@/services/ProjectService";
-import SiteSettingService from "@/services/SiteSettingService";
-import SkillCategoryService from "@/services/SkillCategoryService";
+import type { Database } from "../../types/database.types.js";
 
-import { createClient } from "../supabase/server";
-import {
+import { SiteSettingKeyEnum } from "./SiteSettingKeyEnum.js";
+import { sanitizeRichText, stripRichText } from "./rich-text.js";
+import type {
   ResumeContact,
   ResumeData,
-  ResumeEducation,
   ResumeExperience,
   ResumeProject,
   ResumeProjectTechStackItem,
   ResumeSkillGroup,
-} from "./types";
+} from "./types.js";
+
+type TypedSupabase = SupabaseClient<Database>;
+type SiteSettingRow = Database["public"]["Tables"]["site_settings"]["Row"];
+type ExperienceRow = Database["public"]["Tables"]["experiences"]["Row"];
+type ProjectRow = Database["public"]["Tables"]["projects"]["Row"];
+type SkillCategoryRow = Database["public"]["Tables"]["skill_categories"]["Row"];
+type SkillRow = Database["public"]["Tables"]["skills"]["Row"];
 
 const RESUME_SETTING_KEYS: SiteSettingKeyEnum[] = [
   SiteSettingKeyEnum.HERO_SENTENCE_UNDER_NAME,
@@ -39,7 +39,7 @@ const RESUME_SETTING_KEYS: SiteSettingKeyEnum[] = [
 ];
 
 function getSettingValue(
-  settings: SiteSetting[],
+  settings: SiteSettingRow[],
   key: SiteSettingKeyEnum,
 ): string | undefined {
   const setting = settings.find((s) => s.key === key);
@@ -63,12 +63,20 @@ function formatDateRange(from: string, to: string | null): string {
   return `${fromFormatted} - ${toFormatted}`;
 }
 
-function normalizeDescription(value: string): string {
+function decodeHtmlEntities(value: string): string {
   return value
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, "/")
+    .replace(/&#47;/g, "/");
+}
+
+function sanitizeResumeHtml(value: string | null | undefined): string {
+  return sanitizeRichText(decodeHtmlEntities(value ?? ""));
 }
 
 function parseTechStack(value: unknown): ResumeProjectTechStackItem[] {
@@ -93,46 +101,31 @@ function parseTechStack(value: unknown): ResumeProjectTechStackItem[] {
     }));
 }
 
-function parseEducation(
-  value: string | undefined,
-): ResumeEducation | undefined {
-  if (!value) {
-    return undefined;
-  }
+export async function getResumeData(
+  supabase: TypedSupabase,
+): Promise<ResumeData> {
+  const [settingsResult, experiencesResult, projectsResult, skillCategoriesResult] =
+    await Promise.all([
+      supabase
+        .from("site_settings")
+        .select("*")
+        .in("key", RESUME_SETTING_KEYS),
+      supabase.from("experiences").select("*"),
+      supabase.from("projects").select("*"),
+      supabase.from("skill_categories").select("*, skills(*)"),
+    ]);
 
-  const lines = value
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+  if (settingsResult.error) throw settingsResult.error;
+  if (experiencesResult.error) throw experiencesResult.error;
+  if (projectsResult.error) throw projectsResult.error;
+  if (skillCategoriesResult.error) throw skillCategoriesResult.error;
 
-  if (lines.length === 0) {
-    return undefined;
-  }
-
-  const [degreeLine, school, dateRange] = lines;
-  const [degree, ...fieldParts] = (degreeLine ?? "").split(",");
-  const field = fieldParts.join(",").trim();
-
-  return {
-    degree: degree?.trim() ?? "",
-    field,
-    school: school ?? "",
-    dateRange: dateRange ?? "",
-  };
-}
-
-export async function getResumeData(): Promise<ResumeData> {
-  const supabase = await createClient();
-  const [settings, experiences, projects, skillCategories] = await Promise.all([
-    SiteSettingService.make()
-      .setClient(supabase)
-      .getByKeys(RESUME_SETTING_KEYS),
-    ExperienceService.make().setClient(supabase).all(),
-    ProjectService.make().setClient(supabase).all(),
-    SkillCategoryService.make().setClient(supabase).all(["skills"]),
-  ]);
+  const settings = settingsResult.data as SiteSettingRow[];
+  const experiences = experiencesResult.data as ExperienceRow[];
+  const projects = projectsResult.data as ProjectRow[];
+  const skillCategories = skillCategoriesResult.data as (SkillCategoryRow & {
+    skills: SkillRow[] | null;
+  })[];
 
   const contact: ResumeContact = {
     email: getSettingValue(settings, SiteSettingKeyEnum.EMAIL),
@@ -153,7 +146,7 @@ export async function getResumeData(): Promise<ResumeData> {
       companyName: experience.company_name,
       location: experience.location,
       dateRange: formatDateRange(experience.from, experience.to),
-      jobDescription: normalizeDescription(experience.job_description),
+      jobDescription: sanitizeResumeHtml(experience.job_description),
     }),
   );
 
@@ -171,8 +164,7 @@ export async function getResumeData(): Promise<ResumeData> {
       techStack: parseTechStack(project.tech_stack),
     }));
 
-  const mappedSkillGroups: ResumeSkillGroup[] = skillCategories
-    .filter((category) => category.is_highlighted)
+  const mappedSkillGroups: ResumeSkillGroup[] = [...skillCategories]
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((category) => ({
       category: category.name,
@@ -197,7 +189,7 @@ export async function getResumeData(): Promise<ResumeData> {
     projects: mappedProjects,
     skillGroups: mappedSkillGroups,
     languages: getSettingValue(settings, SiteSettingKeyEnum.LANGUAGES),
-    education: parseEducation(
+    education: sanitizeResumeHtml(
       getSettingValue(settings, SiteSettingKeyEnum.EDUCATION),
     ),
   };

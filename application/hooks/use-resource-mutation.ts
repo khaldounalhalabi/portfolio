@@ -1,3 +1,4 @@
+import { revalidatePortfolio } from "@/app/(dashboard)/dashboard/actions";
 import { Database } from "@/integrations/supabase/database.types";
 import type { DefaultError, QueryClient } from "@tanstack/query-core";
 import {
@@ -28,6 +29,7 @@ type MutationOptions<
   TOnMutateResult = unknown,
 > = UseMutationOptions<TData, TError, TVariables, TOnMutateResult> & {
   resource?: QueryResourceKey<TData, TVariables, TOnMutateResult>;
+  revalidate?: boolean;
 };
 
 const useResourceMutation = <
@@ -42,7 +44,7 @@ const useResourceMutation = <
   const originalQueryClient = useQueryClient();
   const qClient = queryClient ?? originalQueryClient;
 
-  const { resource, ...restOptions } = options;
+  const { resource, revalidate, ...restOptions } = options;
 
   const onSuccess = async (
     data: TData,
@@ -74,6 +76,10 @@ const useResourceMutation = <
             );
           }),
       });
+    }
+
+    if (revalidate) {
+      await revalidatePortfolio();
     }
   };
 
