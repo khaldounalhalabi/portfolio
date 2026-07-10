@@ -1,5 +1,16 @@
-insert into skill_categories (name, icon, description, is_highlighted)
-values ('Languages', 'terminal', 'Production languages I rely on for application and systems work.', false),
-       ('Frameworks', 'layers', 'Frameworks I use to ship fast without compromising system design.', true),
-       ('Tools', 'wrench', 'Infrastructure and delivery tooling around day-to-day engineering work.', false),
-       ('Research', 'flask-conical', 'Applied AI and retrieval work used in modern developer tooling.', false);
+INSERT INTO "public"."skill_categories" ("id", "name", "description", "icon", "is_highlighted")
+VALUES ('1a2c218d-a891-47f6-b044-3c93f177035f', 'Back-End Development',
+        'Robust experience in building scalable backend systems', 'server', false),
+       ('33beddca-5728-4c5b-9fb7-68bd87ab0503', 'Database Management', 'Eyes on database performance',
+        'database-search', false),
+       ('6ddb6fd2-7cab-42a9-b7bc-79b665f4afd2', 'Frameworks',
+        'Frameworks I use to ship fast without compromising system design.', 'layers', true),
+       ('347bd2ef-8bea-42ed-9220-9c8db5bb7646', 'Languages',
+        'Production languages I rely on for application and systems work.', 'terminal', false),
+       ('8ad3234d-2bd0-4d86-9dd2-c4e9297f5767', 'Research',
+        'Applied AI and retrieval work used in modern developer tooling.', 'flask-conical', false),
+       ('fd9174fc-54c5-4fd2-a49f-a52b20b1e1ef', 'Soft Skills', 'The Human Stack', 'person-standing', false),
+       ('8448261a-e5d7-4603-8eda-43ef4487f184', 'Testing & Quality Assurance', 'Quality is my goal', 'check-check',
+        false),
+       ('4fe46c1a-acc4-473c-b1ea-4fa511aa052b', 'Tools',
+        'Infrastructure and delivery tooling around day-to-day engineering work.', 'wrench', false);
