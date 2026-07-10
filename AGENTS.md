@@ -162,6 +162,10 @@ SCREENSHOTONE_SECRET_KEY=<your-screenshotone-secret-key>
 RESUME_SERVICE_URL=http://localhost:3001
 RESUME_SERVICE_API_KEY=<strong-random-key>
 
+# SEO / metadata
+NEXT_PUBLIC_SITE_URL=https://khaldoun.site
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=<google-verification-code>
+
 # Optional: for `npm run storage:dump` to copy remote Storage objects to local
 REMOTE_SUPABASE_URL=<your-remote-supabase-url>
 REMOTE_SUPABASE_SERVICE_ROLE_KEY=<your-remote-service-role-key>
@@ -279,3 +283,4 @@ There are currently **no automated tests** (no Jest, Vitest, or Playwright confi
 - After changing the Supabase schema, regenerate types and keep `services/src/types/database.types.ts` in sync (currently copied from `application/integrations/supabase/database.types.ts`).
 - Portfolio animations are built with Framer Motion. Reusable wrappers live in `components/motion/` (`FadeIn`, `TextReveal`, `StaggerContainer`, `MagneticButton`, `GradientSpotlight`, etc.) and respect `prefers-reduced-motion`.
 - Always regenerate Supabase types after schema changes: `npm run db:types`.
+- SEO metadata, structured data, robots, sitemap, and Open Graph images are centralized in `application/lib/seo.ts` and `application/app/robots.ts`, `sitemap.ts`, `manifest.ts`, and `opengraph-image.tsx`. Public portfolio pages include per-page JSON-LD; dashboard and auth routes are noindexed. AI crawler context is exposed via `/llms.txt` and `/ai.txt`.

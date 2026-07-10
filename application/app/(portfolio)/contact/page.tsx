@@ -15,6 +15,24 @@ import {
   IconBrandTelegram,
   IconBrandWhatsapp,
 } from "@tabler/icons-react";
+import {
+  breadcrumbJsonLd,
+  contactPageJsonLd,
+  generateJsonLd,
+} from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Get in Touch",
+  description:
+    "Contact Khaldoun Alhalabi for full-stack architecture, engineering leadership, or your next technical challenge.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    url: "/contact",
+  },
+};
 
 export default async function ContactPage() {
   const supabase = await createClient();
@@ -97,6 +115,19 @@ export default async function ContactPage() {
 
   return (
     <main className="pt-20 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={generateJsonLd({
+          "@context": "https://schema.org",
+          "@graph": [
+            contactPageJsonLd(),
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+              { name: "Contact", path: "/contact" },
+            ]),
+          ],
+        })}
+      />
       <section className="container-shell">
         <FadeIn>
           <p className="text-xs tracking-[0.3em] text-secondary uppercase">

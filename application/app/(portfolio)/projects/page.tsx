@@ -3,6 +3,24 @@ import { TextReveal } from "@/components/motion/text-reveal";
 import { ProjectsExplorer } from "@/components/portfolio/projects-explorer";
 import { createClient } from "@/lib/supabase/server";
 import ProjectService from "@/services/ProjectService";
+import {
+  breadcrumbJsonLd,
+  generateJsonLd,
+  projectsCollectionJsonLd,
+} from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Selected Works",
+  description:
+    "A curated set of systems, products, and experiments spanning Laravel-heavy backends, modern React stacks, and AI-flavored tooling.",
+  alternates: {
+    canonical: "/projects",
+  },
+  openGraph: {
+    url: "/projects",
+  },
+};
 
 export default async function ProjectsPage() {
   const supabase = await createClient();
@@ -10,6 +28,19 @@ export default async function ProjectsPage() {
 
   return (
     <main className="pt-20 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={generateJsonLd({
+          "@context": "https://schema.org",
+          "@graph": [
+            projectsCollectionJsonLd(projects),
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+              { name: "Projects", path: "/projects" },
+            ]),
+          ],
+        })}
+      />
       <section className="container-shell mb-12">
         <FadeIn>
           <p className="text-xs tracking-[0.3em] text-secondary uppercase">

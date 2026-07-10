@@ -13,6 +13,26 @@ import ProjectService from "@/services/ProjectService";
 import SiteSettingService from "@/services/SiteSettingService";
 import SkillCategoryService from "@/services/SkillCategoryService";
 import { RichTextContent } from "@/components/portfolio/rich-text-content";
+import {
+  breadcrumbJsonLd,
+  generateJsonLd,
+  personJsonLd,
+  siteConfig,
+  websiteJsonLd,
+} from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Khaldoun Alhalabi | Full-Stack Architect & Engineering Leader",
+  description:
+    "Portfolio of Khaldoun Alhalabi, a full-stack architect and engineering leader building scalable Laravel backends, modern React systems, and AI-flavored tooling.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    url: "/",
+  },
+};
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -42,6 +62,19 @@ export default async function HomePage() {
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={generateJsonLd({
+          "@context": "https://schema.org",
+          "@graph": [
+            { "@id": `${siteConfig.url}/#person`, ...personJsonLd() },
+            { "@id": `${siteConfig.url}/#website`, ...websiteJsonLd() },
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+            ]),
+          ],
+        })}
+      />
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 grid-fade opacity-70" />
         <GradientSpotlight

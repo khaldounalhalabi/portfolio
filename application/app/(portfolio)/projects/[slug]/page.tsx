@@ -15,11 +15,67 @@ import { createClient } from "@/lib/supabase/server";
 import Project from "@/models/Project";
 import ProjectService from "@/services/ProjectService";
 import { ExternalLinkIcon } from "lucide-react";
+import { breadcrumbJsonLd, generateJsonLd, projectJsonLd } from "@/lib/seo";
+import { stripRichText } from "@/lib/rich-text";
+import type { Metadata } from "next";
 
 interface TechStackItem {
   name: string;
   icon: string;
   description: string;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = await createClient();
+  let project;
+
+  try {
+    project = (await ProjectService.make()
+      .setClient(supabase)
+      .show(slug, undefined, "slug")) as Project | null;
+  } catch {
+    return {
+      title: "Project Not Found",
+      robots: { index: false, follow: true },
+    };
+  }
+
+  if (!project) {
+    return {
+      title: "Project Not Found",
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const description = stripRichText(
+    project.long_description || project.description,
+  ).slice(0, 160);
+
+  return {
+    title: project.title,
+    description,
+    alternates: {
+      canonical: `/projects/${project.slug}`,
+    },
+    openGraph: {
+      title: project.title,
+      description,
+      url: `/projects/${project.slug}`,
+      type: "article",
+      images: [`/projects/${project.slug}/opengraph-image`],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description,
+      images: [`/projects/${project.slug}/opengraph-image`],
+    },
+  };
 }
 
 export default async function ProjectDetailPage({
@@ -28,6 +84,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+
   const supabase = await createClient();
   let project;
 
@@ -47,6 +104,38 @@ export default async function ProjectDetailPage({
 
   return (
     <main className="relative pt-20 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={generateJsonLd({
+          "@context": "https://schema.org",
+          "@graph": [
+            projectJsonLd({
+              title: project.title,
+              slug: project.slug,
+              description: project.description,
+              longDescription: project.long_description,
+              imageUrl: project.image_url,
+              projectUrl: project.project_url,
+              role: project.role,
+              year: project.year,
+              category: project.category,
+              tags: project.tags,
+              techStack: techStack.map((tech) => ({
+                name: tech.name,
+                description: tech.description,
+              })),
+              features: project.features,
+              updatedAt: project.updated_at,
+              createdAt: project.created_at,
+            }),
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+              { name: "Projects", path: "/projects" },
+              { name: project.title, path: `/projects/${project.slug}` },
+            ]),
+          ],
+        })}
+      />
       <GradientSpotlight
         className="-top-20 -right-40"
         color="cyan"

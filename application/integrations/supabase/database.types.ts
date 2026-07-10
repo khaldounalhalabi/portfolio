@@ -210,12 +210,50 @@ export type Database = {
           },
         ]
       }
+      visits: {
+        Row: {
+          created_at: string
+          id: string
+          path: string
+          referrer: string | null
+          session_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          path: string
+          referrer?: string | null
+          session_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          path?: string
+          referrer?: string | null
+          session_id?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_visit_stats: {
+        Args: never
+        Returns: {
+          top_page_count: number
+          top_page_path: string
+          top_page_percentage: number
+          total_visits: number
+          unique_visitors: number
+          visits_last_week: number
+          visits_this_week: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

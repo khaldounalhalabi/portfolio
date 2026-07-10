@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 
 import QueryClientProvider from "@/components/providers/query-client-provider";
@@ -18,9 +18,79 @@ const heading = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Khaldoun.dev",
+  title: {
+    default: "Khaldoun Alhalabi | Full-Stack Architect & Engineering Leader",
+    template: "%s | Khaldoun",
+  },
   description:
-    "Full-stack architect portfolio with a Supabase-backed admin dashboard.",
+    "Portfolio of Khaldoun Alhalabi, a full-stack architect and engineering leader building scalable Laravel backends, modern React systems, and AI-flavored tooling.",
+  keywords: [
+    "Khaldoun Alhalabi",
+    "Full-Stack Architect",
+    "Software Engineer",
+    "Engineering Leader",
+    "Laravel",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Supabase",
+    "System Architecture",
+  ],
+  authors: [{ name: "Khaldoun Alhalabi", url: "https://khaldoun.site" }],
+  creator: "Khaldoun Alhalabi",
+  publisher: "Khaldoun Alhalabi",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://khaldoun.site"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Khaldoun Alhalabi | Full-Stack Architect & Engineering Leader",
+    description:
+      "Portfolio of Khaldoun Alhalabi, a full-stack architect and engineering leader building scalable Laravel backends, modern React systems, and AI-flavored tooling.",
+    url: "/",
+    siteName: "Khaldoun Alhalabi",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+  manifest: "/manifest.webmanifest",
+  other: {
+    "msapplication-TileColor": "#0a0a0a",
+    "theme-color": "#0a0a0a",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+  ],
+  colorScheme: "dark light",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

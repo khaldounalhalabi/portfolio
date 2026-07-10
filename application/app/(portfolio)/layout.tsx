@@ -1,5 +1,6 @@
 import { SiteLayout } from "@/components/portfolio/site-layout";
 import SiteSettingsProvider from "@/components/providers/site-settings-provider";
+import { VisitTracker } from "@/components/visit-tracker";
 import { createClient } from "@/lib/supabase/server";
 import SiteSettingService from "@/services/SiteSettingService";
 import { ReactNode } from "react";
@@ -16,7 +17,10 @@ export default async function PortfolioLayout({
 
   return (
     <SiteSettingsProvider siteSettings={siteSettings}>
-      <SiteLayout>{children}</SiteLayout>
+      <SiteLayout>
+        {children}
+        <VisitTracker />
+      </SiteLayout>
     </SiteSettingsProvider>
   );
 }

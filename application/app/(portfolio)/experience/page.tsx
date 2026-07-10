@@ -8,6 +8,24 @@ import { SkillsGrid } from "@/components/portfolio/skills-grid";
 import { createClient } from "@/lib/supabase/server";
 import ExperienceService from "@/services/ExperienceService";
 import SkillCategoryService from "@/services/SkillCategoryService";
+import {
+  breadcrumbJsonLd,
+  experienceJsonLd,
+  generateJsonLd,
+} from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Experience",
+  description:
+    "A timeline of roles that shaped my approach to building reliable, scalable systems and working effectively across teams.",
+  alternates: {
+    canonical: "/experience",
+  },
+  openGraph: {
+    url: "/experience",
+  },
+};
 
 export default async function ExperiencePage() {
   const supabase = await createClient();
@@ -18,6 +36,30 @@ export default async function ExperiencePage() {
 
   return (
     <main className="pt-20 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={generateJsonLd({
+          "@context": "https://schema.org",
+          "@graph": [
+            experienceJsonLd(
+              experiences.map((experience) => ({
+                id: experience.id,
+                companyName: experience.company_name,
+                position: experience.position,
+                jobDescription: experience.job_description,
+                from: experience.from,
+                to: experience.to,
+                location: experience.location,
+                companyWebsite: experience.company_website,
+              })),
+            ),
+            breadcrumbJsonLd([
+              { name: "Home", path: "/" },
+              { name: "Experience", path: "/experience" },
+            ]),
+          ],
+        })}
+      />
       <section className="container-shell">
         <FadeIn>
           <p className="text-xs tracking-[0.3em] text-secondary uppercase">
