@@ -1,7 +1,7 @@
-INSERT INTO "public"."projects" ("id", "slug", "title", "description", "long_description", "image_url", "tags",
+INSERT INTO "public"."projects" ("id", "title", "description", "long_description", "image_url", "tags",
                                  "category", "role", "year", "problem", "solution", "features", "tech_stack",
                                  "employer", "featured", "display_order", "project_url", "created_at", "updated_at")
-VALUES ('3baef1a4-7d6b-4ddd-af57-a82ed37c5421', 'betreuungsampel', 'Betreuungsampel',
+VALUES ('3baef1a4-7d6b-4ddd-af57-a82ed37c5421', 'Betreuungsampel',
         'Betreuungsampel is a childcare management platform designed to help daycare centers coordinate temporary capacity shortages through automated parent communication and fair allocation mechanisms. The system streamlines demand collection, notifications, and childcare slot distribution, reducing administrative overhead for childcare providers.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -613,7 +613,7 @@ blockquote {
           }
         ]', 'L-One Systems', false, 10, 'https://betreuungsampel.de', '2026-07-01 23:39:34.789785+00',
         '2026-07-01 23:39:34.789785+00'),
-       ('43f4fa55-cf87-482f-b0bf-04dc5035cf95', 'jawaher-app', 'Jawaher App',
+       ('43f4fa55-cf87-482f-b0bf-04dc5035cf95', 'Jawaher App',
         'Jawaher is a digital marketplace for jewelry and watches that enables individuals and businesses to showcase, market, and sell new or pre-owned luxury products. The platform connects buyers and sellers through a streamlined browsing experience, subscription-based storefronts, and direct communication channels.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -1229,7 +1229,7 @@ blockquote {
             "description": "For admin dashboard pages"
           }
         ]', 'Cubeta', false, 6, null, '2026-07-01 23:08:24.511486+00', '2026-07-01 23:08:24.511486+00'),
-       ('460eef96-4b7f-4ee7-a894-13531a804599', 'cubeta-starter', 'Cubeta Starter',
+       ('460eef96-4b7f-4ee7-a894-13531a804599', 'Cubeta Starter',
         'Cubeta Starter is an open-source developer toolkit designed to accelerate application development by automating repetitive tasks and simplifying CRUD generation. It provides an integrated workflow, code scaffolding capabilities, and developer-friendly tools that help teams build production-ready applications faster and more efficiently.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -1841,7 +1841,7 @@ blockquote {
           }
         ]', 'Open Source', true, 2, 'https://cubeta-io.github.io/cubeta-starter', '2026-07-01 16:21:19.981052+00',
         '2026-07-01 16:21:19.981052+00'),
-       ('6a54c5db-88a2-4f58-8013-5e703d78f28e', 'lingua-connect', 'Lingua Connect',
+       ('6a54c5db-88a2-4f58-8013-5e703d78f28e', 'Lingua Connect',
         'Lingua Connect is a multilingual services platform developed to showcase professional translation, interpretation, and localization solutions. The platform provides an intuitive digital experience for clients to explore language services, request quotations, and connect with linguistic experts worldwide.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -2452,7 +2452,7 @@ blockquote {
          }
        ]', 'Ali Taleb', false, 11, 'https://linguaconnect.co.uk/', '2026-07-01 23:50:45.038505+00',
         '2026-07-01 23:50:45.038505+00'),
-       ('6f72442f-998e-4f9a-a735-1d127856ea8b', 'serv-player', 'Serv Player',
+       ('6f72442f-998e-4f9a-a735-1d127856ea8b', 'Serv Player',
         'Serv IPTV is a comprehensive IPTV ecosystem that combines a cross-platform streaming application with dedicated administration and reseller panels. The platform enables content providers and distributors to manage users, subscriptions, playlists, and service operations while delivering a seamless streaming experience across Smart TVs, Android devices, and desktop platforms.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -3064,7 +3064,7 @@ blockquote {
           }
         ]', 'Eyad Arnaout (Freelancing)', false, 5, 'https://serviptv.com', '2026-07-01 23:00:56.059882+00',
         '2026-07-01 23:00:56.059882+00'),
-       ('99dbd1fd-321e-451a-8bce-78b498bb64d0', 'cohort-hcm', 'Cohort HCM',
+       ('99dbd1fd-321e-451a-8bce-78b498bb64d0', 'Cohort HCM',
         'Cohort HCM is a cloud-based Human Capital Management platform designed to simplify workforce operations through integrated payroll, attendance tracking, and employee management tools. The platform enables organizations to automate HR processes, improve operational efficiency, and manage their workforce from a centralized system.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -3676,7 +3676,7 @@ blockquote {
           }
         ]', 'Cubeta', true, 1, 'https://cohorthcm.com', '2026-07-01 16:15:03.951788+00',
         '2026-07-01 16:15:03.951788+00'),
-       ('9a6579fb-b9ba-44fd-9282-1346276d5f86', 'id-technologies', 'ID Technologies',
+       ('9a6579fb-b9ba-44fd-9282-1346276d5f86', 'ID Technologies',
         'A high-performance responsive corporate web platform equipped with a secure, centralized administrative panel designed for managing product catalogs, lead acquisition pipelines, and site configurations. The platform streamlines digital brand presence while granting internal teams full control over dynamic content delivery.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -4288,7 +4288,7 @@ blockquote {
           }
         ]', 'Ghaith Atfeh', false, 8, 'https://www.idtechco.com', '2026-07-01 23:24:57.264851+00',
         '2026-07-01 23:24:57.264851+00'),
-       ('9ff6aa14-22fe-4db3-bf8b-84d8acfc8e8d', '4partners', '4Partners',
+       ('9ff6aa14-22fe-4db3-bf8b-84d8acfc8e8d', '4Partners',
         '4Partners is a real estate investment platform designed to simplify property discovery and co-ownership opportunities through a secure and transparent digital experience. The platform enables users to explore investment properties, evaluate potential returns, and access tools that support informed real estate decisions.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -4904,7 +4904,7 @@ blockquote {
          }
        ]', 'Ghaith', true, 12, 'https://4partners.ae', '2026-07-01 23:16:42.083199+00',
         '2026-07-01 23:16:42.083199+00'),
-       ('ba8144bf-cfac-476c-9778-ad8e839d71cc', 'phoenix-trading', 'Phoenix Trading',
+       ('ba8144bf-cfac-476c-9778-ad8e839d71cc', 'Phoenix Trading',
         'Phoenix Trading is a corporate web platform developed for an international food manufacturing and distribution company. The project focuses on presenting the company''s products, services, and global operations through a modern, responsive, and user-friendly digital experience.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -5510,7 +5510,7 @@ blockquote {
          }
        ]', 'Ghaith Atfeh', false, 9, 'https://phoenixtradings.ca/', '2026-07-01 23:31:30.524975+00',
         '2026-07-01 23:31:30.524975+00'),
-       ('be022abd-5fe7-45dc-a070-a23b039a94ba', 'rn-center-healthcare-ecosystem', 'RN Center Healthcare Ecosystem',
+       ('be022abd-5fe7-45dc-a070-a23b039a94ba', 'RN Center Healthcare Ecosystem',
         'A comprehensive, multi-platform healthcare management ecosystem featuring a centralized backend API, a web-based administration dashboard, and dedicated cross-platform mobile applications tailored for both patients and medical staff. The platform streamlines medical scheduling, record management, and clinical workflows across the entire organization.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -6127,7 +6127,7 @@ blockquote {
           }
         ]', 'Reslan Alnaal Medical Center', true, 7, 'https://rn-center.khaldoun.site', '2026-07-02 00:04:21.408873+00',
         '2026-07-02 00:04:21.408873+00'),
-       ('ebbc308e-7167-4747-aee8-bbc61daabda6', 'trivex', 'Trivex',
+       ('ebbc308e-7167-4747-aee8-bbc61daabda6', 'Trivex',
         'Tri-Vex is a modern web platform featuring a marketing landing page and a custom-built admin CMS. The system is designed to provide a seamless experience for both end-users and administrators, enabling efficient content management, structured data handling, and a clean, responsive user interface.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -6744,7 +6744,7 @@ blockquote {
           }
         ]', 'Ali Taleb (Freelancing)', false, 4, 'https://tri-vex.com', '2026-07-01 22:49:19.753877+00',
         '2026-07-01 22:49:19.753877+00'),
-       ('f5a147dc-7a59-4009-bcab-1e5a5576006e', 'synfia-ai', 'Synfia AI',
+       ('f5a147dc-7a59-4009-bcab-1e5a5576006e', 'Synfia AI',
         'Synfia.ai is an AI-powered conversational insights platform that transforms traditional surveys and interviews into scalable, intelligent voice-based conversations. By combining adaptive AI interviewing, real-time analysis, and automated reporting, Synfia enables organizations to gather deeper qualitative insights from customers, employees, and stakeholders faster and more efficiently than conventional research methods.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {
 blockquote {
         border-left: 3px solid var(--primary);
@@ -6941,7 +6941,7 @@ blockquote {
             transition: outline 0.15s;
         }
     }
-}</style><p><a target="_blank" rel="noopener noreferrer nofollow" href="http://Synfia.ai"><strong>Synfia.ai</strong></a> is an AI-powered conversational intelligence platform designed to modernize the way organizations collect and analyze qualitative feedback. Instead of relying on traditional static surveys and questionnaires, Synfia leverages advanced conversational AI to conduct dynamic, human-like voice and text interviews that adapt in real time based on participant responses.</p><p>The platform enables businesses, researchers, and organizations to gather richer insights from customers, employees, and stakeholders at scale while significantly reducing the time and effort required for manual interviews and data analysis. Through automated conversations, intelligent follow-up questions, and real-time processing, Synfia captures deeper context, sentiment, and nuanced perspectives that are often missed by conventional survey methods.</p><p>Synfia also provides automated transcription, sentiment analysis, thematic clustering, and AI-generated summaries, allowing teams to quickly identify trends, uncover actionable insights, and make data-driven decisions with greater confidence. By combining conversational experiences with advanced analytics, Synfia transforms feedback collection into a more engaging, scalable, and efficient process for market research, employee engagement, customer experience, and organizational decision-making.</p></div>',
+}</style><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://Synfia.ai"><strong>Synfia.ai</strong></a> is an AI-powered conversational intelligence platform designed to modernize the way organizations collect and analyze qualitative feedback. Instead of relying on traditional static surveys and questionnaires, Synfia leverages advanced conversational AI to conduct dynamic, human-like voice and text interviews that adapt in real time based on participant responses.</p><p>The platform enables businesses, researchers, and organizations to gather richer insights from customers, employees, and stakeholders at scale while significantly reducing the time and effort required for manual interviews and data analysis. Through automated conversations, intelligent follow-up questions, and real-time processing, Synfia captures deeper context, sentiment, and nuanced perspectives that are often missed by conventional survey methods.</p><p>Synfia also provides automated transcription, sentiment analysis, thematic clustering, and AI-generated summaries, allowing teams to quickly identify trends, uncover actionable insights, and make data-driven decisions with greater confidence. By combining conversational experiences with advanced analytics, Synfia transforms feedback collection into a more engaging, scalable, and efficient process for market research, employee engagement, customer experience, and organizational decision-making.</p></div>',
         'https://bmfgtfadddainejlcqmy.supabase.co/storage/v1/object/public/portfolio-images/projects/1782921321726-56we33eta2y.webp',
         ARRAY ['Supabase','AI','Conversational AI','Deno.js','React.js','PostgresSQL','RAG','Tailwindcss','Shadcn'],
         'Conversational AI | SaaS', 'Full-Stack Engineer', '2025 - Present', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {

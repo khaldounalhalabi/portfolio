@@ -7,6 +7,7 @@ A personal portfolio website with a Supabase-backed admin dashboard. Built with 
 - **Frontend**: Next.js 16.2.9 (App Router), React 19.2.4, TypeScript 5
 - **Styling**: Tailwind CSS v4, shadcn/ui (Radix UI primitives), custom dark theme
 - **Backend/Data**: Supabase (PostgreSQL + Auth + Storage)
+- **API Services**: Hono-based TypeScript service under `services/` for tasks better handled outside Next.js server actions (e.g., resume PDF generation)
 - **State & Forms**: TanStack Query, React Hook Form + Zod, Sonner toasts
 - **Rich Text**: TipTap editor with custom extensions
 - **Icons**: Lucide React (with a development stub) + Tabler Icons
@@ -14,7 +15,9 @@ A personal portfolio website with a Supabase-backed admin dashboard. Built with 
 - **Animations**: Framer Motion
 - **Drag-and-Drop**: @dnd-kit (core, sortable, utilities)
 - **Screenshot Capture**: ScreenshotOne API SDK for project images
+- **PDF Generation**: Puppeteer + @sparticuz/chromium (now runs in `services/`)
 - **Package Manager**: npm
+- **Containerization**: Docker + Docker Compose for the `services/` API
 - **Repository**: https://github.com/khaldounalhalabi/portfolio
 
 ## Directory Structure
@@ -80,6 +83,24 @@ portfolio/
 │   ├── integrations/supabase/ # Generated database.types.ts and server client
 │   ├── scripts/             # Build helpers (generate-icons-names-array.js)
 │   └── public/              # Static assets
+├── services/                # Standalone TypeScript API services
+│   ├── src/
+│   │   ├── index.ts         # Server entry point
+│   │   ├── app.ts           # Hono app setup
+│   │   ├── config.ts        # Environment validation
+│   │   ├── routes/          # API routes
+│   │   ├── controllers/     # Request handlers
+│   │   ├── services/        # Business logic (Supabase client, resume service)
+│   │   ├── middleware/      # Auth, logging, error handling
+│   │   ├── generators/      # Task-specific generators (resume PDF)
+│   │   ├── lib/             # Shared utilities
+│   │   └── types/           # Service-wide types + database.types.ts
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── .env.example
+│   └── README.md
 ├── supabase/                # Supabase local dev config & migrations
 │   ├── migrations/            # SQL migration files (timestamped)
 │   ├── seed.sql               # Empty root seed (kept for CLI compatibility)
@@ -96,13 +117,15 @@ portfolio/
 
 ## Build and Development Commands
 
-There is no root `package.json`. The application lives in `application/`, and all npm commands must be run from that directory:
+There is no root `package.json`. The application lives in `application/`, and the API service lives in `services/`. Run npm commands from the relevant directory:
 
 ```bash
 cd application
 npm install
 npm run dev
 ```
+
+### Application Commands (`application/`)
 
 | Command | Description |
 |---------|-------------|
@@ -112,6 +135,18 @@ npm run dev
 | `npm run lint` | Run ESLint (`eslint`) |
 | `npm run db:reset` | Stop, start, and reset local Supabase DB with seeds |
 | `npm run db:types` | Generate TypeScript types from local Supabase schema into `application/integrations/supabase/database.types.ts` |
+| `npm run storage:dump` | Copy all objects from remote Supabase Storage to the local Supabase setup |
+
+### API Service Commands (`services/`)
+
+| Command | Description |
+|---------|-------------|
+| `npm install` | Install service dependencies |
+| `npm run dev` | Start the Hono dev server with hot reload (`tsx watch`) |
+| `npm run build` | Compile TypeScript to `dist/` |
+| `npm run start` | Run the compiled service from `dist/` |
+| `npm run typecheck` | Type-check without emitting files |
+| `docker compose up --build` | Build and run the service in Docker |
 
 ## Environment Variables
 
@@ -123,9 +158,34 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
 SCREENSHOTONE_ACCESS_KEY=<your-screenshotone-access-key>
 SCREENSHOTONE_SECRET_KEY=<your-screenshotone-secret-key>
+
+RESUME_SERVICE_URL=http://localhost:3001
+RESUME_SERVICE_API_KEY=<strong-random-key>
+
+# Optional: for `npm run storage:dump` to copy remote Storage objects to local
+REMOTE_SUPABASE_URL=<your-remote-supabase-url>
+REMOTE_SUPABASE_SERVICE_ROLE_KEY=<your-remote-service-role-key>
+LOCAL_SUPABASE_URL=http://127.0.0.1:54321
+LOCAL_SUPABASE_SERVICE_ROLE_KEY=<your-local-service-role-key>
 ```
 
 The application uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for both browser and server clients. `SUPABASE_SERVICE_ROLE_KEY` is used when service-role access is required. ScreenshotOne keys power the project screenshot capture action (`app/(dashboard)/dashboard/projects/actions.ts`).
+
+For `npm run storage:dump`, add `REMOTE_SUPABASE_URL` and `REMOTE_SUPABASE_SERVICE_ROLE_KEY` pointing at the hosted project, plus `LOCAL_SUPABASE_SERVICE_ROLE_KEY` (get it from `supabase status`). `LOCAL_SUPABASE_URL` defaults to `http://127.0.0.1:54321`.
+
+Create `services/.env` (not committed) with at least:
+
+```
+PORT=3001
+NODE_ENV=production
+SUPABASE_URL=<your-supabase-url>
+SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
+API_KEY=<same-strong-random-key-as-above>
+RESUME_BUCKET_NAME=resume
+RESUME_OBJECT_PATH=khaldoun-alhalabi-resume.pdf
+```
+
+`API_KEY` in `services/.env` must match `RESUME_SERVICE_API_KEY` in `application/.env`. The service uses this shared secret in the `x-api-key` header to authenticate requests from the Next.js app.
 
 ## Technology Stack Details
 
@@ -151,7 +211,9 @@ The application uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLIS
 ### Supabase
 - **Auth**: Email/password authentication. Auth confirmation route at `app/(dashboard)/auth/confirm/route.ts` handles both OAuth `code` exchange and password-recovery `token_hash` verification.
 - **Database**: PostgreSQL with Row Level Security (RLS) policies. Tables: `site_settings`, `skill_categories`, `skills`, `experiences`, `projects`.
-- **Storage**: Public bucket `portfolio-images` is created by the projects migration for project images. RLS policies allow public reads and authenticated writes.
+- **Storage**: Public buckets:
+  - `portfolio-images` — created by the projects migration for project images. RLS policies allow public reads and authenticated writes.
+  - `resume` — stores the generated ATS resume PDF (`khaldoun-alhalabi-resume.pdf`). Public read access; writes are performed by the `services/` API using the service role key.
 - **Local Dev**: Supabase CLI with `supabase/config.toml`. Local services run on ports 54321 (API), 54322 (DB), 54323 (Studio), 54324 (Inbucket).
 - **Type Generation**: `npm run db:types` generates `database.types.ts` from the local schema.
 - **Seeds**: `config.toml` loads `seed.sql`, `site-settings-seeder.sql`, `skill-categories-seeder.sql`, `experiences-seeder.sql`, `skill-seeder.sql`, and `projects-seeder.sql` in that order during `db reset`.
@@ -164,9 +226,8 @@ The application uses `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLIS
 - **Contexts**: `AuthProvider` manages dashboard auth state; `SiteSettingsProvider` makes site settings available to portfolio layouts.
 
 ### Service Layer
-- `BaseService` (`services/contracts/BaseService.ts`) provides generic CRUD operations (`all`, `show`, `store`, `update`, `delete`, `indexWithPagination`) typed against Supabase table rows, plus optional relation loading.
-- Concrete services (`ExperienceService`, `ProjectService`, `SiteSettingService`, `SkillCategoryService`, `SkillService`) extend `BaseService` and implement `getTable()`.
-- Services use the singleton pattern via `static make()`.
+- **Application services** (`application/services/`): `BaseService` (`services/contracts/BaseService.ts`) provides generic CRUD operations (`all`, `show`, `store`, `update`, `delete`, `indexWithPagination`) typed against Supabase table rows, plus optional relation loading. Concrete services (`ExperienceService`, `ProjectService`, `SiteSettingService`, `SkillCategoryService`, `SkillService`) extend `BaseService` and implement `getTable()`. Services use the singleton pattern via `static make()`.
+- **API services** (`services/src/services/`): lightweight business-logic services for the standalone backend. `SupabaseService` creates a service-role Supabase client; `ResumeService` generates the PDF and uploads it to the `resume` storage bucket.
 
 ### Icons
 - Prefer `lucide-react` icons.
@@ -200,7 +261,9 @@ There are currently **no automated tests** (no Jest, Vitest, or Playwright confi
 
 ## Deployment
 
-The project is designed for deployment on **Vercel** (standard Next.js deployment). The Supabase backend is hosted separately. Ensure environment variables are configured in the deployment platform. Run `npm run build` from the `application/` directory.
+- **Next.js frontend**: Deploy on **Vercel** (standard Next.js deployment). Run `npm run build` from the `application/` directory. Ensure environment variables are configured in the deployment platform.
+- **API service**: Deploy via Docker. From `services/`, run `docker compose up --build` or build and push the image to a container platform (e.g., Railway, Fly.io, Google Cloud Run, AWS ECS). The service needs the Supabase service role key and a strong `API_KEY`.
+- **Supabase backend**: Hosted separately (cloud or self-managed).
 
 ## Important Notes for Agents
 
@@ -211,5 +274,8 @@ The project is designed for deployment on **Vercel** (standard Next.js deploymen
 - The auth/session proxy is `application/proxy.ts`; there is no `middleware.ts`.
 - The Next.js app package is at `application/package.json`; do not look for a root `package.json`.
 - Project screenshots are captured via the ScreenshotOne server action in `app/(dashboard)/dashboard/projects/actions.ts` and stored in the `portfolio-images` Supabase bucket.
+- **Resume PDF generation has moved to the `services/` API**. The Next.js server action (`app/(dashboard)/dashboard/resume/actions.ts`) and public route (`app/api/resume/route.ts`) are now thin proxies that call `POST /api/v1/resume/generate` with an `x-api-key` header. Do not re-introduce server-side PDF generation or React rendering logic into the Next.js app.
+- The `services/` backend is a general-purpose API scaffold: add new routes under `services/src/routes/`, controllers under `services/src/controllers/`, and business logic under `services/src/services/`.
+- After changing the Supabase schema, regenerate types and keep `services/src/types/database.types.ts` in sync (currently copied from `application/integrations/supabase/database.types.ts`).
 - Portfolio animations are built with Framer Motion. Reusable wrappers live in `components/motion/` (`FadeIn`, `TextReveal`, `StaggerContainer`, `MagneticButton`, `GradientSpotlight`, etc.) and respect `prefers-reduced-motion`.
 - Always regenerate Supabase types after schema changes: `npm run db:types`.
