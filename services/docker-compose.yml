@@ -4,8 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: portfolio-services
-    ports:
-      - "${PORT:-3001}:${PORT:-3001}"
     environment:
       - PORT=${PORT:-3001}
       - NODE_ENV=${NODE_ENV:-production}
