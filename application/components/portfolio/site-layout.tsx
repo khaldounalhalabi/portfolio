@@ -9,6 +9,7 @@ import { ReactNode, useState } from "react";
 import { MagneticButton } from "@/components/motion/magnetic-button";
 import FooterContactLinks from "@/components/portfolio/footer/footer-contact-links";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -42,8 +43,15 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             <MagneticButton strength={0.15}>
               <Link
                 href="/"
-                className="group relative font-heading text-lg font-bold tracking-[0.15em] text-primary md:text-xl"
+                className="group relative flex items-center gap-2 font-heading text-lg font-bold tracking-[0.15em] text-primary md:text-xl"
               >
+                <Image
+                  width={32}
+                  height={32}
+                  alt="website logo"
+                  unoptimized
+                  src={"/logo.png"}
+                />
                 <span className="relative z-10">KHALDOUN.ALHALABI</span>
                 <span className="absolute inset-x-0 -bottom-1 h-px scale-x-0 bg-primary-container transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
