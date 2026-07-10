@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import ProjectService from "@/services/ProjectService";
 import SiteSettingService from "@/services/SiteSettingService";
 import SkillCategoryService from "@/services/SkillCategoryService";
+import { RichTextContent } from "@/components/portfolio/rich-text-content";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -96,7 +97,7 @@ export default async function HomePage() {
 
           <FadeIn delay={0.5} direction="up" distance={20}>
             <div className="mt-8 max-w-3xl text-lg leading-8 text-on-surface-variant md:text-xl md:leading-9">
-              <div dangerouslySetInnerHTML={{ __html: heroParagraph ?? "" }} />
+              <RichTextContent value={heroParagraph ?? ""}/>
             </div>
           </FadeIn>
 

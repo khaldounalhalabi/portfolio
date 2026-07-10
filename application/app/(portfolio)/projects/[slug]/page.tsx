@@ -9,10 +9,12 @@ import { TextReveal } from "@/components/motion/text-reveal";
 import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
 import { ProjectMedia } from "@/components/portfolio/project-media";
 import { RichTextContent } from "@/components/portfolio/rich-text-content";
+import { Button } from "@/components/ui/button";
 import { hasRichTextContent } from "@/lib/rich-text";
 import { createClient } from "@/lib/supabase/server";
 import Project from "@/models/Project";
 import ProjectService from "@/services/ProjectService";
+import { ExternalLinkIcon } from "lucide-react";
 
 interface TechStackItem {
   name: string;
@@ -54,24 +56,36 @@ export default async function ProjectDetailPage({
       <section className="relative container-shell">
         <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-center">
           <div>
-            <FadeIn>
-              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-                Featured Project
-              </p>
-            </FadeIn>
+            {project.featured && (
+              <FadeIn>
+                <p className="text-xs tracking-[0.3em] text-secondary uppercase">
+                  Featured Project
+                </p>
+              </FadeIn>
+            )}
             <TextReveal as="h1" className="mt-5" delay={0.1}>
-              <span className="font-heading text-4xl font-bold wrap-break-word text-primary md:text-6xl lg:text-7xl">
-                {project.title}
-              </span>
+              <div className={"flex items-center gap-1"}>
+                <span className="font-heading text-4xl font-bold wrap-break-word text-primary md:text-6xl lg:text-7xl">
+                  {project.title}
+                </span>
+                {project.project_url && (
+                  <Button asChild className="mt-2 justify-between">
+                    <Link
+                      href={project.project_url ?? ""}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      Visit
+                      <ExternalLinkIcon />
+                    </Link>
+                  </Button>
+                )}
+              </div>
             </TextReveal>
             <FadeIn delay={0.2} className="mt-6 max-w-3xl">
-              <p className="text-xl leading-9 text-on-surface-variant">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: project.long_description || project.description,
-                  }}
-                />
-              </p>
+              <RichTextContent
+                value={project.long_description || project.description}
+              />
             </FadeIn>
           </div>
           <FadeIn delay={0.3} direction="left">
