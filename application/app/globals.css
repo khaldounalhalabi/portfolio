@@ -9,6 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -58,48 +59,51 @@
 }
 
 :root {
-  --background: #131314;
-  --foreground: #e9feff;
-  --card: #1c1b1c;
-  --card-foreground: #e9feff;
-  --popover: #1c1b1c;
-  --popover-foreground: #e9feff;
-  --primary: #e9feff;
-  --primary-foreground: #003739;
-  --secondary: #7dffa2;
-  --secondary-foreground: #003918;
-  --muted: #201f20;
-  --muted-foreground: #b9caca;
-  --accent: #201f20;
-  --accent-foreground: #e9feff;
+  /* Monochrome dark system — near-black paper, off-white ink, greyscale ramp.
+     Token names are preserved so shadcn/ui and untouched components keep working;
+     every former neon/mint value is remapped to a neutral grey. */
+  --background: #0b0b0c;
+  --foreground: #ededec;
+  --card: #131314;
+  --card-foreground: #ededec;
+  --popover: #131314;
+  --popover-foreground: #ededec;
+  --primary: #f4f4f2;
+  --primary-foreground: #0b0b0c;
+  --secondary: #a0a0a0;
+  --secondary-foreground: #0b0b0c;
+  --muted: #1a1a1b;
+  --muted-foreground: #8f8f8d;
+  --accent: #1a1a1b;
+  --accent-foreground: #ededec;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: rgb(255 255 255 / 10%);
+  --border: rgb(255 255 255 / 9%);
   --input: rgb(255 255 255 / 12%);
-  --ring: #00f5ff;
+  --ring: rgb(255 255 255 / 40%);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.875rem;
-  --sidebar: #161617;
+  --radius: 0.25rem;
+  --sidebar: #101011;
   --sidebar-foreground: #e5e2e3;
-  --sidebar-primary: #00f5ff;
-  --sidebar-primary-foreground: #003739;
-  --sidebar-accent: #201f20;
-  --sidebar-accent-foreground: #e9feff;
+  --sidebar-primary: #f4f4f2;
+  --sidebar-primary-foreground: #0b0b0c;
+  --sidebar-accent: #1a1a1b;
+  --sidebar-accent-foreground: #ededec;
   --sidebar-border: rgb(255 255 255 / 8%);
-  --sidebar-ring: #00f5ff;
-  --surface-container-low: #1c1b1c;
-  --surface-container: #201f20;
-  --surface-container-high: #2a2a2b;
-  --surface-container-highest: #353436;
-  --primary-container: #00f5ff;
-  --secondary-fixed-dim: #00e475;
-  --on-surface-variant: #b9caca;
-  --outline-variant: #3a494a;
-  --on-primary: #003739;
-  --on-secondary: #003918;
+  --sidebar-ring: rgb(255 255 255 / 40%);
+  --surface-container-low: #131314;
+  --surface-container: #18181a;
+  --surface-container-high: #202022;
+  --surface-container-highest: #2a2a2c;
+  --primary-container: #f4f4f2;
+  --secondary-fixed-dim: #f4f4f2;
+  --on-surface-variant: #9a9a98;
+  --outline-variant: #38383a;
+  --on-primary: #0b0b0c;
+  --on-secondary: #0b0b0c;
 }
 
 @layer base {
@@ -112,7 +116,7 @@
   }
 
   body {
-    @apply bg-background text-foreground selection:bg-primary-container selection:text-on-primary;
+    @apply bg-background text-foreground selection:bg-foreground selection:text-background;
   }
 
   a,
@@ -126,16 +130,32 @@
 }
 
 @utility container-shell {
-  @apply mx-auto w-full max-w-7xl px-6 md:px-8;
+  @apply mx-auto w-full max-w-6xl px-6 md:px-10;
+}
+
+/* Faint monochrome hairline grid used sparingly behind hero sections. */
+@utility grid-lines {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 4%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 4%) 1px, transparent 1px);
+  background-size: 72px 72px;
 }
 
 @utility grid-fade {
   background-image: radial-gradient(
-    circle at 2px 2px,
-    rgb(58 73 74 / 18%) 1px,
+    circle at 1px 1px,
+    rgb(255 255 255 / 6%) 1px,
     transparent 0
   );
-  background-size: 40px 40px;
+  background-size: 44px 44px;
+}
+
+/* A thin top hairline that brightens on hover — used for editorial list rows. */
+@utility rule-hover {
+  @apply border-t border-border transition-colors duration-500;
+}
+.rule-hover:hover {
+  border-color: rgb(255 255 255 / 30%);
 }
 
 .noise-overlay {
@@ -148,45 +168,27 @@
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.03;
+  opacity: 0.025;
   pointer-events: none;
   z-index: -1;
 }
 
-@utility text-glow {
-  text-shadow: 0 0 24px rgb(0 245 255 / 20%);
+/* Continuous horizontal marquee (skills strip). Pauses on hover. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-@utility text-glow-strong {
-  text-shadow: 0 0 40px rgb(0 245 255 / 35%);
+.animate-marquee {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
 }
 
-@utility glow-border {
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 8%),
-    0 0 0 0 rgb(0 245 255 / 0%);
-  transition: box-shadow 0.3s ease;
-}
-
-@utility glow-border-hover {
-  box-shadow:
-    inset 0 0 0 1px rgb(0 245 255 / 25%),
-    0 0 30px -5px rgb(0 245 255 / 12%);
-}
-
-.card-hover {
-  transition:
-    transform 0.4s ease,
-    box-shadow 0.4s ease,
-    border-color 0.4s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-4px);
-  border-color: rgb(0 245 255 / 20%);
-  box-shadow:
-    0 20px 40px -15px rgb(0 0 0 / 35%),
-    0 0 30px -10px rgb(0 245 255 / 8%);
+.marquee-paused:hover .animate-marquee {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -197,5 +199,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .animate-marquee {
+    animation: none !important;
   }
 }

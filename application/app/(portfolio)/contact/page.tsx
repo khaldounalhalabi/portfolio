@@ -1,7 +1,6 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import { FadeIn } from "@/components/motion/fade-in";
-import { MagneticButton } from "@/components/motion/magnetic-button";
 import { StaggerContainer, StaggerItem } from "@/components/motion/stagger";
 import { TextReveal } from "@/components/motion/text-reveal";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
@@ -100,21 +99,21 @@ export default async function ContactPage() {
     { icon: IconBrandLinkedin, label: "LinkedIn", href: linkedin?.value },
     {
       icon: IconBrandWhatsapp,
-      label: "Whatsapp",
-      href: `${whatsapp?.value}?text=${message}`,
+      label: "WhatsApp",
+      href: whatsapp?.value ? `${whatsapp.value}?text=${message}` : undefined,
     },
     { icon: IconBrandTelegram, label: "Telegram", href: telegram?.value },
-    { icon: IconBrandGithub, label: "Github", href: github?.value },
-    { icon: IconBrandGitlab, label: "Gitlab", href: gitlab?.value },
+    { icon: IconBrandGithub, label: "GitHub", href: github?.value },
+    { icon: IconBrandGitlab, label: "GitLab", href: gitlab?.value },
     {
       icon: IconBrandStackoverflow,
-      label: "Stackoverflow",
+      label: "Stack Overflow",
       href: stackoverflow?.value,
     },
   ];
 
   return (
-    <main className="pt-20 pb-24">
+    <main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={generateJsonLd({
@@ -128,128 +127,124 @@ export default async function ContactPage() {
           ],
         })}
       />
-      <section className="container-shell">
-        <FadeIn>
-          <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-            Connection Node
-          </p>
-        </FadeIn>
-        <TextReveal as="h1" className="mt-5" delay={0.1}>
-          <span className="bg-linear-to-r from-primary via-primary-container to-secondary bg-clip-text font-heading text-5xl font-bold break-words text-transparent md:text-7xl">
-            Get in Touch
-          </span>
-        </TextReveal>
-        <FadeIn delay={0.2} className="mt-6 max-w-3xl">
-          <p className="text-lg leading-8 text-on-surface-variant">
-            Whether you have a technical challenge, a project proposal, or just
-            want to discuss the future of full-stack architecture, my digital
-            door is open.
-          </p>
-        </FadeIn>
-      </section>
 
-      <section className="container-shell mt-14 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-        <FadeIn delay={0.2} direction="up">
-          <div className="max-w-[90vw] rounded-[2rem] border border-white/6 bg-surface-container-low/80 p-6 backdrop-blur-sm md:max-w-full md:p-8">
-            <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-              Contact Details
+      <section className="border-b border-border">
+        <div className="container-shell py-20 md:py-28">
+          <FadeIn>
+            <p className="font-mono text-xs tracking-wide text-muted-foreground">
+              01 — Contact
             </p>
-            <StaggerContainer className="mt-8 space-y-4" staggerDelay={0.08}>
-              {contactDetails.map(
-                (detail) =>
-                  detail.value && (
-                    <StaggerItem key={detail.label}>
-                      {detail.href ? (
-                        <a
-                          href={detail.href}
-                          target={detail.external ? "_blank" : undefined}
-                          rel={detail.external ? "noreferrer" : undefined}
-                          className="group flex items-start gap-4 rounded-2xl border border-transparent bg-surface-container-high p-5 transition-all duration-300 hover:border-primary-container/20 hover:bg-surface-container"
-                        >
-                          <div className="rounded-xl bg-surface-container p-3 text-primary-container transition-colors group-hover:bg-primary-container/10">
-                            <detail.icon className="h-5 w-5" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs tracking-[0.25em] text-on-surface-variant uppercase">
-                              {detail.label}
-                            </p>
-                            <p className="mt-2 wrap-break-word text-primary transition-colors group-hover:text-primary-container">
-                              {detail.value}
-                            </p>
-                          </div>
-                        </a>
-                      ) : (
-                        <div className="flex items-start gap-4 rounded-2xl bg-surface-container-high p-5">
-                          <div className="rounded-xl bg-surface-container p-3 text-primary-container">
-                            <detail.icon className="h-5 w-5" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs tracking-[0.25em] text-on-surface-variant uppercase">
-                              {detail.label}
-                            </p>
-                            <p className="mt-2 wrap-break-word text-primary">
-                              {detail.value}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </StaggerItem>
-                  ),
-              )}
-            </StaggerContainer>
-          </div>
-        </FadeIn>
-
-        <aside className="space-y-8">
-          <FadeIn delay={0.3} direction="up">
-            <div className="rounded-[2rem] border border-white/6 bg-surface-container-low/80 p-6 backdrop-blur-sm md:p-8">
-              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-                Social Nodes
-              </p>
-              <div className="mt-6 grid gap-3">
-                {socialLinks.map(
-                  (social) =>
-                    social.href && (
-                      <MagneticButton
-                        key={social.label}
-                        strength={0.15}
-                        className="w-full"
-                      >
-                        <a
-                          href={social.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="group flex w-full items-center gap-3 rounded-2xl border border-transparent bg-surface-container-high px-5 py-4 text-on-surface-variant transition-all duration-300 hover:border-primary-container/20 hover:bg-surface-container hover:text-primary"
-                        >
-                          <social.icon className="h-5 w-5 shrink-0 transition-colors group-hover:text-primary-container" />
-                          <span className="min-w-0 flex-1 truncate font-medium">
-                            {social.label}
-                          </span>
-                        </a>
-                      </MagneticButton>
-                    ),
-                )}
-              </div>
-            </div>
           </FadeIn>
-
-          <FadeIn delay={0.4} direction="up">
-            <div className="relative overflow-hidden rounded-[2rem] border border-primary-container/15 bg-linear-to-br from-primary-container/10 via-background to-secondary/5 p-6 md:p-8">
-              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-primary-container/10 blur-[80px]" />
-              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-                Availability
-              </p>
-              <h2 className="relative mt-4 font-heading text-3xl font-bold break-words text-primary">
-                Available for new opportunities
-              </h2>
-              <p className="relative mt-3 text-sm leading-6 text-on-surface-variant">
-                Currently open to full-stack, backend-heavy, and architecture
-                roles. Let&apos;s build something great.
-              </p>
-            </div>
+          <TextReveal as="h1" className="mt-6 max-w-4xl" delay={0.1}>
+            <span className="font-heading text-5xl font-semibold tracking-tight break-words text-foreground md:text-7xl">
+              Let&apos;s talk.
+            </span>
+          </TextReveal>
+          <FadeIn delay={0.2} className="mt-8 max-w-2xl">
+            <p className="text-lg leading-8 text-muted-foreground">
+              Whether you have a technical challenge, a project proposal, or just
+              want to discuss the future of full-stack architecture — the door is
+              open. Fastest reply is by email.
+            </p>
           </FadeIn>
-        </aside>
+        </div>
       </section>
+
+      <section className="container-shell grid gap-px bg-background md:grid-cols-2">
+        {/* Direct contact */}
+        <div className="bg-background py-12 md:py-16 md:pr-12">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+            Direct
+          </p>
+          <StaggerContainer className="mt-8 border-t border-border" staggerDelay={0.07}>
+            {contactDetails.map(
+              (detail) =>
+                detail.value && (
+                  <StaggerItem key={detail.label}>
+                    {detail.href ? (
+                      <a
+                        href={detail.href}
+                        target={detail.external ? "_blank" : undefined}
+                        rel={detail.external ? "noreferrer" : undefined}
+                        className="group flex items-center gap-5 border-b border-border py-5 transition-colors"
+                      >
+                        <detail.icon className="h-5 w-5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                            {detail.label}
+                          </p>
+                          <p className="mt-1 wrap-break-word text-foreground transition-colors group-hover:underline group-hover:decoration-border group-hover:underline-offset-4">
+                            {detail.value}
+                          </p>
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="flex items-center gap-5 border-b border-border py-5">
+                        <detail.icon className="h-5 w-5 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                            {detail.label}
+                          </p>
+                          <p className="mt-1 wrap-break-word text-foreground">
+                            {detail.value}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </StaggerItem>
+                ),
+            )}
+          </StaggerContainer>
+        </div>
+
+        {/* Elsewhere */}
+        <div className="bg-background py-12 md:py-16 md:pl-12">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+            Elsewhere
+          </p>
+          <StaggerContainer
+            className="mt-8 grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-2"
+            staggerDelay={0.05}
+          >
+            {socialLinks.map(
+              (social) =>
+                social.href && (
+                  <StaggerItem key={social.label}>
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex h-full items-center gap-3 bg-background px-5 py-5 text-muted-foreground transition-colors hover:bg-surface-container-low hover:text-foreground"
+                    >
+                      <social.icon className="h-5 w-5 shrink-0" />
+                      <span className="min-w-0 flex-1 truncate font-mono text-sm">
+                        {social.label}
+                      </span>
+                      <span className="text-muted-foreground transition-transform group-hover:translate-x-0.5">
+                        ↗
+                      </span>
+                    </a>
+                  </StaggerItem>
+                ),
+            )}
+          </StaggerContainer>
+
+          <FadeIn delay={0.3}>
+            <div className="mt-8 flex items-center gap-3 border border-border p-6">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-foreground opacity-50" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-foreground" />
+              </span>
+              <p className="font-mono text-xs text-muted-foreground">
+                Currently open to full-stack, backend-heavy &amp; architecture
+                roles.
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <div className="pb-24" />
     </main>
   );
 }

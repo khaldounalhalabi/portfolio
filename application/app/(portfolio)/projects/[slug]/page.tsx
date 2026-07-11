@@ -2,19 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { FadeIn } from "@/components/motion/fade-in";
-import { GradientSpotlight } from "@/components/motion/gradient-spotlight";
-import { MagneticButton } from "@/components/motion/magnetic-button";
 import { StaggerContainer, StaggerItem } from "@/components/motion/stagger";
 import { TextReveal } from "@/components/motion/text-reveal";
 import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
 import { ProjectMedia } from "@/components/portfolio/project-media";
 import { RichTextContent } from "@/components/portfolio/rich-text-content";
-import { Button } from "@/components/ui/button";
 import { hasRichTextContent } from "@/lib/rich-text";
 import { createClient } from "@/lib/supabase/server";
 import Project from "@/models/Project";
 import ProjectService from "@/services/ProjectService";
-import { ExternalLinkIcon } from "lucide-react";
+import { ArrowUpRight, ExternalLinkIcon } from "lucide-react";
 import { breadcrumbJsonLd, generateJsonLd, projectJsonLd } from "@/lib/seo";
 import { stripRichText } from "@/lib/rich-text";
 import type { Metadata } from "next";
@@ -102,8 +99,17 @@ export default async function ProjectDetailPage({
 
   const techStack = (project.tech_stack as TechStackItem[] | null) ?? [];
 
+  const meta = [
+    { label: "Role", value: project.role || "Lead Full-Stack Architect" },
+    { label: "Year", value: project.year || "—" },
+    ...(project.category
+      ? [{ label: "Category", value: project.category }]
+      : []),
+    ...(project.employer ? [{ label: "Employer", value: project.employer }] : []),
+  ];
+
   return (
-    <main className="relative pt-20 pb-24">
+    <main className="pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={generateJsonLd({
@@ -136,241 +142,216 @@ export default async function ProjectDetailPage({
           ],
         })}
       />
-      <GradientSpotlight
-        className="-top-20 -right-40"
-        color="cyan"
-        size={500}
-      />
 
-      <section className="relative container-shell">
-        <div className="grid gap-10 lg:grid-cols-[1fr_320px] lg:items-center">
-          <div>
-            {project.featured && (
-              <FadeIn>
-                <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-                  Featured Project
-                </p>
-              </FadeIn>
-            )}
-            <TextReveal as="h1" className="mt-5" delay={0.1}>
-              <div className={"flex items-center gap-1"}>
-                <span className="font-heading text-4xl font-bold wrap-break-word text-primary md:text-6xl lg:text-7xl">
-                  {project.title}
-                </span>
-                {project.project_url && (
-                  <Button asChild className="mt-2 justify-between">
-                    <Link
-                      href={project.project_url ?? ""}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      Visit
-                      <ExternalLinkIcon />
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </TextReveal>
-            <FadeIn delay={0.2} className="mt-6 max-w-3xl">
+      {/* Header */}
+      <section className="border-b border-border">
+        <div className="container-shell pt-16 pb-12 md:pt-20">
+          <FadeIn>
+            <div className="flex items-center gap-3 font-mono text-xs text-muted-foreground">
+              <Link href="/projects" className="hover:text-foreground">
+                Work
+              </Link>
+              <span className="text-border">/</span>
+              <span className="text-foreground">{project.category}</span>
+            </div>
+          </FadeIn>
+
+          <TextReveal as="h1" className="mt-8 max-w-4xl" delay={0.05}>
+            <span className="font-heading text-4xl font-semibold tracking-tight break-words text-foreground md:text-6xl lg:text-7xl">
+              {project.title}
+            </span>
+          </TextReveal>
+
+          <FadeIn delay={0.15} className="mt-8 max-w-3xl">
+            <div className="text-lg leading-8 text-muted-foreground">
               <RichTextContent
                 value={project.long_description || project.description}
               />
+            </div>
+          </FadeIn>
+
+          {project.project_url && (
+            <FadeIn delay={0.2}>
+              <Link
+                href={project.project_url}
+                rel="noreferrer"
+                target="_blank"
+                className="group mt-8 inline-flex items-center gap-2 bg-foreground px-6 py-3 font-mono text-sm text-background transition-opacity hover:opacity-90"
+              >
+                Visit live project
+                <ExternalLinkIcon className="h-4 w-4" />
+              </Link>
             </FadeIn>
-          </div>
-          <FadeIn delay={0.3} direction="left">
-            <div className="grid gap-4">
-              <div className="rounded-3xl border border-white/6 bg-surface-container-low/80 p-6 backdrop-blur-sm">
-                <p className="text-xs tracking-[0.25em] text-secondary uppercase">
-                  Role
-                </p>
-                <p className="mt-3 font-heading text-xl text-primary">
-                  {project.role || "Lead Full-Stack Architect"}
-                </p>
-              </div>
-              <div className="rounded-3xl border border-white/6 bg-surface-container-low/80 p-6 backdrop-blur-sm">
-                <p className="text-xs tracking-[0.25em] text-secondary uppercase">
-                  Year
-                </p>
-                <p className="mt-3 font-heading text-xl text-primary">
-                  {project.year || "2024"}
-                </p>
-              </div>
-              {project.category && (
-                <div className="rounded-3xl border border-white/6 bg-surface-container-low/80 p-6 backdrop-blur-sm">
-                  <p className="text-xs tracking-[0.25em] text-secondary uppercase">
-                    Category
-                  </p>
-                  <p className="mt-3 font-heading text-xl text-primary">
-                    {project.category}
-                  </p>
+          )}
+
+          {/* Meta row */}
+          <FadeIn delay={0.25}>
+            <dl className="mt-12 grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-4">
+              {meta.map((item) => (
+                <div key={item.label} className="bg-background p-5">
+                  <dt className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                    {item.label}
+                  </dt>
+                  <dd className="mt-2 font-heading text-lg text-foreground">
+                    {item.value}
+                  </dd>
                 </div>
-              )}
+              ))}
+            </dl>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Media */}
+      <section className="border-b border-border">
+        <div className="container-shell py-12 md:py-16">
+          <FadeIn>
+            <div className="relative aspect-video overflow-hidden border border-border">
+              <ProjectMedia
+                imageUrl={project.image_url}
+                title={project.title}
+                priority
+              />
             </div>
           </FadeIn>
         </div>
       </section>
 
-      <section className="container-shell mt-14">
-        <FadeIn>
-          <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/5">
-            <ProjectMedia imageUrl={project.image_url} title={project.title} />
-            <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
-          </div>
-        </FadeIn>
-      </section>
-
-      <section className="container-shell mt-16 grid gap-12 lg:grid-cols-2">
-        <FadeIn delay={0.1} direction="up">
-          <div className="h-full rounded-[2rem] border border-white/6 bg-surface-container-low/60 p-8 backdrop-blur-sm md:p-10">
-            <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-              The Problem
+      {/* Problem / Solution */}
+      <section className="border-b border-border">
+        <div className="container-shell grid gap-px bg-background md:grid-cols-2">
+          <div className="bg-background py-12 md:py-16 md:pr-12">
+            <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              The problem
             </p>
             {hasRichTextContent(project.problem) ? (
-              <RichTextContent
-                value={project.problem}
-                className="mt-6 text-lg"
-              />
+              <RichTextContent value={project.problem} className="mt-6" />
             ) : (
-              <p className="mt-6 text-lg leading-8 text-on-surface-variant">
+              <p className="mt-6 text-lg leading-8 text-muted-foreground">
                 Legacy systems often suffer from fragmented data flows, brittle
                 admin surfaces, and poor visibility into day-to-day operations.
               </p>
             )}
           </div>
-        </FadeIn>
-        <FadeIn delay={0.2} direction="up">
-          <div className="h-full rounded-[2rem] border border-white/6 bg-surface-container-low/60 p-8 backdrop-blur-sm md:p-10">
-            <p className="text-xs tracking-[0.3em] text-primary-container uppercase">
-              The Solution
+          <div className="bg-background py-12 md:py-16 md:pl-12">
+            <p className="font-mono text-xs tracking-wide text-foreground uppercase">
+              The solution
             </p>
             {hasRichTextContent(project.solution) ? (
-              <RichTextContent
-                value={project.solution}
-                className="mt-6 text-lg"
-              />
+              <RichTextContent value={project.solution} className="mt-6" />
             ) : (
-              <p className="mt-6 text-lg leading-8 text-on-surface-variant">
+              <p className="mt-6 text-lg leading-8 text-muted-foreground">
                 The solution consolidates critical workflows into a maintainable
                 architecture with a clean interface and a data model designed to
                 evolve.
               </p>
             )}
           </div>
-        </FadeIn>
+        </div>
       </section>
 
+      {/* Overview */}
       {hasRichTextContent(project.long_description) ? (
-        <section className="container-shell mt-16">
-          <FadeIn direction="up">
-            <div className="rounded-[2rem] border border-white/6 bg-surface-container-low/60 p-8 backdrop-blur-sm md:p-10">
-              <p className="text-xs tracking-[0.3em] text-secondary uppercase">
-                Overview
-              </p>
-              <RichTextContent
-                value={project.long_description}
-                className="mt-6"
-              />
-            </div>
-          </FadeIn>
-        </section>
-      ) : null}
-
-      {techStack.length ? (
-        <section className="container-shell mt-20">
-          <FadeIn>
-            <div className="mb-8 flex items-center gap-4">
-              <h2 className="font-heading text-3xl font-bold text-primary">
-                Engineered With
-              </h2>
-              <div className="h-px flex-1 bg-linear-to-r from-white/10 to-transparent" />
-            </div>
-          </FadeIn>
-          <StaggerContainer
-            className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
-            staggerDelay={0.06}
-          >
-            {techStack.map((tech) => (
-              <StaggerItem
-                key={`${project.id}-${tech.name}`}
-                className="h-full"
-              >
-                <div className="group h-full rounded-3xl border border-white/6 bg-surface-container-low p-6 transition-all duration-500 hover:-translate-y-1 hover:border-primary-container/20 hover:bg-surface-container">
-                  <PortfolioIcon
-                    name={tech.icon}
-                    className="h-7 w-7 text-primary-container transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <h3 className="mt-5 font-heading text-xl font-bold text-primary">
-                    {tech.name}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-on-surface-variant">
-                    {tech.description}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </section>
-      ) : null}
-
-      {project.features.length ? (
-        <section className="container-shell mt-20 grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-          <FadeIn direction="up">
-            <div>
-              <h2 className="font-heading text-4xl font-bold text-primary">
-                Architected for impact.
-              </h2>
-              <p className="mt-6 max-w-md text-lg leading-8 text-on-surface-variant">
-                Every module is designed to remove operational friction while
-                preserving room for future growth.
-              </p>
-            </div>
-          </FadeIn>
-          <StaggerContainer className="space-y-5" staggerDelay={0.08}>
-            {project.features.map((feature, index) => (
-              <StaggerItem key={`${project.id}-feature-${index}`}>
-                <div className="rounded-3xl border border-white/6 bg-surface-container-low/60 p-6 backdrop-blur-sm transition-all duration-300 hover:border-primary-container/20 hover:bg-surface-container">
-                  <p className="text-xs tracking-[0.25em] text-secondary uppercase">
-                    Outcome {index + 1}
-                  </p>
-                  <p className="mt-4 text-base leading-8 text-on-surface-variant">
-                    {feature}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </section>
-      ) : null}
-
-      <section className="container-shell mt-20">
-        <FadeIn direction="up">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/6 bg-surface-container-low/80 p-10 text-center backdrop-blur-sm">
-            <div className="absolute -top-20 -left-20 h-60 w-60 rounded-full bg-primary-container/10 blur-[100px]" />
-            <div className="absolute -right-20 bottom-0 h-60 w-60 rounded-full bg-secondary/10 blur-[100px]" />
-            <h2 className="relative font-heading text-3xl font-bold break-words text-primary md:text-4xl">
-              Building the future of {project.title.split(" ")[0]}?
-            </h2>
-            <p className="relative mx-auto mt-5 max-w-2xl text-lg leading-8 text-on-surface-variant">
-              Let&apos;s discuss a solution that stays performant, maintainable,
-              and easy to operate after it ships.
+        <section className="border-b border-border">
+          <div className="container-shell py-16">
+            <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              Overview
             </p>
-            <div className="relative mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-              <MagneticButton strength={0.25}>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-full bg-secondary-fixed-dim px-6 py-3 font-semibold text-on-secondary transition-shadow hover:shadow-[0_0_30px_-5px_rgba(0,228,117,0.45)]"
-                >
-                  Get in Touch
-                </Link>
-              </MagneticButton>
-              <MagneticButton strength={0.25}>
-                <Link
-                  href="/projects"
-                  className="inline-flex items-center justify-center rounded-full border border-white/10 bg-surface-container px-6 py-3 font-semibold text-primary transition-colors hover:border-primary-container/30"
-                >
-                  View More Projects
-                </Link>
-              </MagneticButton>
+            <FadeIn className="mt-6 max-w-3xl">
+              <RichTextContent value={project.long_description} />
+            </FadeIn>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Tech stack */}
+      {techStack.length ? (
+        <section className="border-b border-border">
+          <div className="container-shell py-16">
+            <div className="flex items-baseline gap-4">
+              <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                {String(techStack.length).padStart(2, "0")}
+              </span>
+              <h2 className="font-heading text-sm font-medium tracking-wide text-foreground uppercase">
+                Engineered with
+              </h2>
+            </div>
+            <StaggerContainer
+              className="mt-10 grid grid-cols-1 gap-5 bg-background sm:grid-cols-2 xl:grid-cols-4"
+              staggerDelay={0.05}
+            >
+              {techStack.map((tech) => (
+                <StaggerItem key={`${project.id}-${tech.name}`}>
+                  <div className="group border border-border shadow-md flex h-full flex-col bg-background p-6 transition-colors hover:bg-surface-container-low">
+                    <PortfolioIcon
+                      name={tech.icon}
+                      className="h-6 w-6 text-foreground"
+                    />
+                    <h3 className="mt-5 font-heading text-lg font-semibold text-foreground">
+                      {tech.name}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {tech.description}
+                    </p>
+                  </div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Features */}
+      {project.features.length ? (
+        <section className="border-b border-border">
+          <div className="container-shell py-16">
+            <div className="flex items-baseline gap-4">
+              <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                {String(project.features.length).padStart(2, "0")}
+              </span>
+              <h2 className="font-heading text-sm font-medium tracking-wide text-foreground uppercase">
+                Key outcomes
+              </h2>
+            </div>
+            <StaggerContainer className="mt-10 border-t border-border" staggerDelay={0.06}>
+              {project.features.map((feature, index) => (
+                <StaggerItem key={`${project.id}-feature-${index}`}>
+                  <div className="flex gap-6 border-b border-border py-6">
+                    <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p className="text-base leading-8 text-foreground/90">
+                      {feature}
+                    </p>
+                  </div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+      ) : null}
+
+      {/* CTA */}
+      <section className="container-shell py-20">
+        <FadeIn>
+          <div className="flex flex-col items-start justify-between gap-8 border border-border p-10 md:flex-row md:items-center md:p-14">
+            <h2 className="max-w-xl font-heading text-3xl font-semibold text-foreground md:text-4xl">
+              Have a system worth building carefully?
+            </h2>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/contact"
+                className="group inline-flex items-center justify-center gap-2 bg-foreground px-6 py-3 font-mono text-sm text-background transition-opacity hover:opacity-90"
+              >
+                Get in touch
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+              <Link
+                href="/projects"
+                className="inline-flex items-center justify-center border border-border px-6 py-3 font-mono text-sm text-foreground transition-colors hover:bg-surface-container-low"
+              >
+                More projects
+              </Link>
             </div>
           </div>
         </FadeIn>

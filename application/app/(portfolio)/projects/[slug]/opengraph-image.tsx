@@ -25,8 +25,8 @@ export default async function Image({ params }: Props) {
         <div
           tw="flex flex-col items-start justify-center w-full h-full p-16"
           style={{
-            background: "linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%)",
-            color: "#f9fafb",
+            background: "#0b0b0c",
+            color: "#ededec",
           }}
         >
           <h1 tw="text-6xl font-bold">Project Not Found</h1>
@@ -59,17 +59,23 @@ export default async function Image({ params }: Props) {
       <div
         tw="flex flex-col items-start justify-between w-full h-full p-16"
         style={{
-          background: "linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%)",
-          color: "#f9fafb",
+          background: "#0b0b0c",
+          color: "#ededec",
           fontFamily: "Inter, sans-serif",
         }}
       >
         <div tw="flex items-center gap-3">
-          <span tw="text-sm tracking-widest uppercase text-emerald-400">
+          <span
+            tw="text-sm uppercase text-gray-400"
+            style={{ letterSpacing: "0.2em", fontFamily: "monospace" }}
+          >
             {category}
           </span>
           {project.featured && (
-            <span tw="text-sm tracking-widest uppercase text-gray-400">
+            <span
+              tw="text-sm uppercase text-gray-500"
+              style={{ letterSpacing: "0.2em", fontFamily: "monospace" }}
+            >
               • Featured
             </span>
           )}
@@ -82,7 +88,7 @@ export default async function Image({ params }: Props) {
           >
             {title}
           </h1>
-          <p tw="text-2xl text-gray-300">
+          <p tw="text-2xl text-gray-400">
             {role} • {year}
           </p>
           {tags.length > 0 && (
@@ -90,7 +96,7 @@ export default async function Image({ params }: Props) {
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  tw="px-4 py-1.5 rounded-full border border-white/10 text-gray-300 text-lg"
+                  tw="px-4 py-1.5 border border-white/15 text-gray-300 text-lg"
                 >
                   {tag}
                 </span>
@@ -99,10 +105,10 @@ export default async function Image({ params }: Props) {
           )}
         </div>
 
-        <div tw="flex items-center gap-4 text-lg text-gray-400">
+        <div tw="flex items-center gap-4 text-lg text-gray-500">
           <span>Khaldoun Alhalabi</span>
-          <span tw="text-gray-600">•</span>
-          <span>khaldoun.dev/projects/{project.slug}</span>
+          <span tw="text-gray-700">•</span>
+          <span>khaldoun.site/projects/{project.slug}</span>
         </div>
       </div>
     ),

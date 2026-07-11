@@ -1,12 +1,20 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Check, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { ProjectMedia } from "@/components/portfolio/project-media";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { stripRichText } from "@/lib/rich-text";
+import { cn } from "@/lib/utils";
 import Project from "@/models/Project";
 
 interface ProjectsExplorerProps {
@@ -14,114 +22,83 @@ interface ProjectsExplorerProps {
 }
 
 export function ProjectsExplorer({ projects }: ProjectsExplorerProps) {
-  const [selectedCategory, setSelectedCategory] = useState("All Projects");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const categories = useMemo(
-    () => [
-      "All Projects",
-      ...new Set(projects.map((project) => project.category)),
-    ],
+    () => ["All", ...new Set(projects.map((project) => project.category))],
     [projects],
   );
 
   const filteredProjects = useMemo(() => {
-    if (selectedCategory === "All Projects") {
-      return projects;
-    }
-
+    if (selectedCategory === "All") return projects;
     return projects.filter((project) => project.category === selectedCategory);
   }, [projects, selectedCategory]);
 
+  const countFor = (category: string) =>
+    category === "All"
+      ? projects.length
+      : projects.filter((p) => p.category === category).length;
+
+  const handleSelect = (category: string) => {
+    setSelectedCategory(category);
+    setFilterOpen(false);
+  };
+
   return (
     <div>
-      <div className="sticky top-18.25 z-30 border-y border-white/5 bg-background/80 py-4 backdrop-blur-xl">
-        <div className="container-shell flex flex-wrap gap-3 pb-1">
-          {categories.slice(0, 15).map((category) => (
-            <button
-              key={category}
-              type="button"
-              onClick={() => setSelectedCategory(category)}
-              className={`relative rounded-full px-5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors ${
-                selectedCategory === category
-                  ? "text-on-primary"
-                  : "bg-surface-container-high text-on-surface-variant hover:text-primary"
-              }`}
-            >
-              {selectedCategory === category && (
-                <motion.span
-                  layoutId="activeCategory"
-                  className="absolute inset-0 rounded-full bg-primary-container"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10">{category}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
       <motion.div
         layout
-        className="container-shell grid gap-8 pt-10 md:grid-cols-2 xl:grid-cols-3"
+        className="container-shell grid grid-cols-1 gap-x-8 gap-y-14 pt-4 md:grid-cols-2"
       >
         <AnimatePresence mode="popLayout">
           {filteredProjects.map((project, index) => (
             <motion.div
               key={project.id}
               layout
-              className="h-full"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              exit={{ opacity: 0, scale: 0.98 }}
               transition={{
-                duration: 0.4,
-                delay: index * 0.05,
+                duration: 0.45,
+                delay: index * 0.04,
+                ease: [0.22, 1, 0.36, 1],
                 layout: { duration: 0.4 },
               }}
             >
-              <Link
-                href={`/projects/${project.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/6 bg-surface-container-low transition-all duration-500 hover:-translate-y-1 hover:border-primary-container/20 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.4),0_0_30px_-10px_rgba(0,245,255,0.08)]"
-              >
-                <div className="relative aspect-16/10 overflow-hidden">
+              <Link href={`/projects/${project.slug}`} className="group block">
+                <div className="relative aspect-16/10 overflow-hidden border border-border">
                   <ProjectMedia
-                    className="transition duration-700 group-hover:scale-105"
+                    className="grayscale transition duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
                     imageUrl={project.image_url}
                     title={project.title}
                   />
-                  <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center bg-primary-container/0 transition-colors duration-500 group-hover:bg-primary-container/5">
-                    <span className="flex h-12 w-12 -translate-y-4 scale-75 items-center justify-center rounded-full bg-background/80 text-primary opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
-                      <ArrowUpRight className="h-5 w-5" />
-                    </span>
-                  </div>
                 </div>
-                <div className="flex flex-1 flex-col space-y-5 p-7">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs tracking-[0.25em] text-secondary uppercase">
-                        {project.category}
-                      </p>
-                      <h3 className="mt-3 font-heading text-2xl font-bold text-primary transition-colors group-hover:text-primary-container">
-                        {project.title}
-                      </h3>
-                    </div>
-                    <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-primary-container opacity-0 transition-all group-hover:opacity-100" />
+                <div className="mt-5">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <p className="font-mono text-xs tracking-wide text-muted-foreground">
+                      {project.category}
+                      {project.year ? ` — ${project.year}` : ""}
+                    </p>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
                   </div>
-                  <p className="line-clamp-3 flex-1 text-sm leading-7 text-on-surface-variant">
+                  <h3 className="mt-2 font-heading text-2xl font-semibold text-foreground">
+                    {project.title}
+                  </h3>
+                  <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
                     {stripRichText(project.description)}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1">
                     {project.tags.slice(0, 4).map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-surface-container-high px-3 py-1 text-xs tracking-[0.15em] text-secondary uppercase transition-colors group-hover:bg-surface-container"
+                        className="font-mono text-xs text-muted-foreground"
                       >
                         {tag}
                       </span>
                     ))}
                     {project.tags.length > 4 && (
-                      <span className="rounded-full bg-surface-container-high px-3 py-1 text-xs text-on-surface-variant">
+                      <span className="font-mono text-xs text-muted-foreground">
                         +{project.tags.length - 4}
                       </span>
                     )}
@@ -132,6 +109,77 @@ export function ProjectsExplorer({ projects }: ProjectsExplorerProps) {
           ))}
         </AnimatePresence>
       </motion.div>
+
+      {filteredProjects.length === 0 && (
+        <div className="container-shell py-20 text-center">
+          <p className="font-mono text-sm text-muted-foreground">
+            No projects in this category yet.
+          </p>
+        </div>
+      )}
+
+      {/* Floating filter — one small button regardless of category count. */}
+      <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
+        <SheetTrigger asChild>
+          <button
+            type="button"
+            className="group fixed bottom-6 left-1/2 z-40 inline-flex -translate-x-1/2 items-center gap-3 border border-border bg-background/90 py-3 pr-3 pl-5 font-mono text-sm text-foreground shadow-[0_8px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-md transition-colors hover:bg-surface-container-low"
+            aria-label="Filter projects by category"
+          >
+            <SlidersHorizontal className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+            <span className="max-w-[40vw] truncate">{selectedCategory}</span>
+            <span className="border border-border px-2 py-0.5 text-xs text-muted-foreground tabular-nums">
+              {filteredProjects.length}
+            </span>
+          </button>
+        </SheetTrigger>
+
+        <SheetContent
+          side="bottom"
+          className="max-h-[80vh] w-full overflow-y-auto border-t border-border bg-background p-0 data-[side=bottom]:sm:max-w-none"
+        >
+          <SheetHeader className="border-b border-border p-6 md:px-10">
+            <SheetTitle className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              Filter by category
+            </SheetTitle>
+          </SheetHeader>
+
+          <div className="container-shell grid grid-cols-2 gap-px bg-border py-px sm:grid-cols-3 lg:grid-cols-4">
+            {categories.map((category) => {
+              const active = selectedCategory === category;
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => handleSelect(category)}
+                  className={cn(
+                    "group flex items-center justify-between gap-3 bg-background px-5 py-4 text-left transition-colors hover:bg-surface-container-low",
+                    active && "bg-surface-container-low",
+                  )}
+                >
+                  <span className="min-w-0">
+                    <span
+                      className={cn(
+                        "block truncate font-mono text-sm",
+                        active ? "text-foreground" : "text-muted-foreground",
+                      )}
+                    >
+                      {category}
+                    </span>
+                    <span className="mt-0.5 block font-mono text-[10px] text-muted-foreground tabular-nums">
+                      {countFor(category)} project
+                      {countFor(category) === 1 ? "" : "s"}
+                    </span>
+                  </span>
+                  {active && (
+                    <Check className="h-4 w-4 shrink-0 text-foreground" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

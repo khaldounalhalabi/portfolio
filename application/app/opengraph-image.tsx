@@ -10,7 +10,7 @@ export default async function Image() {
     fetch("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2").then(
       (res) => res.arrayBuffer(),
     ),
-    fetch("https5://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiJ-Ek-_EeA.woff2").then(
+    fetch("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiJ-Ek-_EeA.woff2").then(
       (res) => res.arrayBuffer(),
     ),
     fetch("https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMBBSSJLm2E.woff2").then(
@@ -23,14 +23,17 @@ export default async function Image() {
       <div
         tw="flex flex-col items-start justify-between w-full h-full p-16"
         style={{
-          background: "linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%)",
-          color: "#f9fafb",
+          background: "#0b0b0c",
+          color: "#ededec",
           fontFamily: "Inter, sans-serif",
         }}
       >
         <div tw="flex items-center gap-3">
-          <div tw="h-3 w-3 rounded-full bg-emerald-400" />
-          <span tw="text-sm tracking-widest uppercase text-emerald-400">
+          <div tw="h-2.5 w-2.5 rounded-full bg-white" />
+          <span
+            tw="text-sm uppercase text-gray-400"
+            style={{ letterSpacing: "0.2em", fontFamily: "monospace" }}
+          >
             Available for new opportunities
           </span>
         </div>
@@ -45,15 +48,18 @@ export default async function Image() {
           <p tw="text-3xl text-gray-300">
             Full-Stack Architect & Engineering Leader
           </p>
-          <p tw="text-xl text-gray-400 max-w-2xl">
+          <p tw="text-xl text-gray-500 max-w-2xl">
             Building scalable Laravel backends, modern React systems, and
             AI-flavored tooling.
           </p>
         </div>
 
-        <div tw="flex items-center gap-4 text-lg text-gray-400">
-          <span>khaldoun.dev</span>
-          <span tw="text-gray-600">•</span>
+        <div
+          tw="flex items-center gap-4 text-lg text-gray-500"
+          style={{ fontFamily: "monospace" }}
+        >
+          <span>khaldoun.site</span>
+          <span tw="text-gray-700">•</span>
           <span>Projects, Experience & Contact</span>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { StaggerContainer, StaggerItem } from "@/components/motion/stagger";
 import { PortfolioIcon } from "@/components/portfolio/portfolio-icons";
+import { cn } from "@/lib/utils";
 import SkillCategory from "@/models/SkillCategory";
 
 interface SkillsGridProps {
@@ -9,48 +10,77 @@ interface SkillsGridProps {
 }
 
 export function SkillsGrid({ skillCategories }: SkillsGridProps) {
+  const total = skillCategories.length;
+  // Number of items left over in the final row at each breakpoint.
+  const remainderMd = total % 2; // 2 cards per row from md
+  const remainderXl = total % 3; // 3 cards per row from xl
+
   return (
     <StaggerContainer
-      className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4"
-      staggerDelay={0.08}
+      className="mt-12 grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-6"
+      staggerDelay={0.06}
     >
-      {skillCategories.map((group) => (
-        <StaggerItem key={group.id} className="h-full">
-          <div
-            className={`group h-full rounded-[2rem] border p-6 transition-all duration-500 hover:-translate-y-1 ${
-              group.is_highlighted
-                ? "border-primary-container/30 bg-surface-container hover:border-primary-container/50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.35),0_0_30px_-10px_rgba(0,245,255,0.1)]"
-                : "border-white/6 bg-surface-container-low hover:border-white/15 hover:bg-surface-container"
-            }`}
+      {skillCategories.map((group, index) => {
+        const isLast = index === total - 1;
+        const isSecondLast = index === total - 2;
+
+        // The grid has 6 tracks from `md`. A full row is 3 spans (md, 2/row) or
+        // 2 spans (xl, 3/row). When the last row is short, stretch its cards so
+        // they fill the whole width instead of leaving empty bordered cells.
+        const mdSpan =
+          remainderMd === 1 && isLast ? "md:col-span-6" : "md:col-span-3";
+
+        let xlSpan = "xl:col-span-2";
+        if (remainderXl === 1 && isLast) {
+          xlSpan = "xl:col-span-6";
+        } else if (remainderXl === 2 && (isLast || isSecondLast)) {
+          xlSpan = "xl:col-span-3";
+        }
+
+        return (
+          <StaggerItem
+            key={group.id}
+            className={cn("h-full", mdSpan, xlSpan)}
           >
             <div
-              className={`inline-flex rounded-2xl bg-surface-container-high p-3 transition-transform duration-300 group-hover:scale-110 ${
-                group.is_highlighted
-                  ? "text-primary-container"
-                  : "text-secondary"
-              }`}
+              className={cn(
+                "group flex h-full flex-col bg-background p-7 transition-colors duration-300 hover:bg-surface-container-low",
+                group.is_highlighted && "bg-surface-container-low/60",
+              )}
             >
-              <PortfolioIcon name={group.icon} className="h-6 w-6" />
+              <div className="flex items-center justify-between">
+                <PortfolioIcon
+                  name={group.icon}
+                  className="h-5 w-5 text-foreground"
+                />
+                {group.is_highlighted && (
+                  <span className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase">
+                    Core
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-6 font-heading text-xl font-semibold text-foreground">
+                {group.name}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {group.description}
+              </p>
+              {group.skills && group.skills.length > 0 && (
+                <div className="mt-6 flex flex-wrap gap-x-3 gap-y-1.5 border-t border-border pt-5">
+                  {group.skills.map((skill) => (
+                    <span
+                      key={skill.name}
+                      className="font-mono text-xs text-muted-foreground transition-colors group-hover:text-foreground"
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
-            <h3 className="mt-5 font-heading text-2xl font-bold text-primary">
-              {group.name}
-            </h3>
-            <p className="mt-3 text-sm leading-7 text-on-surface-variant">
-              {group.description}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {group.skills?.map((skill) => (
-                <span
-                  key={skill.name}
-                  className="rounded-full bg-surface-container-high px-3 py-1 text-xs text-on-surface-variant transition-colors group-hover:bg-surface-container-highest"
-                >
-                  {skill.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        </StaggerItem>
-      ))}
+          </StaggerItem>
+        );
+      })}
     </StaggerContainer>
   );
 }

@@ -25,7 +25,7 @@ const FooterContactLinks = () => {
   ];
 
   return (
-    <div className="flex flex-wrap gap-3 text-sm text-on-surface-variant">
+    <div className="flex flex-wrap gap-2">
       {links.map(
         (link) =>
           link.href && (
@@ -34,10 +34,10 @@ const FooterContactLinks = () => {
               href={link.href}
               target="_blank"
               rel="noreferrer"
-              className="group flex h-10 w-10 items-center justify-center rounded-full border border-white/8 text-on-surface-variant transition-all duration-300 hover:border-primary-container/30 hover:text-primary-container"
+              className="group flex h-11 w-11 items-center justify-center border border-border text-muted-foreground transition-colors hover:bg-foreground hover:text-background"
               aria-label={link.label}
             >
-              <link.icon className="size-5 transition-transform duration-300 group-hover:scale-110" />
+              <link.icon className="size-5" />
             </a>
           ),
       )}

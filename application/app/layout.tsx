@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
 import QueryClientProvider from "@/components/providers/query-client-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +14,11 @@ const sans = Inter({
 
 const heading = Space_Grotesk({
   variable: "--font-heading",
+  subsets: ["latin"],
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -78,15 +83,15 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.webmanifest",
   other: {
-    "msapplication-TileColor": "#0a0a0a",
-    "theme-color": "#0a0a0a",
+    "msapplication-TileColor": "#0b0b0c",
+    "theme-color": "#0b0b0c",
   },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0b0c" },
+    { media: "(prefers-color-scheme: light)", color: "#0b0b0c" },
   ],
   colorScheme: "dark light",
   width: "device-width",
@@ -101,7 +106,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark h-full antialiased">
       <body
-        className={`${sans.variable} ${heading.variable} min-h-full bg-background font-sans text-foreground`}
+        className={`${sans.variable} ${heading.variable} ${mono.variable} min-h-full bg-background font-sans text-foreground`}
       >
         <NextTopLoader />
         <Toaster />
