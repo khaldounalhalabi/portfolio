@@ -78,6 +78,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               target="_blank"
               rel="noreferrer"
               className="hidden items-center gap-2 border border-border px-4 py-2 font-mono text-xs text-foreground transition-colors hover:bg-foreground hover:text-background md:inline-flex"
+              download
             >
               Résumé ↗
             </Link>
@@ -132,6 +133,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                   target="_blank"
                   rel="noreferrer"
                   className="mt-4 mb-2 border border-border px-6 py-3 text-center font-mono text-sm text-foreground"
+                  download
                 >
                   Résumé ↗
                 </Link>

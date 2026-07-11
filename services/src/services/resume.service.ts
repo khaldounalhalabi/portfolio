@@ -25,7 +25,9 @@ export class ResumeService {
   public getPublicUrl(objectPath: string): string {
     const { data } = this.supabaseService.client.storage
       .from(config.resumeBucketName)
-      .getPublicUrl(objectPath);
+      .getPublicUrl(objectPath, {
+        download: true,
+      });
 
     return data.publicUrl;
   }
