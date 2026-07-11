@@ -72,4 +72,7 @@ VALUES ('e6c1be5e-1ffc-4736-8929-6076753743fc', 'education',
        }'),
        ('6f0337ac-1469-4c3d-92e3-7a7f33767574', 'whatsapp', to_jsonb(cast('https://wa.me/963956926129' as text)), '{
          "type": "string"
+       }'),
+       ('b7c0f2a1-3d4e-4a5b-9c6d-7e8f9a0b1c2d', 'resume_link', to_jsonb(cast('' as text)), '{
+         "type": "string"
        }');

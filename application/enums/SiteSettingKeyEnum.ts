@@ -15,5 +15,6 @@ enum SiteSettingKeyEnum {
   LANGUAGES = "languages",
   EDUCATION = "education",
   RESUME_TITLE = "resume_title",
+  RESUME_LINK = "resume_link",
 }
 export default SiteSettingKeyEnum;

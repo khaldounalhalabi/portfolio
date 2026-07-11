@@ -43,6 +43,7 @@ type SiteSetting =
   | StringStructure<SiteSettingKeyEnum.WHATSAPP>
   | StringStructure<SiteSettingKeyEnum.TELEGRAM>
   | StringStructure<SiteSettingKeyEnum.PRE_FILLED_MESSAGE>
-  | StringStructure<SiteSettingKeyEnum.STACKOVERFLOW>;
+  | StringStructure<SiteSettingKeyEnum.STACKOVERFLOW>
+  | StringStructure<SiteSettingKeyEnum.RESUME_LINK>;
 
 export default SiteSetting;

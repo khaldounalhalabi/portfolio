@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 
 import FooterContactLinks from "@/components/portfolio/footer/footer-contact-links";
+import { useSiteSettings } from "@/components/providers/site-settings-provider";
+import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -19,6 +21,12 @@ const navLinks = [
 export function SiteLayout({ children }: { children: ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { get } = useSiteSettings();
+
+  // Prefer the versioned URL stored on each regeneration (cache-busted); fall
+  // back to the canonical /resume.pdf route when the setting is not yet set.
+  const resumeHref =
+    get(SiteSettingKeyEnum.RESUME_LINK)?.value || "/resume.pdf";
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -66,7 +74,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/resume.pdf"
+              href={resumeHref}
               target="_blank"
               rel="noreferrer"
               className="hidden items-center gap-2 border border-border px-4 py-2 font-mono text-xs text-foreground transition-colors hover:bg-foreground hover:text-background md:inline-flex"
@@ -119,7 +127,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                   </Link>
                 ))}
                 <Link
-                  href="/resume.pdf"
+                  href={resumeHref}
                   onClick={() => setMobileMenuOpen(false)}
                   target="_blank"
                   rel="noreferrer"
