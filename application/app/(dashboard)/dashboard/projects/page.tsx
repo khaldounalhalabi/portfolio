@@ -1,4 +1,3 @@
-import { fetchProjectImageAction } from "./actions";
 import ProjectSheet from "@/components/projects/project-sheet";
 import TableActions from "@/components/projects/table-actions";
 import {
@@ -19,6 +18,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import Project from "@/models/Project";
 import { redirect } from "next/navigation";
+import { fetchProjectImageAction } from "./actions";
 
 const ProjectsPage = async () => {
   const supabase = await createClient();
@@ -48,6 +48,7 @@ const ProjectsPage = async () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Display Order</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Year</TableHead>
@@ -58,6 +59,7 @@ const ProjectsPage = async () => {
           <TableBody>
             {projects.map((project) => (
               <TableRow key={project.id}>
+                <TableCell>{project.display_order}</TableCell>
                 <TableCell className="font-medium">{project.title}</TableCell>
                 <TableCell>{project.category}</TableCell>
                 <TableCell>{project.year}</TableCell>
