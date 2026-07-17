@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
@@ -40,9 +41,15 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         <div className="container-shell flex h-16 items-center justify-between gap-4">
           <Link
             href="/"
-            className="group flex items-center gap-2 font-mono text-sm tracking-tight text-foreground"
+            className="group flex items-center gap-2.5 font-mono text-sm tracking-tight text-foreground"
           >
-            <span className="inline-block h-2 w-2 shrink-0 bg-foreground transition-transform duration-300 group-hover:rotate-45" />
+            <Image
+              src="/sidebar-transparent-64.png"
+              alt="Khaldoun Alhalabi"
+              width={24}
+              height={24}
+              className="shrink-0 transition-transform duration-300 group-hover:scale-110"
+            />
             <span>khaldoun.alhalabi</span>
           </Link>
 

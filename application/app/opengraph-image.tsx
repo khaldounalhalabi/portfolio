@@ -1,9 +1,13 @@
 import { ImageResponse } from "next/og";
 
+import { siteConfig } from "@/lib/seo";
+
 export const runtime = "edge";
 export const alt = "Khaldoun Alhalabi | Full-Stack Architect & Engineering Leader";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+const logoUrl = `${siteConfig.url}/sidebar-transparent-256.png`;
 
 export default async function Image() {
   const [interRegular, interBold, spaceGroteskBold] = await Promise.all([
@@ -28,8 +32,13 @@ export default async function Image() {
           fontFamily: "Inter, sans-serif",
         }}
       >
-        <div tw="flex items-center gap-3">
-          <div tw="h-2.5 w-2.5 rounded-full bg-white" />
+        <div tw="flex items-center gap-4">
+          <img
+            src={logoUrl}
+            alt="Khaldoun Alhalabi"
+            width="64"
+            height="64"
+          />
           <span
             tw="text-sm uppercase text-gray-400"
             style={{ letterSpacing: "0.2em", fontFamily: "monospace" }}

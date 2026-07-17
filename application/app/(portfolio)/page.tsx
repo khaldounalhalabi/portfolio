@@ -5,6 +5,7 @@ import { FadeIn } from "@/components/motion/fade-in";
 import { Marquee } from "@/components/motion/marquee";
 import { TextReveal } from "@/components/motion/text-reveal";
 import { FeaturedProjectsCarousel } from "@/components/portfolio/featured-projects-carousel";
+import { HeroGridBackground } from "@/components/portfolio/hero-grid-background";
 import { RichTextContent } from "@/components/portfolio/rich-text-content";
 import { SkillsGrid } from "@/components/portfolio/skills-grid";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
@@ -74,9 +75,9 @@ export default async function HomePage() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="pointer-events-none absolute inset-0 grid-lines opacity-60" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      <section id="hero" className="relative overflow-hidden border-b border-border">
+        <HeroGridBackground />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-background to-transparent" />
 
         <div className="relative container-shell flex min-h-[calc(100vh-4rem)] flex-col justify-center py-20">
           <FadeIn>

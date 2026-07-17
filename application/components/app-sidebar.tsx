@@ -21,8 +21,8 @@ import {
   SettingsIcon,
   ShapesIcon,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const data = {
   navMain: [
@@ -73,9 +73,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               }}
             >
               <Link href="/" className="p-0">
-                <Avatar className="p-0">
-                  <AvatarFallback>KH</AvatarFallback>
-                </Avatar>
+                <Image
+                  src="/sidebar-transparent-64.png"
+                  alt="Khaldoun"
+                  width={32}
+                  height={32}
+                  className="shrink-0"
+                />
                 <span className="text-base font-semibold">
                   Khaldoun Portfolio Dashboard
                 </span>
