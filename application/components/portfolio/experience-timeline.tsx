@@ -102,6 +102,33 @@ function TimelineItem({
         </SheetTrigger>
         <ExperienceDetailsSheet experience={experience} />
       </Sheet>
+
+      {/*
+        Server-rendered, visually-hidden copy of the role details. The Sheet
+        content lives in a Radix Portal that renders null during SSR, so its
+        text is absent from the static HTML that LLM crawlers / no-JS clients
+        read. This sr-only block keeps the full narrative in the server HTML
+        without altering the visible Sheet interaction.
+      */}
+      <div className="sr-only">
+        <h3>
+          {experience.position} @ {experience.company_name}
+        </h3>
+        <p>
+          {experience.from} — {experience.to ?? "Present"}
+          {experience.location ? ` · ${experience.location}` : ""}
+        </p>
+        {experience.company_description ? (
+          <section>
+            <h4>Company</h4>
+            <RichTextContent value={experience.company_description} />
+          </section>
+        ) : null}
+        <section>
+          <h4>Work</h4>
+          <RichTextContent value={experience.job_description} />
+        </section>
+      </div>
     </motion.div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -36,8 +36,6 @@ export function FeaturedProjectsCarousel({
     return () => clearInterval(interval);
   }, [projects.length]);
 
-  const project = projects[currentIndex];
-
   return (
     <section id="featured" className="border-t border-border">
       <div className="container-shell py-20 md:py-28">
@@ -60,42 +58,54 @@ export function FeaturedProjectsCarousel({
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="relative order-2 lg:order-1">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <p className="font-mono text-xs tracking-wide text-muted-foreground">
-                  {project.category}
-                  {project.year ? ` — ${project.year}` : ""}
-                </p>
-                <h3 className="mt-4 font-heading text-3xl font-semibold text-foreground md:text-4xl">
-                  {project.title}
-                </h3>
-                <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2">
-                  {project.tags.slice(0, 5).map((tag) => (
-                    <span
-                      key={tag}
-                      className="font-mono text-xs text-muted-foreground"
+            {/*
+              All slides render in the DOM so every featured project's text is
+              present in the server HTML for crawlers / no-JS clients. Only the
+              active slide is visible; inactive slides are faded out and made
+              non-interactive via CSS rather than unmounted.
+            */}
+            <div className="grid">
+              {projects.map((item, index) => {
+                const active = index === currentIndex;
+                return (
+                  <motion.div
+                    key={item.id}
+                    className="[grid-area:1/1]"
+                    animate={{ opacity: active ? 1 : 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    aria-hidden={!active}
+                    inert={!active ? true : undefined}
+                  >
+                    <p className="font-mono text-xs tracking-wide text-muted-foreground">
+                      {item.category}
+                      {item.year ? ` — ${item.year}` : ""}
+                    </p>
+                    <h3 className="mt-4 font-heading text-3xl font-semibold text-foreground md:text-4xl">
+                      {item.title}
+                    </h3>
+                    <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2">
+                      {item.tags.slice(0, 5).map((tag) => (
+                        <span
+                          key={tag}
+                          className="font-mono text-xs text-muted-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link
+                      href={`/projects/${item.slug}`}
+                      className="group mt-8 inline-flex items-center gap-2 font-mono text-sm text-foreground"
                     >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="group mt-8 inline-flex items-center gap-2 font-mono text-sm text-foreground"
-                >
-                  <span className="border-b border-border pb-0.5 transition-colors group-hover:border-foreground">
-                    Read case study
-                  </span>
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </Link>
-              </motion.div>
-            </AnimatePresence>
+                      <span className="border-b border-border pb-0.5 transition-colors group-hover:border-foreground">
+                        Read case study
+                      </span>
+                      <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
 
             {projects.length > 1 && (
               <div className="mt-12 flex items-center gap-4">
@@ -127,28 +137,34 @@ export function FeaturedProjectsCarousel({
           </div>
 
           <div className="order-1 lg:order-2">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, scale: 1.02 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="group relative block overflow-hidden border border-border"
-                >
-                  <div className="relative aspect-4/3">
-                    <ProjectMedia
-                      imageUrl={project.image_url}
-                      title={project.title}
-                      className="grayscale transition duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
-                    />
-                  </div>
-                </Link>
-              </motion.div>
-            </AnimatePresence>
+            <div className="grid">
+              {projects.map((item, index) => {
+                const active = index === currentIndex;
+                return (
+                  <motion.div
+                    key={item.id}
+                    className="[grid-area:1/1]"
+                    animate={{ opacity: active ? 1 : 0 }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    aria-hidden={!active}
+                    inert={!active ? true : undefined}
+                  >
+                    <Link
+                      href={`/projects/${item.slug}`}
+                      className="group relative block overflow-hidden border border-border"
+                    >
+                      <div className="relative aspect-4/3">
+                        <ProjectMedia
+                          imageUrl={item.image_url}
+                          title={item.title}
+                          className="grayscale transition duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
+                        />
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
