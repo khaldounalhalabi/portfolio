@@ -205,3 +205,35 @@
     animation: none !important;
   }
 }
+
+/* Themed scrollbar for the entire app.
+   Monochrome to match the greyscale token ramp; the thumb picks up the
+   foreground ink on hover, mirroring the site's hover-to-brighten motif. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-container-highest) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--surface-container-highest);
+  border: 2px solid var(--background);
+  border-radius: 9999px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--on-surface-variant);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

@@ -13,7 +13,7 @@ import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "Index" },
+  { href: "/", label: "Home" },
   { href: "/projects", label: "Work" },
   { href: "/experience", label: "Experience" },
   { href: "/contact", label: "Contact" },
