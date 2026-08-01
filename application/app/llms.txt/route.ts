@@ -34,20 +34,20 @@ export async function GET() {
     "",
     "## About",
     "",
-    `Name: Khaldoun Alhalabi`,
-    `Role: Full-Stack Architect & Engineering Leader`,
-    `Site: ${siteUrl}`,
-    `Email: ${getSetting(SiteSettingKeyEnum.EMAIL) ?? "khaldoun.dev@gmail.com"}`,
-    `Location: ${getSetting(SiteSettingKeyEnum.LOCATION) ?? "Remote / Global"}`,
-    `Availability: Open to new opportunities`,
+    `- Name: Khaldoun Alhalabi`,
+    `- Role: Full-Stack Architect & Engineering Leader`,
+    `- Site: [${siteUrl}](${siteUrl})`,
+    `- Email: [${getSetting(SiteSettingKeyEnum.EMAIL) ?? "khaldoun.dev@gmail.com"}](mailto:${getSetting(SiteSettingKeyEnum.EMAIL) ?? "khaldoun.dev@gmail.com"})`,
+    `- Location: ${getSetting(SiteSettingKeyEnum.LOCATION) ?? "Remote / Global"}`,
+    `- Availability: Open to new opportunities`,
     "",
     "## Public Pages",
     "",
-    `- Home: ${siteUrl}/`,
-    `- Projects: ${siteUrl}/projects`,
-    `- Experience: ${siteUrl}/experience`,
-    `- Contact: ${siteUrl}/contact`,
-    `- Resume PDF: ${siteUrl}/resume.pdf`,
+    `- [Home](${siteUrl}/): Portfolio landing page and overview`,
+    `- [Projects](${siteUrl}/projects): Featured and recent project work`,
+    `- [Experience](${siteUrl}/experience): Professional work history`,
+    `- [Contact](${siteUrl}/contact): Get in touch`,
+    `- [Resume PDF](${getSetting(SiteSettingKeyEnum.RESUME_LINK) ?? `${siteUrl}/resume.pdf`}): Downloadable ATS resume`,
     "",
     "## Professional Summary",
     "",
@@ -76,23 +76,23 @@ export async function GET() {
 
   if (featuredProjects.length > 0) {
     for (const project of featuredProjects) {
-      lines.push(`### ${project.title}`);
-      lines.push(`- URL: ${siteUrl}/projects/${project.slug}`);
-      lines.push(`- Category: ${project.category}`);
-      lines.push(`- Role: ${project.role ?? "Lead Full-Stack Architect"}`);
-      lines.push(`- Year: ${project.year ?? "N/A"}`);
-      lines.push(`- Summary: ${project.description}`);
+      lines.push(
+        `- [${project.title}](${siteUrl}/projects/${project.slug}): ${project.description}`,
+      );
+      lines.push(`  - Category: ${project.category}`);
+      lines.push(`  - Role: ${project.role ?? "Lead Full-Stack Architect"}`);
+      lines.push(`  - Year: ${project.year ?? "N/A"}`);
       if (project.tags?.length) {
-        lines.push(`- Tags: ${project.tags.join(", ")}`);
+        lines.push(`  - Tags: ${project.tags.join(", ")}`);
       }
       lines.push("");
     }
   } else {
     for (const project of projects.slice(0, 6)) {
-      lines.push(`### ${project.title}`);
-      lines.push(`- URL: ${siteUrl}/projects/${project.slug}`);
-      lines.push(`- Category: ${project.category}`);
-      lines.push(`- Summary: ${project.description}`);
+      lines.push(
+        `- [${project.title}](${siteUrl}/projects/${project.slug}): ${project.description}`,
+      );
+      lines.push(`  - Category: ${project.category}`);
       lines.push("");
     }
   }
@@ -110,18 +110,24 @@ export async function GET() {
 
   lines.push("## Contact & Social Links");
   lines.push("");
-  lines.push(`- LinkedIn: ${getSetting(SiteSettingKeyEnum.LINKED_IN) ?? "https://www.linkedin.com/in/khaldounalhalabi"}`);
-  lines.push(`- GitHub: ${getSetting(SiteSettingKeyEnum.GITHUB) ?? "https://github.com/khaldounalhalabi"}`);
-  lines.push(`- GitLab: ${getSetting(SiteSettingKeyEnum.GITLAB) ?? "https://gitlab.com/khaldounalhalabi"}`);
-  lines.push(`- Stack Overflow: ${getSetting(SiteSettingKeyEnum.STACKOVERFLOW) ?? "https://stackoverflow.com/users/16442922/khaldoun-alhalabi"}`);
-  lines.push(`- WhatsApp: ${getSetting(SiteSettingKeyEnum.WHATSAPP) ?? "N/A"}`);
-  lines.push(`- Telegram: ${getSetting(SiteSettingKeyEnum.TELEGRAM) ?? "N/A"}`);
+  const linkedIn = getSetting(SiteSettingKeyEnum.LINKED_IN) ?? "https://www.linkedin.com/in/khaldounalhalabi";
+  const github = getSetting(SiteSettingKeyEnum.GITHUB) ?? "https://github.com/khaldounalhalabi";
+  const gitlab = getSetting(SiteSettingKeyEnum.GITLAB) ?? "https://gitlab.com/khaldounalhalabi";
+  const stackoverflow = getSetting(SiteSettingKeyEnum.STACKOVERFLOW) ?? "https://stackoverflow.com/users/16442922/khaldoun-alhalabi";
+  const whatsapp = getSetting(SiteSettingKeyEnum.WHATSAPP);
+  const telegram = getSetting(SiteSettingKeyEnum.TELEGRAM);
+  lines.push(`- [LinkedIn](${linkedIn})`);
+  lines.push(`- [GitHub](${github})`);
+  lines.push(`- [GitLab](${gitlab})`);
+  lines.push(`- [Stack Overflow](${stackoverflow})`);
+  if (whatsapp) lines.push(`- [WhatsApp](${whatsapp})`);
+  if (telegram) lines.push(`- [Telegram](${telegram})`);
   lines.push("");
   lines.push("## Crawler Instructions");
   lines.push("");
   lines.push("- Public portfolio content is free to crawl and summarize.");
   lines.push("- Dashboard, auth, and API routes are private and should not be indexed.");
-  lines.push(`- For structured data, see ${siteUrl}/sitemap.xml and per-page JSON-LD.`);
+  lines.push(`- For structured data, see the [sitemap](${siteUrl}/sitemap.xml) and per-page JSON-LD.`);
   lines.push("");
 
   return new NextResponse(lines.join("\n"), {
