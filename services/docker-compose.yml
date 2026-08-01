@@ -12,6 +12,13 @@ services:
       - API_KEY=${API_KEY}
       - RESUME_BUCKET_NAME=${RESUME_BUCKET_NAME:-resume}
       - RESUME_OBJECT_PATH=${RESUME_OBJECT_PATH:-khaldoun-alhalabi-resume.pdf}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_SECURE=${SMTP_SECURE}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - CONTACT_FROM_ADDRESS=${CONTACT_FROM_ADDRESS}
+      - CONTACT_TO_ADDRESS=${CONTACT_TO_ADDRESS}
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:${PORT:-3001}/health').then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))"]
       interval: 30s
