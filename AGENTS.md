@@ -163,7 +163,7 @@ RESUME_SERVICE_URL=http://localhost:3001
 RESUME_SERVICE_API_KEY=<strong-random-key>
 
 # SEO / metadata
-NEXT_PUBLIC_SITE_URL=https://khaldoun.site
+NEXT_PUBLIC_SITE_URL=https://khaldounalhalabi.com
 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=<google-verification-code>
 
 # Optional: for `npm run storage:dump` to copy remote Storage objects to local
@@ -187,9 +187,18 @@ SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
 API_KEY=<same-strong-random-key-as-above>
 RESUME_BUCKET_NAME=resume
 RESUME_OBJECT_PATH=khaldoun-alhalabi-resume.pdf
+
+# SMTP for the contact form emails
+SMTP_HOST=<your-smtp-host>
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=<your-smtp-user>
+SMTP_PASSWORD=<your-smtp-password>
+CONTACT_FROM_ADDRESS=<from-address>
+CONTACT_TO_ADDRESS=<inbox-that-receives-messages>
 ```
 
-`API_KEY` in `services/.env` must match `RESUME_SERVICE_API_KEY` in `application/.env`. The service uses this shared secret in the `x-api-key` header to authenticate requests from the Next.js app.
+`API_KEY` in `services/.env` must match `RESUME_SERVICE_API_KEY` in `application/.env`. The service uses this shared secret in the `x-api-key` header to authenticate requests from the Next.js app. The same shared secret authenticates the contact-form requests. The public contact form (`app/(portfolio)/contact/page.tsx`) posts to the Next.js route `app/api/contact/route.ts`, which proxies to `POST /api/v1/contact/send` on the `services/` API; the service sends the email over SMTP via `nodemailer` (`services/src/services/mail.service.ts`).
 
 ## Technology Stack Details
 

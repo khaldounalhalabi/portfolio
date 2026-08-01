@@ -108,7 +108,7 @@ export default async function Image({ params }: Props) {
         <div tw="flex items-center gap-4 text-lg text-gray-500">
           <span>Khaldoun Alhalabi</span>
           <span tw="text-gray-700">•</span>
-          <span>khaldoun.site/projects/{project.slug}</span>
+          <span>khaldounalhalabi.com/projects/{project.slug}</span>
         </div>
       </div>
     ),

@@ -67,7 +67,7 @@ export default async function Image() {
           tw="flex items-center gap-4 text-lg text-gray-500"
           style={{ fontFamily: "monospace" }}
         >
-          <span>khaldoun.site</span>
+          <span>khaldounalhalabi.com</span>
           <span tw="text-gray-700">•</span>
           <span>Projects, Experience & Contact</span>
         </div>

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://khaldoun.site";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com";
 
   const content = `# AI Agent Access File
 # https://ai.txt

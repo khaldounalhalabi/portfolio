@@ -6,14 +6,14 @@ export const siteConfig = {
   title: "Khaldoun Alhalabi | Full-Stack Architect & Engineering Leader",
   defaultDescription:
     "Portfolio of Khaldoun Alhalabi, a full-stack architect and engineering leader building scalable Laravel backends, modern React systems, and AI-flavored tooling.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://khaldoun.site",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com",
   locale: "en_US",
   twitterHandle: "@khaldounalhalabi",
   author: {
     name: "Khaldoun Alhalabi",
     email: "khaldoun.dev@gmail.com",
     jobTitle: "Full-Stack Architect & Engineering Leader",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://khaldoun.site",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com",
   },
   keywords: [
     "Khaldoun Alhalabi",

@@ -3,6 +3,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { FadeIn } from "@/components/motion/fade-in";
 import { StaggerContainer, StaggerItem } from "@/components/motion/stagger";
 import { TextReveal } from "@/components/motion/text-reveal";
+import { ContactForm } from "@/components/portfolio/contact-form";
 import SiteSettingKeyEnum from "@/enums/SiteSettingKeyEnum";
 import { createClient } from "@/lib/supabase/server";
 import SiteSettingService from "@/services/SiteSettingService";
@@ -146,6 +147,26 @@ export default async function ContactPage() {
               want to discuss the future of full-stack architecture — the door is
               open. Fastest reply is by email.
             </p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Send a message */}
+      <section className="border-b border-border">
+        <div className="container-shell py-12 md:py-16">
+          <FadeIn>
+            <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              Send a message
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.1} className="mt-4 max-w-2xl">
+            <p className="text-muted-foreground">
+              Fill in the form below and your message lands straight in my inbox.
+              I usually reply within a day.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.15} className="max-w-2xl">
+            <ContactForm />
           </FadeIn>
         </div>
       </section>

@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     "Supabase",
     "System Architecture",
   ],
-  authors: [{ name: "Khaldoun Alhalabi", url: "https://khaldoun.site" }],
+  authors: [{ name: "Khaldoun Alhalabi", url: "https://khaldounalhalabi.com" }],
   creator: "Khaldoun Alhalabi",
   publisher: "Khaldoun Alhalabi",
   formatDetection: {
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://khaldoun.site"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com"),
   alternates: {
     canonical: "/",
   },

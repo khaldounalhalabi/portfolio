@@ -9,8 +9,6 @@ export async function apiKeyMiddleware(
     const providedKey = c.req.header("x-api-key");
 
     if (!providedKey || providedKey !== config.apiKey) {
-        console.log(`NEXT: ${providedKey}`)
-        console.log(`HONO: ${config.apiKey}`)
         return c.json({error: "Unauthorized"}, 401);
     }
 

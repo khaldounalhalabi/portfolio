@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import ExperienceService from "@/services/ExperienceService";
 import ProjectService from "@/services/ProjectService";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://khaldoun.site";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com";
 
 export const dynamic = "force-dynamic";
 

@@ -6125,7 +6125,7 @@ blockquote {
             "name": "MYSQL",
             "description": "MYSQL as a database"
           }
-        ]', 'Reslan Alnaal Medical Center', true, 7, 'https://rn-center.khaldoun.site', '2026-07-02 00:04:21.408873+00',
+        ]', 'Reslan Alnaal Medical Center', true, 7, 'https://rn-center.khaldounalhalabi.com', '2026-07-02 00:04:21.408873+00',
         '2026-07-02 00:04:21.408873+00'),
        ('ebbc308e-7167-4747-aee8-bbc61daabda6', 'Trivex',
         'Tri-Vex is a modern web platform featuring a marketing landing page and a custom-built admin CMS. The system is designed to provide a seamless experience for both end-users and administrators, enabling efficient content management, structured data handling, and a clean, responsive user interface.', '<div class="tiptap-content-viewer"><style>.tiptap-content-viewer {

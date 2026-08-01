@@ -20,7 +20,7 @@ export async function GET() {
   const getSetting = (key: SiteSettingKeyEnum) =>
     siteSettings.find((s) => s.key === key)?.value;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://khaldoun.site";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com";
 
   const featuredProjects = projects
     .filter((p) => p.featured)
