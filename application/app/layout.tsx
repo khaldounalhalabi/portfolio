@@ -49,7 +49,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://khaldounalhalabi.com",
+  ),
   alternates: {
     canonical: "/",
   },
@@ -112,7 +114,7 @@ export default function RootLayout({
       <body
         className={`${sans.variable} ${heading.variable} ${mono.variable} min-h-full bg-background font-sans text-foreground`}
       >
-        <NextTopLoader />
+        <NextTopLoader color="#ededed" showSpinner={false} />
         <Toaster />
         <QueryClientProvider>
           <TooltipProvider>{children}</TooltipProvider>
