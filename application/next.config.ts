@@ -44,6 +44,28 @@ const nextConfig: NextConfig = {
         destination: "https://khaldounalhalabi.com/:path*",
         statusCode: 301,
       },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "khaldoun.site",
+          },
+        ],
+        destination: "https://www.khaldounalhalabi.com/:path*",
+        statusCode: 301,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.khaldoun.site",
+          },
+        ],
+        destination: "https://www.khaldounalhalabi.com/:path*",
+        statusCode: 301,
+      },
     ];
   },
   turbopack:
