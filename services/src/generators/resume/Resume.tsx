@@ -113,7 +113,10 @@ function buildContactItems(
   }
 
   if (contact.phone) {
-    items.push({ value: contact.phone.replace(/\s+/g, ""), href: `tel:${contact.phone}` });
+    items.push({
+      value: contact.phone.replace(/\s+/g, ""),
+      href: `tel:${contact.phone}`,
+    });
   }
 
   if (contact.email) {
@@ -121,7 +124,10 @@ function buildContactItems(
   }
 
   if (contact.linkedIn) {
-    items.push({ value: stripProtocol(contact.linkedIn), href: contact.linkedIn });
+    items.push({
+      value: stripProtocol(contact.linkedIn),
+      href: contact.linkedIn,
+    });
   }
 
   if (contact.github) {
@@ -140,12 +146,23 @@ function buildContactItems(
   }
 
   if (contact.telegram) {
-    items.push({ value: stripProtocol(contact.telegram), href: contact.telegram });
+    items.push({
+      value: stripProtocol(contact.telegram),
+      href: contact.telegram,
+    });
   }
 
   if (contact.whatsapp) {
-    items.push({ value: stripProtocol(contact.whatsapp), href: contact.whatsapp });
+    items.push({
+      value: stripProtocol(contact.whatsapp),
+      href: contact.whatsapp,
+    });
   }
+
+  items.push({
+    value: stripProtocol("https://khaldounalhalabi.com"),
+    href: "https://khaldounalhalabi.com",
+  });
 
   return items;
 }
@@ -274,10 +291,7 @@ export function Resume({ data }: ResumeProps) {
                 }}
               >
                 {experiences.map((experience) => (
-                  <article
-                    key={experience.id}
-                    style={{ breakInside: "avoid" }}
-                  >
+                  <article key={experience.id} style={{ breakInside: "avoid" }}>
                     <div
                       style={{
                         display: "flex",
@@ -288,7 +302,13 @@ export function Resume({ data }: ResumeProps) {
                         gap: "4px",
                       }}
                     >
-                      <span style={{ fontWeight: 600, color: textColor, fontSize: "9.5pt" }}>
+                      <span
+                        style={{
+                          fontWeight: 600,
+                          color: textColor,
+                          fontSize: "9.5pt",
+                        }}
+                      >
                         {experience.companyName}
                         {experience.location ? ` • ${experience.location}` : ""}
                       </span>
@@ -342,7 +362,13 @@ export function Resume({ data }: ResumeProps) {
                         gap: "4px",
                       }}
                     >
-                      <span style={{ fontWeight: 700, color: textColor, fontSize: "10pt" }}>
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: textColor,
+                          fontSize: "10pt",
+                        }}
+                      >
                         {project.title}
                       </span>
                       <span
@@ -407,7 +433,9 @@ export function Resume({ data }: ResumeProps) {
           {skillGroups.length > 0 && (
             <section style={{ marginBottom: "10px", breakInside: "avoid" }}>
               <SectionHeading>Skills</SectionHeading>
-              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "5px" }}
+              >
                 {skillGroups.map((group) => (
                   <div key={group.category}>
                     <span
