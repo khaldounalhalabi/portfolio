@@ -20,22 +20,39 @@ const nextConfig: NextConfig = {
     remotePatterns,
   },
 
-  async rewrites() {
+  async redirects() {
     return [
       {
-        source: "/resume.pdf",
-        destination: "/api/resume",
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "khaldoun.site",
+          },
+        ],
+        destination: "https://khaldounalhalabi.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.khaldoun.site",
+          },
+        ],
+        destination: "https://khaldounalhalabi.com/:path*",
+        permanent: true,
       },
     ];
   },
-
   turbopack:
     process.env.NODE_ENV === "development"
       ? {
-        resolveAlias: {
-          "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
-        },
-      }
+          resolveAlias: {
+            "lucide-react/dynamic": "./lib/lucide-dynamic-stub.tsx",
+          },
+        }
       : undefined,
 };
 
